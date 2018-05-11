@@ -63,7 +63,7 @@ export GEOTIFF_INCLUDES='-I/usr/include/libgeotiff'
 #export GEOTIFF_HOME=/home/ipecm/ips_COTS64/tiff
 #export TIFF_HOME=/home/ipecm/ips_COTS64/tiff
 
-export GSL_HOME=/home/ipecm/ips_COTS64/gsl
+#export GSL_HOME=/home/ipecm/ips_COTS64/gsl
 
 #export HDF5INC=/home/ipecm/ips_COTS64/hdf5/include
 #export HDF5LIB=/home/ipecm/ips_COTS64/hdf5/lib
