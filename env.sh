@@ -1,3 +1,6 @@
+
+
+sub_dir=build_ias
 export DEVDIR=/LOSRLPGD03/development/rcattelan
 export SRCROOT=$DEVDIR/ips-all/ips
 
@@ -5,8 +8,8 @@ export CXXFLAGS='-g -Wall -O2 -march=nocona -mfpmath=sse -msse2'
 export CFLAGS=$CXXFLAGS
 #export QTDIR=/usr/local/qt_12c
 export QTDIR=/usr/lib64/qt4
-export PERL5LIB=$DEVDIR/build_ias/perllib:$DEVDIR/build_ias/perllib:$DEVDIR/build_ias/perllib/lib/perl5
-export PYTHONPATH=$DEVDIR/build_ias/python/lib/python3.4/site-packages:$DEVDIR/build_ias/pylib:/home/ipecm/ips_COTS64/gdal/lib/python3.4/site-packages
+export PERL5LIB=$DEVDIR/$sub_dir/perllib:$DEVDIR/$sub_dir/perllib:$DEVDIR/$sub_dir/perllib/lib/perl5
+export PYTHONPATH=$DEVDIR/$sub_dir/python/lib/python3.4/site-packages:$DEVDIR/$sub_dir/pylib
 #export JUNIT_HOME=/usr/share/java
 # single path -- do not add colon separated paths
 export JAVA_LIB=/home/ipecm/ips_COTS64/javalib
@@ -15,7 +18,7 @@ export PATH=$QTDIR/bin
 export PATH=$PATH:/home/ipecm/ips_COTS64/hdf5/bin
 export PATH=$PATH:/home/ipecm/ips_COTS64/hdfview/bin
 export PATH=$PATH:/sbin:/bin:/usr/sbin:/usr/bin
-export PATH=$PATH:/LOSRLPGD03/development/rcattelan/build_ias/bin
+export PATH=$PATH:/LOSRLPGD03/development/rcattelan/$sub_dir/bin
 export PATH=$PATH:${ORACLE_HOME}/bin
 
 #export PATH=$PATH:/home/ipecm/ips_COTS64/gdal/bin
@@ -24,7 +27,7 @@ export LD_LIBRARY_PATH=/usr/lib64
 #export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/qt_12c/lib
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${ORACLE_HOME}/lib
 #export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/ipecm/ips_COTS64/gdal/lib
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/LOSRLPGD03/development/rcattelan/build_ias/lib
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$DEVDIR/$sub_dir/lib
 
 #export PATH=$PATH:/opt/bin
 #export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/lib
@@ -111,18 +114,18 @@ export IAS_DB_L8_OLITIRS_EVAL=rcattelan_l8/rcattelan123
 export IAS_DB_TRAM=rcattelan_tram/rcattelan123
 
 export IAS_BUILD_64BIT=1
-export IASBASE_PERLLIB=$DEVDIR/build_ias/perllib
-export IASBASE_PYLIB=$DEVDIR/build_ias/pylib
-export IASBUILD=$DEVDIR/build_ias
-export IASLIB_BASE=$DEVDIR/build_ias
-export IASLIB_INC=$DEVDIR/build_ias/include
-export IASLIB_LIB=$DEVDIR/build_ias/lib
-export IASLIB_PERLLIB=$DEVDIR/build_ias/perllib
-export IASLIB_PYLIB=$DEVDIR/build_ias/python
-export IAS_INC=$DEVDIR/build_ias/include
-export IAS_LIB=$DEVDIR/build_ias/lib
-export IAS_BIN=$DEVDIR/build_ias/bin
-export IAS_JAVA_LIB=$DEVDIR/build_ias/javalib
+export IASBASE_PERLLIB=$DEVDIR/$sub_dir/perllib
+export IASBASE_PYLIB=$DEVDIR/$sub_dir/pylib
+export IASBUILD=$DEVDIR/$sub_dir
+export IASLIB_BASE=$DEVDIR/$sub_dir
+export IASLIB_INC=$DEVDIR/$sub_dir/include
+export IASLIB_LIB=$DEVDIR/$sub_dir/lib
+export IASLIB_PERLLIB=$DEVDIR/$sub_dir/perllib
+export IASLIB_PYLIB=$DEVDIR/$sub_dir/python
+export IAS_INC=$DEVDIR/$sub_dir/include
+export IAS_LIB=$DEVDIR/$sub_dir/lib
+export IAS_BIN=$DEVDIR/$sub_dir/bin
+export IAS_JAVA_LIB=$DEVDIR/$sub_dir/javalib
 
 export IAS_SYSTEM_USER_ID=rcattelan
 export IAS_SYSTEM_ID=I
