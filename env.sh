@@ -58,8 +58,10 @@ export GCTP_HOME=/home/ipecm/ips_COTS64/gctp3
 
 #export GDAL_HOME=/home/ipecm/ips_COTS64/gdal
 
-export GEOTIFF_HOME=/home/ipecm/ips_COTS64/tiff
-export TIFF_HOME=/home/ipecm/ips_COTS64/tiff
+# Fix the code but for now set here
+export GEOTIFF_INCLUDES='-I/usr/include/libgeotiff'
+#export GEOTIFF_HOME=/home/ipecm/ips_COTS64/tiff
+#export TIFF_HOME=/home/ipecm/ips_COTS64/tiff
 
 export GSL_HOME=/home/ipecm/ips_COTS64/gsl
 
