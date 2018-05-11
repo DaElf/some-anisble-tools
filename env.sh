@@ -44,9 +44,9 @@ export CGREENINC=/home/ipecm/ips_COTS64/cgreen/include
 export CGREENLIB=/home/ipecm/ips_COTS64/cgreen/lib
 export CGREEN_HOME=/home/ipecm/ips_COTS64/cgreen
 
-export FFTWINC=/home/ipecm/ips_COTS64/fftw/include
-export FFTWLIB=/home/ipecm/ips_COTS64/fftw/lib
-export FFTW_HOME=/home/ipecm/ips_COTS64/fftw
+#export FFTWINC=/home/ipecm/ips_COTS64/fftw/include
+#export FFTWLIB=/home/ipecm/ips_COTS64/fftw/lib
+#export FFTW_HOME=/home/ipecm/ips_COTS64/fftw
 
 export GCTP2INC=/home/ipecm/ips_COTS64/gctp/include
 export GCTP2LIB=/home/ipecm/ips_COTS64/gctp/lib
