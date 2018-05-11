@@ -69,9 +69,9 @@ export GEOTIFF_INCLUDES='-I/usr/include/libgeotiff'
 #export HDF5LIB=/home/ipecm/ips_COTS64/hdf5/lib
 #export HDF5_HOME=/home/ipecm/ips_COTS64/hdf5
 
-export HDFINC=/home/ipecm/ips_COTS64/hdf/include
-export HDFLIB=/home/ipecm/ips_COTS64/hdf/lib
-export HDF_HOME=/home/ipecm/ips_COTS64/hdf
+export HDFINC=/home/rcattelan/ips_COTS64/hdf/include
+export HDFLIB=/home/rcattelan/ips_COTS64/hdf/lib
+export HDF_HOME=/home/rcattelan/ips_COTS64/hdf
 
 export JPLDE421=/home/ipecm/ips_COTS64/novas3.1/data/lnxp1900p2053.421
 
