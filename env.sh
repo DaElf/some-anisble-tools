@@ -15,8 +15,8 @@ export PYTHONPATH=$DEVDIR/$sub_dir/python/lib/python3.4/site-packages:$DEVDIR/$s
 export JAVA_LIB=/home/ipecm/ips_COTS64/javalib
 
 export PATH=$QTDIR/bin
-export PATH=$PATH:/home/ipecm/ips_COTS64/hdf5/bin
-export PATH=$PATH:/home/ipecm/ips_COTS64/hdfview/bin
+#export PATH=$PATH:/home/ipecm/ips_COTS64/hdf5/bin
+#export PATH=$PATH:/home/ipecm/ips_COTS64/hdfview/bin
 export PATH=$PATH:/sbin:/bin:/usr/sbin:/usr/bin
 export PATH=$PATH:/LOSRLPGD03/development/rcattelan/$sub_dir/bin
 export PATH=$PATH:${ORACLE_HOME}/bin
@@ -38,7 +38,7 @@ export TLE_LIB=/pcache/level1/tle
 
 export COTS=/home/ipecm/ips_COTS64
 
-export CUBIST_HOME=/home/ipecm/ips_COTS64/cubist
+#export CUBIST_HOME=/home/ipecm/ips_COTS64/cubist
 
 export CGREENINC=/home/ipecm/ips_COTS64/cgreen/include
 export CGREENLIB=/home/ipecm/ips_COTS64/cgreen/lib
@@ -48,13 +48,13 @@ export CGREEN_HOME=/home/ipecm/ips_COTS64/cgreen
 #export FFTWLIB=/home/ipecm/ips_COTS64/fftw/lib
 #export FFTW_HOME=/home/ipecm/ips_COTS64/fftw
 
-export GCTP2INC=/home/ipecm/ips_COTS64/gctp/include
-export GCTP2LIB=/home/ipecm/ips_COTS64/gctp/lib
-export GCTP2_HOME=/home/ipecm/ips_COTS64/gctp
-
-export GCTPINC=/home/ipecm/ips_COTS64/gctp3/include
-export GCTPLIB=/home/ipecm/ips_COTS64/gctp3/lib
-export GCTP_HOME=/home/ipecm/ips_COTS64/gctp3
+#export GCTP2INC=/home/ipecm/ips_COTS64/gctp/include
+#export GCTP2LIB=/home/ipecm/ips_COTS64/gctp/lib
+#export GCTP2_HOME=/home/ipecm/ips_COTS64/gctp
+#
+#export GCTPINC=/home/ipecm/ips_COTS64/gctp3/include
+#export GCTPLIB=/home/ipecm/ips_COTS64/gctp3/lib
+#export GCTP_HOME=/home/ipecm/ips_COTS64/gctp3
 
 #export GDAL_HOME=/home/ipecm/ips_COTS64/gdal
 
@@ -69,17 +69,22 @@ export GEOTIFF_INCLUDES='-I/usr/include/libgeotiff'
 #export HDF5LIB=/home/ipecm/ips_COTS64/hdf5/lib
 #export HDF5_HOME=/home/ipecm/ips_COTS64/hdf5
 
-export HDFINC=/home/rcattelan/ips_COTS64/hdf/include
-export HDFLIB=/home/rcattelan/ips_COTS64/hdf/lib
-export HDF_HOME=/home/rcattelan/ips_COTS64/hdf
+export HDF_INCLUDES=-I/usr/include/hdf
+export HDF_LDFLAGS=-L/usr/lib64/hdf
+export HDFINC=/usr/include/hdf
+export HDFLIB=/usr/lib64/hdf
+#export HDFINC=/home/rcattelan/ips_COTS64/hdf/include
+#export HDFLIB=/home/rcattelan/ips_COTS64/hdf/lib
+#export HDF_HOME=/home/rcattelan/ips_COTS64/hdf
 
-export JPLDE421=/home/ipecm/ips_COTS64/novas3.1/data/lnxp1900p2053.421
+#export JPLDE421=/home/ipecm/ips_COTS64/novas3.1/data/lnxp1900p2053.421
+export JPLDE421=/usr/share/data/novas/lnxp1900p2053.421
 
 export MATH_HOME=/home/ipecm/ips_COTS64
 
-export NOVAS_HOME=/home/ipecm/ips_COTS64/novas3.1
-export NOVASINC=/home/ipecm/ips_COTS64/novas3.1/include
-export NOVASLIB=/home/ipecm/ips_COTS64/novas3.1/lib
+#export NOVAS_HOME=/home/ipecm/ips_COTS64/novas3.1
+#export NOVASINC=/home/ipecm/ips_COTS64/novas3.1/include
+#export NOVASLIB=/home/ipecm/ips_COTS64/novas3.1/lib
 
 export ODBC_HOME=/usr
 export ODBC_INC=/usr/include
