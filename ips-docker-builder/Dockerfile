@@ -47,7 +47,16 @@ RUN yum upgrade -y \
        qt \
        qt-odbc \
        gsl \
-       hdf
+       hdf \
+       gctp \
+       gctp3 \
+       cubist \
+       novas \
+       odl \
+       cgreen \
+       shapelib \
+       remez \
+       rsync
 
 #COPY oracle-instantclient12.2-* perl-DBD-Oracle*.rpm /tmp/
 #RUN yum install -y /tmp/oracle-instantclient12.2-* /tmp/perl-DBD-Oracle*.rpm
@@ -95,11 +104,7 @@ RUN yum install -y \
     yum-plugin-priorities \
     qt-devel \
     gsl-devel \
-    hdf-devel \
-    gctp \
-    gctp3 \
-    cubist \
-    novas
+    hdf-devel
 
 #    glibc-static \
 #    libgfortran-static \
@@ -112,7 +117,15 @@ RUN yum clean metadata && \
     perl-DBD-Oracle \
     gdal-python3 \
     python2-gdal \
-    qt-oci
+    qt-oci \
+    perl-Env
+
+RUN yum install -y \
+     apache-commons-lang \
+     apache-commons-logging \
+     apache-commons-configuration \
+     apache-commons-io \
+     product-tools
 
 # not the best way to handle this
 RUN echo "/usr/lib/oracle/12.2/client64/lib/" > /etc/ld.so.conf.d/oracle-x86_64.conf
