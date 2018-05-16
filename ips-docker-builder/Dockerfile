@@ -130,6 +130,8 @@ RUN yum install -y \
 # not the best way to handle this
 RUN echo "/usr/lib/oracle/12.2/client64/lib/" > /etc/ld.so.conf.d/oracle-x86_64.conf
 RUN pip3 install cx_oracle
+COPY odbcinst.ini /tmp/odbcinst.ini
+RUN cat  /tmp/odbcinst.ini >> /etc/odbcinst.ini
 
 RUN alternatives --install /usr/bin/python3 python3 /usr/bin/python3.4 60
 RUN alternatives --install /usr/bin/qmake qmake /bin/qmake-qt4 60
