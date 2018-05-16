@@ -128,7 +128,7 @@ RUN yum install -y \
      product-tools
 
 # not the best way to handle this
-RUN echo "/usr/lib/oracle/12.2/client64/lib/" > /etc/ld.so.conf.d/oracle-x86_64.conf
+RUN echo "/usr/lib/oracle/12.2/client64/lib/" > /etc/ld.so.conf.d/oracle-x86_64.conf && ldconfig
 RUN pip3 install cx_oracle
 COPY odbcinst.ini /tmp/odbcinst.ini
 RUN cat  /tmp/odbcinst.ini >> /etc/odbcinst.ini
