@@ -1,0 +1,564 @@
+# tnsnames.ora Network Configuration File: 
+
+# Entries for L8 DEV/IT/ST/OPS
+
+IAS2ST =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = lsdsscant.cr.usgs.gov)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = ias2st)
+    )
+  )
+
+LSATIT =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = lsdsscant.cr.usgs.gov)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = lsatit)
+    )
+  )
+
+CRDEV =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = losrlcdd10.cr.usgs.gov)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = crdev)
+    )
+  )
+
+CRDEVIT =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = lsdsscant.cr.usgs.gov)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = crdevit)
+    )
+  )
+
+CRCM =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = losrlmdt01.cr.usgs.gov)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = crcm)
+    )
+  )
+
+CRMASTER =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = losrlmdt01.cr.usgs.gov)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = crmaster)
+    )
+  )
+
+CRIT =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = lsdsscant.cr.usgs.gov)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = crit)
+    )
+  )
+
+CRST =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = lsdsscant.cr.usgs.gov)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = crst)
+    )
+  )
+
+CR2ST =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = lsdsscant.cr.usgs.gov)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = cr2st)
+    )
+  )
+
+CR2IT =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = lsdsscant.cr.usgs.gov)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = cr2it)
+    )
+  )
+
+
+CROPS =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = lsdsscanp.cr.usgs.gov)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = cropsnew)
+    )
+  )
+
+IAS2OPS =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = lsdsscanp.cr.usgs.gov)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = ias2ops)
+    )
+  )
+
+CR2OPS =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = lsdsscanp.cr.usgs.gov)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = cr2ops)
+    )
+  )
+
+# Entries for MDS systems.
+
+MDSDEV =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = losrlmdt01.cr.usgs.gov)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = mdsdev)
+    )
+  )
+
+MDSST =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = losrlmdt01.cr.usgs.gov)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = mdsst)
+    )
+  )
+
+MDSIT =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = losrlmdt01.cr.usgs.gov)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = mdsit)
+    )
+  )
+
+MDSOPS =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = losrlmdp01.cr.usgs.gov)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = mdsops)
+    )
+  )
+
+MMOPROD =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = losrlmdp01.cr.usgs.gov)(PORT = 1522))
+    (CONNECT_DATA =
+      (SERVICE_NAME = MMOPROD)
+      (SRVR = DEDICATED)
+    )
+  )
+
+# Entries for INVENTORY / EE
+
+INV =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = edcsns300.cr.usgs.gov)(PORT = 1521))
+    )
+    (CONNECT_DATA =
+      (SERVICE_NAME = inv)
+    )
+  )
+
+INVDS =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = edcsns301.cr.usgs.gov)(PORT = 1521))
+    )
+    (CONNECT_DATA =
+      (SID = invds)
+    )
+  )
+
+INVMS =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = edcsns301.cr.usgs.gov)(PORT = 1521))
+    )
+    (CONNECT_DATA =
+      (SID = invms)
+    )
+  )
+
+# Entries for the L8 CAPE systems.
+
+CAPEDEV =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = losrlcpp01.cr.usgs.gov)(PORT = 1521))
+    )
+    (CONNECT_DATA =
+      (SERVICE_NAME = capedev)
+    )
+  )
+
+CAPETEST =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = losrlcpp01.cr.usgs.gov)(PORT = 1521))
+    )
+    (CONNECT_DATA =
+      (SERVICE_NAME = capetest)
+    )
+  )
+
+CAPESCI1 =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = losrlcpp01.cr.usgs.gov)(PORT = 1521))
+    )
+    (CONNECT_DATA =
+      (SERVICE_NAME = capesci1)
+    )
+  )
+
+CAPESCI2 =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = losrlcpp01.cr.usgs.gov)(PORT = 1521))
+    )
+    (CONNECT_DATA =
+      (SERVICE_NAME = capesci2)
+    )
+  )
+
+CAPESCI3 =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = losrlcpp01.cr.usgs.gov)(PORT = 1521))
+    )
+    (CONNECT_DATA =
+      (SERVICE_NAME = capesci3)
+    )
+  )
+
+CAPESCI4 =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = losrlcpp01.cr.usgs.gov)(PORT = 1521))
+    )
+    (CONNECT_DATA =
+      (SERVICE_NAME = capesci4)
+    )
+  )
+
+CAPESCI5 =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = losrlcpp01.cr.usgs.gov)(PORT = 1521))
+    )
+    (CONNECT_DATA =
+      (SERVICE_NAME = capesci5)
+    )
+  )
+
+# Entries for L7 Development databases
+
+LACDEV =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = lsdsscant.cr.usgs.gov)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = lacdev)
+    )
+  )
+
+IASDEV =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = lsdsscant.cr.usgs.gov)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = iasdev)
+    )
+  )
+
+DEVDCS =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = lsdsscant.cr.usgs.gov)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = devdcs)
+    )
+  )
+
+DEVLPS =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = lsdsscant.cr.usgs.gov)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = devlps)
+    )
+  )
+
+LAMIT =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = lsdsscant.cr.usgs.gov)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = lamdev)
+    )
+  )
+
+
+LAMDEV =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = lsdsscant.cr.usgs.gov)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = lamdev)
+    )
+  )
+  
+# Entries for L7 IT databases  
+
+LACIT =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = lsdsscant.cr.usgs.gov)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = lacit)
+    )
+  )
+  
+ITDCS =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = lsdsscant.cr.usgs.gov)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = itdcs)
+    )
+  )
+
+ITLPS =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = lsdsscant.cr.usgs.gov)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = itlps)
+    )
+  )
+
+# Entries for L7 ST databases
+
+STDCS =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = lsdsscant.cr.usgs.gov)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = stdcs)
+    )
+  )
+
+STLPS =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = lsdsscant.cr.usgs.gov)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = stlps)
+    )
+  )
+  
+LAMST =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = lsdsscant.cr.usgs.gov)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = lamst)
+    )
+  )
+  
+LACST =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = lsdsscant.cr.usgs.gov)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = lacst)
+    )
+  )
+
+IASST =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = lsdsscant.cr.usgs.gov)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = iasst)
+    )
+  )
+
+# Entries for L7 OPS databases
+  
+IASOPS =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = lsdsscanp.cr.usgs.gov)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = ias)
+    )
+  )
+
+IAS =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = lsdsscanp.cr.usgs.gov)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = ias)
+    )
+  )
+
+LAC =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = lsdsscanp.cr.usgs.gov)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = LAC)
+    )
+  )
+
+TTRACK =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = losrlmdp01.cr.usgs.gov)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = TTRACK.WORLD)
+    )
+  )
+
+LPS =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = lsdsscanp.cr.usgs.gov)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = LPS)
+    )
+  )
+
+DCS =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = lsdsscanp.cr.usgs.gov)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = DCS)
+    )
+  )
+
+LAMOPS =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = lsdsscanp.cr.usgs.gov)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = LAM)
+    )
+  )
+
+# Entries for COTS
+
+MASHUPS =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = losrlmdt01.cr.usgs.gov)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = mashups)
+    )
+  )
+
+TTRACK =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = losrlmdp01)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = TTRACK.WORLD)
+    )
+  )
+ 
+# Entries of OEM
+
+HERMES =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = edclxs244.cr.usgs.gov)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = HERMES)
+    )
+  )
+
+QBERT =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = edclxs244.cr.usgs.gov)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = QBERT)
+    )
+  )
+
+RMANCAT =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = edclxs244.cr.usgs.gov)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = RMANCAT )
+    )
+  )
+
+MMO =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = losrlmdp01.cr.usgs.gov)(PORT = 1521))
+    (CONNECT_DATA =
+      (SID = mmo)
+      (SRVR = DEDICATED)
+    )
+  )
+
+LISTENER_MMOPROD =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = edclxs99)(PORT = 1511))
+
+LISTENER_IASOPS =
+     (ADDRESS = (PROTOCOL = TCP)(HOST = edclxs99)(PORT = 1510))
+
+LISTENER_TTRACK =
+     (ADDRESS = (PROTOCOL = TCP)(HOST = losrlmdp01)(PORT = 1521))
+
+LISTENER_CAPEX =
+  (ADDRESS = (PROTOCOL = TCP)(HOST = LOSRLCPP01.cr.usgs.gov)(PORT = 1521))
+
+LISTENER_CAPETEST =
+  (ADDRESS = (PROTOCOL = TCP)(HOST = LOSRLCPP01.cr.usgs.gov)(PORT = 1521))
+
+LISTENER_CAPEDEV =
+  (ADDRESS = (PROTOCOL = TCP)(HOST = LOSRLCPP01.cr.usgs.gov)(PORT = 1521))
+
+LISTENER_CAPESCI1 =
+  (ADDRESS = (PROTOCOL = TCP)(HOST = LOSRLCPP01.cr.usgs.gov)(PORT = 1521))
+
+LISTENER_CAPESCI2 =
+  (ADDRESS = (PROTOCOL = TCP)(HOST = LOSRLCPP01.cr.usgs.gov)(PORT = 1521))
+
+LISTENER_CAPESCI3 =
+  (ADDRESS = (PROTOCOL = TCP)(HOST = LOSRLCPP01.cr.usgs.gov)(PORT = 1521))
+
+LISTENER_CAPESCI4 =
+  (ADDRESS = (PROTOCOL = TCP)(HOST = LOSRLCPP01.cr.usgs.gov)(PORT = 1521))
+
+LISTENER_CAPESCI5 =
+  (ADDRESS = (PROTOCOL = TCP)(HOST = LOSRLCPP01.cr.usgs.gov)(PORT = 1521))
+
+
+

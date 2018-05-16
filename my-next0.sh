@@ -7,7 +7,6 @@ docker run --rm --tty -it\
   --ipc=host \
   --volume /LOSRLPGD03/development:/LOSRLPGD03/development:rw \
   --volume /LOSRLPGD03/data2:/LOSRLPGD03/data2:rw \
-  --volume /home/ipecm:/home/ipecm:ro \
   --volume /home/rcattelan:/home/rcattelan:rw \
   --volume /tmp/.X11-unix:/tmp/.X11-unix:rw \
   --workdir /home/espa \
