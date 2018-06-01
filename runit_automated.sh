@@ -1,5 +1,5 @@
 #!/bin/sh
-set -x
+#set -x
 set -e
 
 host_addr=$(ip -4 a show docker0 | grep inet | awk  'BEGIN {FS = "[ /]+" } {print $3}')

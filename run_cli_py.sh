@@ -1,6 +1,6 @@
 #!/bin/sh
 set -e
-set -x
+#set -x
 
 cd /efs/DEMO
 mkdir -p /home/espa/.usgs/espa
@@ -29,7 +29,7 @@ do
   	--bridge-mode \
   	--input-url $JOBINPUTURL"
    TOAST=`expr $TOAST + 1`
-done) | parallel --max-procs 2 --progress
+done) | parallel --max-procs 2 --progress --verbose
 
 export UNIQID=`date +%s`
 mkdir -p /efs/testruns/$UNIQID
