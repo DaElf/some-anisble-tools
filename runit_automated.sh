@@ -18,4 +18,4 @@ docker run --rm \
   --volume /jobtmp:/jobtmp:rw \
   --workdir /home/espa \
   707566951618.dkr.ecr.us-west-2.amazonaws.com/espa-daelf/processing:latest \
-  bash -c /efs/DEMO/jobwrapper.sh
+  /efs/DEMO/run_cli_py.sh
