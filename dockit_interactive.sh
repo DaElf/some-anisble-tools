@@ -2,7 +2,8 @@
 
 host_addr=$(ip -4 a show docker0 | grep inet | awk  'BEGIN {FS = "[ /]+" } {print $3}')
 
-docker run --rm --tty -it\
+docker run --rm --tty -it \
+  -p 19022:22 \
   --add-host=docker.local:$host_addr \
   --cap-add LINUX_IMMUTABLE \
   --cap-add SYS_PTRACE \
