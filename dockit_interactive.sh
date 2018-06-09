@@ -10,8 +10,9 @@ docker run --rm --tty -it \
   --hostname $USER-espa \
   --name $USER-espa-$$ \
   --volume /efs:/efs:rw \
+  --volume /devel:/devel:rw \
   --volume /jobtmp:/jobtmp:rw \
   --workdir /home/espa \
-  707566951618.dkr.ecr.us-west-2.amazonaws.com/espa-daelf/processing:latest \
+  707566951618.dkr.ecr.us-west-2.amazonaws.com/espa-process/devel:latest \
   bash
 
