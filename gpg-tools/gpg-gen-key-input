@@ -1,0 +1,14 @@
+%echo Generating a default key
+%no-protection
+Key-Type: default
+Subkey-Type: default
+Name-Real: USGS EROS
+Name-Comment: with stupid passphrase
+Name-Email: USGS-EROS@usgs.gov
+Expire-Date: 0
+#Passphrase: foofoo
+# Do a commit here, so that we can later print "done" :-)
+%commit
+%echo done
+
+
