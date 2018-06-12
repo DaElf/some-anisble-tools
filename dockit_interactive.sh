@@ -12,7 +12,7 @@ docker run --rm --tty -it \
   --volume /efs:/efs:rw \
   --volume /devel:/devel:rw \
   --volume /jobtmp:/jobtmp:rw \
-  --workdir /home/espa \
+  --workdir $(pwd) \
   707566951618.dkr.ecr.us-west-2.amazonaws.com/espa-process/devel:latest \
   bash
 

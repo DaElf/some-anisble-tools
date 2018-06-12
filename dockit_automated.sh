@@ -17,6 +17,6 @@ docker run --rm \
   --volume /efs:/efs:rw \
   --volume /devel:/devel:rw \
   --volume /jobtmp:/jobtmp:rw \
-  --workdir /home/espa \
+  --workdir /efs/espa-container-tools \
   707566951618.dkr.ecr.us-west-2.amazonaws.com/espa-process/devel:latest \
-  /efs/DEMO/run_cli_py.sh
+  /efs/espa-container-tools/espa-worker.sh
