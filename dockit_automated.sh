@@ -7,7 +7,7 @@ host_addr=$(ip -4 a show docker0 | grep inet | awk  'BEGIN {FS = "[ /]+" } {prin
 sudo mkdir -p /jobtmp
 sudo chmod 777 /jobtmp
 
-docker run --rm \
+docker run --rm -it \
   --user espa \
   --add-host=docker.local:$host_addr \
   --cap-add LINUX_IMMUTABLE \
@@ -17,6 +17,6 @@ docker run --rm \
   --volume /efs:/efs:rw \
   --volume /devel:/devel:rw \
   --volume /jobtmp:/jobtmp:rw \
-  --workdir /efs/espa-container-tools \
+  --workdir $(pwd) \
   707566951618.dkr.ecr.us-west-2.amazonaws.com/espa-process/devel:latest \
-  /efs/espa-container-tools/espa-worker.sh
+  $(pwd)/espa-worker.sh
