@@ -1,1 +1,7 @@
 run_data
+cli-*.log
+espa-*.log
+USGS_private.asc
+USGS_private.gpg
+USGS_public.asc
+USGS_public.gpg
