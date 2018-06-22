@@ -5,11 +5,14 @@ account="default"
 region="us-west-2"
 
 # Instance settings
+# This is normal image with ec2-user == 1000
 image_id="ami-0a3c7372"
+# computer image for batch
+#image_id="ami-e06e1f98"
 ssh_key_name="daelf-us-west-2"
 security_group_id="sg-f07ea081"
 security_group="daelf-data0-fw"
-instance_type="c5d.xlarge"
+instance_type="c3.xlarge"
 vpc_id="vpc-f0114a96"
 subnet_id="subnet-d7d86b9c"
 root_vol_size=20
@@ -19,7 +22,7 @@ count=1
 tags_Name="daelf-instance"
 tags_Owner="daelf"
 tags_ApplicationRole="Dev"
-tags_Cluster="DaElf Cluster"
+tags_Cluster="DaElf AMI"
 tags_Environment="dev"
 tags_OwnerEmail="cattelan@digitalelves.com"
 tags_Project="Test"
@@ -68,7 +71,3 @@ echo "storing instance details..."
 aws --profile $account --region $region ec2 describe-instances --instance-id $id --query 'Reservations[].Instances[].PublicDnsName' --output text
 aws --profile $account --region $region ec2 describe-instances --instance-ids $id > instance-details.json
 
-echo "create termination script"
-echo "#!/bin/sh" > terminate-instance.sh
-echo "aws --profile $account --region $region ec2 terminate-instances --instance-ids $id" >> terminate-instance.sh
-chmod +x terminate-instance.sh
