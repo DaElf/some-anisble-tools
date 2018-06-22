@@ -1,6 +1,5 @@
 #!/bin/sh -x
 
-#. ./dofoo.sh
 mkdir -p /s3/auxiliaries/elevation
 ./goofys -o allow_other lsds-mvp-elevation-aux /s3/auxiliaries/elevation
 mkdir -p /s3/auxiliaries/aster
