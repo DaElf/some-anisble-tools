@@ -1,0 +1,18 @@
+{
+  "Comment": "Update the A record set",
+  "Changes": [
+    {
+      "Action": "UPSERT",
+      "ResourceRecordSet": {
+        "Name": "daelf.lsdsdev.net",
+        "Type": "A",
+        "TTL": 300,
+        "ResourceRecords": [
+          {
+            "Value": "54.187.105.84"
+          }
+        ]
+      }
+    }
+  ]
+}
