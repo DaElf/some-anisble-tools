@@ -26,6 +26,7 @@ tags_Project="Test"
 tags_BusinessUnit="Cloud Platform Engineering"
 tags_SupportEmail="cattelan@digitalelves.com"
 
+rm -f ./image_id
 echo 'creating instance...'
 set -x
 id=$(aws --profile $account --region $region ec2 run-instances \
@@ -43,6 +44,7 @@ id=$(aws --profile $account --region $region ec2 run-instances \
 
 set +x
 echo "$id created"
+echo "$id" > image_id
 # tag it
 
 echo "tagging $id..."
