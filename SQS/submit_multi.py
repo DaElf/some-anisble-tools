@@ -67,9 +67,8 @@ prefix = 'L7'
 prefixList = getPrefixListFromFile(prefixListTestFile)
 sentMessageCount = 0
 
-print("Queuing " + str(count) + " {j}".format(
-        j = "job" if count == 1 else "jobs"))
-for s3Obj in getS3ObjectList('lsaa-level1-data', prefix)[:count]:
+print("Queuing {} {j}".format(count, j = "job" if count == 1 else "jobs"))
+for s3Obj in getS3ObjectList('lsaa-level1-data', prefix, prefixlist=prefixList)[:count]:
     inputUrl = s3Obj[0]
     inputId = s3Obj[1]
     print(inputUrl + " : " + inputId)
@@ -86,4 +85,5 @@ for s3Obj in getS3ObjectList('lsaa-level1-data', prefix)[:count]:
 
     sentMessageCount += 1
 
-print("All jobs queued")
+print("{} {j} queued".format(sentMessageCount,
+        j = "job" if sentMessageCount == 1 else "jobs"))
