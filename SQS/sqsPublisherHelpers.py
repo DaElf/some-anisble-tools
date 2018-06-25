@@ -81,9 +81,10 @@ def getS3ObjectList(bucket, prefix, prefixlist=None):
     if prefixlist:
         for object in my_bucket.objects.all():
             for item in prefixlist:
-                inputProductId = object.key.split('/')[-1].split('.')[0]
-                if inputProductId == item:
+                prefix = object.key.split('/')[0]
+                if item == prefix:
                     inputUrl = 's3://' + object.bucket_name + '/' + object.key
+                    inputProductId = object.key.split('/')[-1].split('.')[0]
                     objectList.append([inputUrl, inputProductId])
     else:
         for object in my_bucket.objects.filter(Prefix=prefix):
@@ -94,6 +95,9 @@ def getS3ObjectList(bucket, prefix, prefixlist=None):
     return objectList
 
 def getPrefixListFromFile(prefixfile):
-    file = open(prefixfile)
-    prefixList = file.readlines()
-    return prefixList
+    try:
+        with open(prefixfile) as file:
+            prefixList = [line.rstrip() for line in file]
+        return prefixList
+    except IOError:
+        return None
