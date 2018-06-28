@@ -78,7 +78,7 @@ def validate_args(args):
 
 
 def main():
-    orderPrefix = 'espa-' + \
+    orderPrefix = '' + \
             ''.join(random.choice(string.ascii_lowercase) for _ in range(4)) + \
             '-'
     orderNo = 1

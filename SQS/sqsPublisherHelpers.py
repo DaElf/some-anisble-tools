@@ -40,7 +40,7 @@ def formMessage(orderNo, inputproduictid, inputurl, messagegroupid):
 
 def formCmd(orderNo, productId, inputURL, queue, full, batch):
     cmdConstant = ['python',
-            '/efs/jdc/espa-all/espa-processing/processing/espa_submit.py', \
+            '/efs/daelf/espa-all/espa-processing/processing/espa_submit.py', \
             '--product-type', 'landsat', \
             '--output-format', 'gtiff', \
             '--bridge-mode',
@@ -49,18 +49,12 @@ def formCmd(orderNo, productId, inputURL, queue, full, batch):
     cmdBasic = ['--include-top-of-atmosphere', \
             '--include-brightness-temperature', \
             '--include-surface-reflectance']
-    cmdFull = ['--include-pixel-qa', \
-            '--include-customized-source-data', \
+    cmdFull = [\
             '--include-surface-temperature', \
-            '--include-sr-evi', \
-            '--include-sr-msavi', \
-            '--include-sr-nbr', \
-            '--include-sr-nbr2', \
-            '--include-sr-ndmi', \
-            '--include-sr-ndvi', \
-            '--include-sr-savi', \
-            '--include-surface-water-extent', \
-            '--include-statistics']
+            '--include-surface-water-extent']
+
+# this has not been ported to s3
+#            '--include-statistics'
 
     cmd = cmdConstant[:]
     cmd.extend(cmdBasic)
