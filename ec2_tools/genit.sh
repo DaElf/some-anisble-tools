@@ -6,7 +6,8 @@ region="us-west-2"
 
 # Instance settings
 # This is normal image with ec2-user == 1000
-image_id="ami-0a3c7372"
+image_id="ami-79612901"
+#image_id="ami-0a3c7372"
 # computer image for batch
 #image_id="ami-e06e1f98"
 ssh_key_name="daelf-us-west-2"
