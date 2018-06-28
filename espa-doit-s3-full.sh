@@ -1,20 +1,14 @@
 #!/bin/sh -x
 
-pushd /efs/auxiliaries/aster
-python -m SimpleHTTPServer 1666 &
-pid=$!; echo "simple server pid $pid"
-popd
+my_dir=$(dirname "$0")
 
-export AWS_ACCESS_KEY_ID=XXXXX
-export AWS_SECRET_ACCESS_KEY=XXXXXX
-export AWS_DEFAULT_REGION=us-west-2
+cd $my_dir
+export ESPA_CONFIG_PATH=$my_dir
 
-#export PYTHONPATH=/devel/daelf/espa-all/espa-processing/processing
-export ESPA_CACHE_HOST_LIST=localhost
-export ESPA_CONFIG_PATH=$(pwd)
+gpg --import ./gpg-tools/USGS_private.gpg || true
+export PYTHONPATH=/efs/daelf/espa-all/espa-processing/processing
 
-#time python /devel/daelf/espa-all/espa-processing/processing/espa-prybar.py \
-time espa-process --order-id toast \
+time /efs/daelf/espa-all/espa-processing/processing/cli.py \
 	--order-id toast \
 	--product-type landsat \
 	--input-product-id LE07_L1TP_042034_20130104_20160909_01_T1 \
@@ -28,6 +22,3 @@ time espa-process --order-id toast \
 	--include-surface-reflectance \
 	--include-surface-temperature \
 	--include-surface-water-extent \
-\
-
-kill $pid
