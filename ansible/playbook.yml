@@ -1,0 +1,94 @@
+---
+- hosts: daelf-aws
+  remote_user: ec2-user
+  become: yes
+  pre_tasks:
+    - set_fact: ansible_distribution_major_version=7
+      when: ansible_distribution == "Amazon" and ansible_distribution_major_version == "NA"
+  roles:
+    - role: nginxinc.nginx
+      nginx_http_params:
+        - sendfile on
+        - access_log /var/log/nginx/access.log
+      nginx_sites:
+         wiredcraft:
+           - listen 80
+           - server_name _
+           - root /var/www/wiredcraft.com/_site
+           - location / { try_files $uri $uri/ /index.html; }
+
+  tasks:
+    - name: Update all packages to latest
+      yum: name=* state=latest
+
+    - name:  Add the epel repo
+      yum: name='https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm' state=present
+
+    - name: Install specific mock package for centos 7
+      yum: name=mock,rpm-build state=present
+
+    - name: Install git
+      yum: name=git state=present
+
+    - name: Install zsh
+      yum: name=zsh state=present
+
+    - name: Install amazon-efs-utils
+      yum: name=amazon-efs-utils state=present
+
+    - name: Install fuse
+      yum: name=fuse state=present
+
+    - name: Install docker
+      yum: name=docker state=present
+
+    - name: Creates directory /efs
+      file: path=/efs state=directory
+    - name: Creates directory /devel
+      file: path=/devel state=directory
+
+    - name: Mount up /efs
+      mount:
+        path: /efs
+        src: fs-174024be:/
+        fstype: efs
+        opts:  defaults,_netdev
+        state: present
+
+    - name: Mount up /devel
+      mount:
+        path: /devel
+        src: fs-15a9c8bc:/
+        fstype: efs
+        opts:  defaults,_netdev
+        state: present
+
+    - name: adding existing user ec2-user to group sudo
+      user:
+        name: ec2-user
+        groups: docker
+        append: yes
+
+    - name: enable service nfs and ensure it is not masked
+      systemd:
+        name: nfs
+        enabled: yes
+        state: started
+        masked: no
+
+    - name: enable service docker and ensure it is not masked
+      systemd:
+        name: docker
+        enabled: yes
+        state: started
+        masked: no
+
+    - name: Add the user 'cattelan' with a specific uid and a primary group of 'wheel'
+      user:
+        name: cattelan
+        comment: Russell Cattelan
+        uid: 7000
+        group: wheel
+        shell: /bin/zsh
+        home: /efs/cattelan
+        create_home: false
