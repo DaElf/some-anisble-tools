@@ -55,7 +55,7 @@
         src: fs-174024be:/
         fstype: efs
         opts:  defaults,_netdev
-        state: present
+        state: mounted
 
     - name: Mount up /devel
       mount:
@@ -63,7 +63,7 @@
         src: fs-15a9c8bc:/
         fstype: efs
         opts:  defaults,_netdev
-        state: present
+        state: mounted
 
     - name: adding existing user ec2-user to group sudo
       user:
