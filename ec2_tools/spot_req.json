@@ -1,0 +1,20 @@
+{
+    "ImageId": "ami-a9d09ed1",
+    "KeyName": "daelf-us-west-2",
+    "SecurityGroupIds": [ "sg-36916f46" ],
+    "InstanceType": "t2.large",
+    "SubnetId": "subnet-d42f6e9c",
+    "Placement": {
+	"AvailabilityZone": "us-west-2a"
+    },
+    "BlockDeviceMappings": [
+	{
+	    "DeviceName": "/dev/xvda",
+	    "Ebs": {
+		"DeleteOnTermination": true,
+		"VolumeSize": 32,
+		"VolumeType": "standard"
+	    }
+	}
+    ]
+}
