@@ -1,0 +1,7 @@
+# Jot down some notes -- Russell
+
+# Change my static ip to new instance
+aws ec2 associate-address --instance-id i-0d8a42c9ea293e3c7  --allocation-id eipalloc-0eda8932
+
+# update the route53 entry based on json file
+aws route53 change-resource-record-sets --hosted-zone-id Z3H3BGZ2DYPRFC --change-batch file://./my_route53.json
