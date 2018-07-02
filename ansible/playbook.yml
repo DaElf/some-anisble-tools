@@ -20,29 +20,6 @@
            - location / { try_files $uri $uri/ /index.html; }
 
   tasks:
-    - name: Update all packages to latest
-      yum: name=* state=latest
-
-    - name:  Add the epel repo
-      yum: name='https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm' state=present
-
-    - name: Install specific mock package for centos 7
-      yum: name=mock,rpm-build state=present
-
-    - name: Install git
-      yum: name=git state=present
-
-    - name: Install zsh
-      yum: name=zsh state=present
-
-    - name: Install amazon-efs-utils
-      yum: name=amazon-efs-utils state=present
-
-    - name: Install fuse
-      yum: name=fuse state=present
-
-    - name: Install docker
-      yum: name=docker state=present
 
     - name: Creates directory /efs
       file: path=/efs state=directory
@@ -65,6 +42,40 @@
         opts:  defaults,_netdev
         state: mounted
 
+    - name: Update all packages to latest
+      yum: name=* state=latest
+
+    - name: Add local repository
+      yum_repository:
+        name: local
+        description: EROS YUM repo
+        baseurl: file:///efs/CentOS/latest/local/x86_64/
+        gpgcheck: no
+
+    - name:  Add the epel repo
+      yum: name='https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm' state=present
+
+    - name: Install specific mock package for centos 7
+      yum: name=mock,rpm-build state=present
+
+    - name: Install git
+      yum: name=git state=present
+
+    - name: Install zsh
+      yum: name=zsh state=present
+
+    - name: Install amazon-efs-utils
+      yum: name=amazon-efs-utils,python-boto3,tmux state=present
+
+    - name: Install ESPA python lib
+      yum: name=python-espa,python-watchtower state=present
+
+    - name: Install fuse
+      yum: name=fuse state=present
+
+    - name: Install docker
+      yum: name=docker state=present
+
     - name: adding existing user ec2-user to group sudo
       user:
         name: ec2-user
@@ -85,6 +96,14 @@
         state: started
         masked: no
 
+    - name: Allow 'wheel' group to have passwordless sudo
+      lineinfile:
+        dest: /etc/sudoers
+        state: present
+        regexp: '^%wheel'
+        line: '%wheel ALL=(ALL) NOPASSWD: ALL'
+        validate: 'visudo -cf %s'
+
     - name: Add the user 'cattelan' with a specific uid and a primary group of 'wheel'
       user:
         name: cattelan
@@ -94,3 +113,5 @@
         shell: /bin/sh
         home: /devel/cattelan
         create_home: false
+        password: $6$/JrOCM11$37j62aldAFHLI/sxWnnZ/XYpV65B85v22aoCZCm8P7oFCrsAdFoXGOEnlErWmAoKTbFRMR7Epa0LKbdjI/9C7/
+        update_password: always
