@@ -91,6 +91,6 @@
         comment: Russell Cattelan
         uid: 7000
         group: wheel
-        shell: /bin/zsh
-        home: /efs/cattelan
+        shell: /bin/sh
+        home: /devel/cattelan
         create_home: false
