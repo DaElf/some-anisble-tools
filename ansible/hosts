@@ -1,3 +1,2 @@
-daelf-aws ansible_ssh_host=ec2-34-219-220-51.us-west-2.compute.amazonaws.com
-#espa-process ansible_ssh_host=ec2-34-213-162-232.us-west-2.compute.amazonaws.com
-espa-process ansible_ssh_host=ec2-34-220-42-137.us-west-2.compute.amazonaws.com
+daelf-aws ansible_ssh_host=daelf.landsat.io
+espa-process ansible_ssh_host=ec2-52-32-118-214.us-west-2.compute.amazonaws.com
