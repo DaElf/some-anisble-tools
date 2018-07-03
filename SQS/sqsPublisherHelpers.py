@@ -40,7 +40,7 @@ def formMessage(orderNo, inputproduictid, inputurl, messagegroupid):
 
 def formCmd(orderNo, productId, inputURL, queue, full, batch):
     cmdConstant = ['python',
-            '/efs/daelf/espa-all/espa-processing/processing/espa_submit.py', \
+            '/devel/daelf/espa-all/espa-processing/processing/espa_submit.py', \
             '--product-type', 'landsat', \
             '--output-format', 'gtiff', \
             '--bridge-mode',
