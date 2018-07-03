@@ -25,6 +25,8 @@
       file: path=/efs state=directory
     - name: Creates directory /devel
       file: path=/devel state=directory
+    - name: Install amazon-efs-utils
+      yum: name=amazon-efs-utils,python-boto3,tmux state=present
 
     - name: Mount up /efs
       mount:
@@ -63,9 +65,6 @@
 
     - name: Install zsh
       yum: name=zsh state=present
-
-    - name: Install amazon-efs-utils
-      yum: name=amazon-efs-utils,python-boto3,tmux state=present
 
     - name: Install ESPA python lib
       yum: name=python-espa,python-watchtower state=present
