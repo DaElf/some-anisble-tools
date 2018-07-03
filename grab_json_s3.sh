@@ -1,16 +1,26 @@
 #!/bin/sh -x
 
-export AWS_DEFAULT_REGION=us-west-2
+#sudo mkdir -p /media/ephemeral0
+#sudo chmod 777 /media/ephemeral0
+sudo chmod 777 /jobtmp
 my_dir=$(dirname "$0")
-
 cd $my_dir
-export ESPA_CONFIG_PATH=$my_dir
+
+sudo -u espa -s <<EOF
+set -x
+pwd
 
 gpg --import ./gpg-tools/USGS_private.gpg || true
-export PYTHONPATH=/efs/daelf/espa-all/espa-processing/processing
 
-time /efs/daelf/espa-all/espa-processing/processing/espa_batch_worker.py $1
+export ESPA_CONFIG_PATH=$my_dir
+export AWS_DEFAULT_REGION=us-west-2
+
+export PYTHONPATH=/devel/daelf/espa-all/espa-processing/processing
+
+time /devel/daelf/espa-all/espa-processing/processing/espa_batch_worker.py $1
+
+EOF
+
 ret=$?
-
-echo "batchworker exit $ret"
+echo "Exit now" $?
 exit $ret
