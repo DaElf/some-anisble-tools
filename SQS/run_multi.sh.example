@@ -15,7 +15,6 @@ export ESPA_CONFIG_PATH=/devel/djt/espa-container-tools/
 
 $SQSHOME/aws-helpers/SQS/submit_multi.py \
         --batch \
-#        --full \
         --bucket lsaa-level1-data \
         --queue $AWSQueue \
         --prefix L8 \
