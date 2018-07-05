@@ -22,5 +22,5 @@ time /devel/daelf/espa-all/espa-processing/processing/espa_batch_worker.py $1
 EOF
 
 ret=$?
-echo "Exit now" $?
+echo "Exit now" $ret
 exit $ret
