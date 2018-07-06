@@ -20,13 +20,13 @@
            - location / { try_files $uri $uri/ /index.html; }
 
   tasks:
+    - name: Install amazon-efs-utils
+      yum: name=amazon-efs-utils,python-boto3,tmux state=present
 
     - name: Creates directory /efs
       file: path=/efs state=directory
     - name: Creates directory /devel
       file: path=/devel state=directory
-    - name: Install amazon-efs-utils
-      yum: name=amazon-efs-utils,python-boto3,tmux state=present
 
     - name: Mount up /efs
       mount:
@@ -58,7 +58,7 @@
       yum: name='https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm' state=present
 
     - name: Install specific mock package for centos 7
-      yum: name=mock,rpm-build state=present
+      yum: name=mock,rpm-build,createrepo state=present
 
     - name: Install git
       yum: name=git state=present
@@ -108,7 +108,8 @@
         name: cattelan
         comment: Russell Cattelan
         uid: 7000
-        group: wheel
+        groups: wheel,docker
+        append: yes
         shell: /bin/sh
         home: /devel/cattelan
         create_home: false
