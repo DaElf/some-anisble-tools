@@ -5,3 +5,4 @@ USGS_private.asc
 USGS_private.gpg
 USGS_public.asc
 USGS_public.gpg
+*.pyc
