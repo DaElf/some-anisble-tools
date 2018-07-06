@@ -6,8 +6,6 @@ sudo chmod 777 /jobtmp
 my_dir=$(dirname "$0")
 cd $my_dir
 
-exit 1
-
 sudo -u espa -s <<EOF
 set -x
 pwd
