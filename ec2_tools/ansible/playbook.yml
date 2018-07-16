@@ -23,18 +23,8 @@
     - name: Install amazon-efs-utils
       yum: name=amazon-efs-utils,python-boto3,tmux state=present
 
-    - name: Creates directory /efs
-      file: path=/efs state=directory
     - name: Creates directory /devel
       file: path=/devel state=directory
-
-    - name: Mount up /efs
-      mount:
-        path: /efs
-        src: fs-174024be:/
-        fstype: efs
-        opts:  defaults,_netdev
-        state: mounted
 
     - name: Mount up /devel
       mount:
@@ -51,7 +41,7 @@
       yum_repository:
         name: local
         description: EROS YUM repo
-        baseurl: file:///efs/CentOS/latest/local/x86_64/
+        baseurl: file:///devel/CentOS/latest/local/x86_64/
         gpgcheck: no
 
     - name:  Add the epel repo
