@@ -24,11 +24,21 @@ def parse_command_line():
             nargs = '?',
             default = 0,
             help = 'Number of jobs to submit')
+    parser.add_argument('--batch-command',
+            dest = 'batch_cmd',
+            action = 'store',
+            default = False,
+            help = "Command to run in batch container")
     parser.add_argument('--batch',
             dest = 'batch',
             action = 'store_true',
             default = False,
             help = "Submit jobs to batch queue (default: submit to SQS queue)")
+    parser.add_argument('--blacklist',
+            dest = 'blacklist',
+            action = 'store',
+            default = None,
+            help = "File with list of product IDs to avoid")
     parser.add_argument('--bucket',
             type = str,
             dest = 'bucket',
@@ -95,6 +105,18 @@ def main():
                          "       Must set AWSQueue or use --queue\n")
         exit(1)
 
+    if args.blacklist is not None:
+        try:
+            f = open(args.blacklist, 'r')
+        except Exception as e:
+            sys.stderr.write("Error: can't open blacklist file {}: {}\n".format(
+                    args.blacklist, e))
+            exit(1)
+        blacklist = f.read().split()
+        f.close()
+    else:
+        blacklist = None
+
     if args.prefix is not None:
         prefixList = []
         prefixes = args.prefix.split(',')
@@ -106,7 +128,7 @@ def main():
         if count == 0:
             count = len(objectList)
     else:
-        objectList = getS3ObjectList(args.bucket, prefixList)
+        objectList = getS3ObjectList(args.bucket, prefixList, blacklist)
         if count == 0:
             count = 1
 
@@ -124,13 +146,14 @@ def main():
     for s3Obj in objectList[:count]:
         inputUrl = s3Obj[0]
         inputId = s3Obj[1]
-        print(inputUrl + ' : ' + inputId)
 
-        cmd = formCmd(orderPrefix + str(orderNo).zfill(5), inputId, inputUrl,
-                queue, args.full_job, args.batch)
+        orderId = orderPrefix + str(orderNo).zfill(5)
+        print(orderId + ' : ' + inputUrl)
+
+        cmd = formCmd(orderId, inputId, inputUrl, queue, args)
         orderNo += 1
         # JDC Debug
-        print("Issuing command: " + " ".join(cmd))
+#       print("Issuing command: " + " ".join(cmd))
         try:
             subprocess.check_call(cmd)
         except subprocess.CalledProcessError as e:

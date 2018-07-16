@@ -13,7 +13,7 @@ if len(prefixList) == 0:
     prefixList = [prefix]
 sentMessageCount = 0
 print("Sending messages...")
-for s3Obj in getS3ObjectList('lsaa-level1-data', prefixList)[:5500]:
+for s3Obj in getS3ObjectList('lsaa-level1-data', prefixList, None)[:5500]:
     inputUrl = s3Obj[0]
     inputId = s3Obj[1]
     messageGroupId = str(random.getrandbits(128))

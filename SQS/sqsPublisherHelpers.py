@@ -38,7 +38,7 @@ def formMessage(orderNo, inputproduictid, inputurl, messagegroupid):
     return jsonMessage
 
 
-def formCmd(orderNo, productId, inputURL, queue, full, batch):
+def formCmd(orderNo, productId, inputURL, queue, args):
     cmdConstant = ['python',
             '/devel/daelf/espa-all/espa-processing/processing/espa_submit.py', \
             '--product-type', 'landsat', \
@@ -58,18 +58,20 @@ def formCmd(orderNo, productId, inputURL, queue, full, batch):
 
     cmd = cmdConstant[:]
     cmd.extend(cmdBasic)
-    if full:
+    if args.full_job:
         cmd.extend(cmdFull)
     cmd.extend(['--order-id', orderNo])
     cmd.extend(['--input-url', inputURL])
     cmd.extend(['--input-product-id', productId])
     cmd.extend(['--queue', queue])
-    if batch:
+    if args.batch:
         cmd.append('--batch')
+    if args.batch_cmd:
+        cmd.extend(['--batch-command', args.batch_cmd])
 
     return cmd
 
-def getS3ObjectList(bucket, prefixList):
+def getS3ObjectList(bucket, prefixList, blacklist):
     """Get a list of objects in an S3 bucket
 
     Get a list of objects in an S3 bucket that have prefixes that
@@ -93,6 +95,9 @@ def getS3ObjectList(bucket, prefixList):
         for object in my_bucket.objects.filter(Prefix=prefix):
             inputUrl = 's3://' + object.bucket_name + '/' + object.key
             inputProductId = object.key.split('/')[-1].split('.')[0]
+            if blacklist is not None:
+                if inputProductId in blacklist:
+                    continue
             objectList.append([inputUrl, inputProductId])
 
     return objectList
