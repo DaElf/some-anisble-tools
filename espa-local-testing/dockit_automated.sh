@@ -14,7 +14,7 @@ docker run --rm -it \
   --cap-add SYS_PTRACE \
   --hostname $USER-espa \
   --name $USER-espa-$$ \
-  --volume /efs:/efs:rw \
+  --volume /s3:/s3:ro \
   --volume /devel:/devel:rw \
   --volume /jobtmp:/jobtmp:rw \
   --workdir $(pwd) \
