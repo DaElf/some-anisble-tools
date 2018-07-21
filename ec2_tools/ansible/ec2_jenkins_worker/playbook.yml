@@ -1,6 +1,7 @@
 ---
 - name: Create a new Demo EC2 instance
   hosts: localhost
+  connection: local
   gather_facts: False
 
   vars:
@@ -8,9 +9,10 @@
       instance_type: t2.small
       ami: ami-28e07e50 # RedHat 7.5
       keypair: daelf-us-west-2 # pem file name
+      subnet: subnet-d42f6e9c
+      ansible_ssh_private_key_file: ~/Dropbox/USGS/daelf-us-west-2.pem
 
   tasks:
-
     - name: Create an ec2 instance
       ec2:
          key_name: "{{ keypair }}"
@@ -24,13 +26,78 @@
             Name: Jenkins-RHEL-worker
          instance_tags:
             Name: Jenkins-RHEL-worker
-         vpc_subnet_id: subnet-1c2b6a54
+         vpc_subnet_id: "{{ subnet }}"
          assign_public_ip: true
-      register: ec2
+      register: ec2_provision_result
+
+#    - debug: var=ec2_provision_result
+
+#    - debug: var=ec2_provision_result.instances
+
+    - debug: var=ec2_provision_result.instances[0].public_ip
+
 
     - name: Wait for SSH to come up
       local_action: wait_for
       host: "{{ item.public_ip }}"
       port: 22
       state: started
-      with_items: ec2.instances
+      with_items: "{{ ec2_provision_result.instances }}"
+
+    - name: Create SSH Group to login dynamically to EC2 Instance
+      add_host:
+        hostname: "{{ item.public_ip }}"
+        groupname: ec2_server
+      with_items: "{{ ec2_provision_result.instances }}"
+
+- name: Setup EC2 server
+  hosts: ec2_server
+  become: yes
+  remote_user: ec2-user
+  gather_facts: yes
+  vars:
+    ansible_ssh_private_key_file: ~/Dropbox/USGS/daelf-us-west-2.pem
+
+  pre_tasks:
+    - set_fact: ansible_distribution_major_version=7
+      when: ansible_distribution == "Amazon" and ansible_distribution_major_version == "NA"
+
+  tasks:
+    - name: Install nfs-utils
+      yum: name=nfs-utils state=present
+      
+    - name: Install java-1.8.0-openjdk
+      yum: name=java-1.8.0-openjdk state=present
+
+    - name: Creates directory /devel
+      file: path=/devel state=directory
+
+    - name: Mount up /devel
+      mount:
+        path: /devel
+        src: fs-15a9c8bc.efs.us-west-2.amazonaws.com:/
+        fstype: nfs4
+        opts: nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2
+        state: mounted
+
+    - name: Update all packages to latest
+      yum: name=* state=latest
+
+    - name:  Add the epel repo
+      yum: name='https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm' state=present
+
+    - name:  Add the IUS repo
+      yum: name='https://centos7.iuscommunity.org/ius-release.rpm' state=present
+
+    - name: Install specific mock package for centos 7
+      yum: name=mock,rpm-build,createrepo state=present
+
+    - name: Install git
+      yum: name=git2u,git-lfs state=present
+
+    - name: enable service nfs and ensure it is not masked
+      systemd:
+        name: nfs
+        enabled: yes
+        state: started
+        masked: no

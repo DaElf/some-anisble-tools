@@ -7,19 +7,13 @@
   pre_tasks:
     - set_fact: ansible_distribution_major_version=7
       when: ansible_distribution == "Amazon" and ansible_distribution_major_version == "NA"
-  roles:
-    - role: nginxinc.nginx
-      nginx_http_params:
-        - sendfile on
-        - access_log /var/log/nginx/access.log
-      nginx_sites:
-         wiredcraft:
-           - listen 80
-           - server_name _
-           - root /var/www/wiredcraft.com/_site
-           - location / { try_files $uri $uri/ /index.html; }
 
   tasks:
+    - name: Install nfs-utils
+      yum: name=nfs-utils state=present
+
+    - name: Install java-1.8.0-openjdk
+      yum: name=java-1.8.0-openjdk state=present
 
     - name: Creates directory /devel
       file: path=/devel state=directory
