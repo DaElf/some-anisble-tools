@@ -1,11 +1,9 @@
 #!/bin/sh -x
 
+. /devel/cattelan/set_aws_cred.sh
+
 export AWS_DEFAULT_REGION=us-west-2
 
-#pushd /efs/auxiliaries/aster
-#python -m SimpleHTTPServer 1666 &
-#pid=$!; echo "simple server pid $pid"
-#popd
 export ESPA_CONFIG_PATH="$(pwd)"
 
 my_dir="/jobtmp/$HOSTNAME"
@@ -21,15 +19,14 @@ mkdir -p $my_dir
 input="s3://lsaa-level1-data/L8/2013/042/034/LC08_L1TP_042034_20130327_20170310_01_T1.tar.gz"
 prodid="LC08_L1TP_042034_20130327_20170310_01_T1"
 
-#espa_worker=/devel/daelf/espa-all/espa-processing/processing/cli.py
-espa_process=espa-process
-
+espa_process=/devel/daelf/espa-all/espa-processing/processing/cli.py
+#espa_process=espa-process
 
 debug="--debug --dev-mode --dev-intermediate"
+full=""
+#full="--include-sr-evi --include-surface-temperature --include-surface-water-extent"
 
-#debug=""
-
-#export PYTHONPATH=/devel/daelf/espa-all/espa-processing/processing
+export PYTHONPATH=/devel/daelf/espa-all/espa-processing/processing
 (cd $my_dir; time $espa_process \
      --order-id toast \
      --product-type landsat \
@@ -37,12 +34,11 @@ debug="--debug --dev-mode --dev-intermediate"
      --bridge-mode \
      --input-product-id $prodid \
      --input-url $input \
+     --dist-method s3 \
+     --dist-s3-bucket a.out \
      --include-top-of-atmosphere \
      --include-brightness-temperature \
      --include-surface-reflectance \
-     --include-surface-temperature \
-     --include-sr-evi \
-     $debug
+     $full \
+     $debug \
 )
-
-#kill $pid
