@@ -95,6 +95,19 @@ def getS3ObjectList(bucket, prefixList, blacklist):
         for object in my_bucket.objects.filter(Prefix=prefix):
             inputUrl = 's3://' + object.bucket_name + '/' + object.key
             inputProductId = object.key.split('/')[-1].split('.')[0]
+
+            # Get the path/row and check the value of the row.
+            # Ascending (nighttime) scenes have rows greater
+            # than 120.  We can't generate surface reflectance
+            # for them, so we don't add them to the list.
+            prod_split = inputProductId.split('_')
+            path_row = prod_split[2]
+            row = int(path_row[3:6])
+            if row > 120:
+                continue
+            if prod_split[1] == 'L1GT':
+                continue
+
             if blacklist is not None:
                 if inputProductId in blacklist:
                     continue

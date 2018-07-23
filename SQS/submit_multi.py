@@ -45,22 +45,27 @@ def parse_command_line():
             action = 'store',
             default = 'lsaa-level1-data',
             help = "Input S3 bucket (default: lsaa-level1-data)")
+    parser.add_argument('--full',
+            dest = 'full_job',
+            action = 'store_true',
+            default = False,
+            help = "Submit jobs specifying all products")
     parser.add_argument('--job-file',
             type = str,
             dest = 'job_file_name',
             action = 'store',
             default = None,
             help = "File of input file names to submit")
-    parser.add_argument('--full',
-            dest = 'full_job',
+    parser.add_argument('--list-only',
+            dest = 'list_only',
             action = 'store_true',
             default = False,
-            help = "Submit jobs specifying all products")
+            help = "Just create a list of scenes, don't submit a job")
     parser.add_argument('--prefix',
             type = str,
             dest = 'prefix',
             action = 'store',
-            default = None,
+            default = 'L7',
             help = "Prefix of S3 input files (default: L7)")
     parser.add_argument('--queue',
             dest = 'queue',
@@ -100,7 +105,7 @@ def main():
     queue = args.queue
     if queue is None and 'AWSQueue' in os.environ:
         queue = os.environ['AWSQueue']
-    if queue is None:
+    if not args.list_only and queue is None:
         sys.stderr.write("Error: queue not specified\n" +
                          "       Must set AWSQueue or use --queue\n")
         exit(1)
@@ -140,6 +145,11 @@ def main():
         count = len(objectList)
         print("Note: Only {} input {f} available".format(
                 count, f = 'file' if count == 1 else 'files'))
+
+    if args.list_only:
+        for s3Obj in objectList[:count]:
+            print(s3Obj[0])
+        sys.exit(0)
 
     print("Queuing {} {j}".format(count, j = 'job' if count == 1 else 'jobs'))
     sentMessageCount = 0
