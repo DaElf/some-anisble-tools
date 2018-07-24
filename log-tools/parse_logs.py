@@ -335,7 +335,7 @@ def main():
                 "Errors during processing",
                 startTime=start_timestamp, endTime=end_timestamp)
 
-
-use_AWS_search = True
+# Set this to false if you want to use a --prefix
+use_AWS_search = False
 if __name__ == '__main__':
     main()
