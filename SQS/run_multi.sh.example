@@ -5,18 +5,28 @@
 # 2) run_multi.sh ###, where ### is the number of scenes to process
 # 3) Check your batch status and/or the L2 output S3 bucket for results
 
-SQSHOME=/devel/djt
-AWSQueue=djt-process-batch-ESPA_ProcessJobQueue
-export espaJobBucket=jdc-test-dev
-export JobDefinition=djt-process-batch-ESPA_ProcessJob
-export AWSRegion=us-west-2
-export ESPA_PROCESS_TEMPLATE=/devel/daelf/espa-all/espa-processing/processing/order_template.json
-export ESPA_CONFIG_PATH=/devel/djt/espa-container-tools/
+# Batch stack output values here:
+AWSStack=espa-batch-costanalysisv3
+export AWSQueue=espa-batch-costanalysisv3-ESPABatchStack-1CCTGQJ445KBU-ESPA_ProcessJobQueueSpot
+export BatchQueue=$AWSQueue
+export JobDefinition=espa-batch-costanalysisv3-ESPABatchStack-1CCTGQJ445KBU-ESPA_ProcessJob
 
-$SQSHOME/aws-helpers/SQS/submit_multi.py \
+# Region and S3 log values here (note these are for the job submit JSON files, not the espa-processing logs)
+export espaJobBucket=jdc-test-dev
+export AWSRegion=us-west-2
+
+# Devel host options that are pulled into the job submit JSON file
+SQSHOME=/devel/djt/espa-all
+export ESPA_PROCESS_TEMPLATE=/devel/djt/espa-all/espa-processing/processing/order_template.json
+export ESPA_CONFIG_PATH=/devel/djt/espa-all/espa-container-tools/
+
+# Actual command to run, leave this alone for the most part unless you are updating parameters
+# Replace --prefix with --job-file <joblist> and leave off the argument to select all scenes in the file
+$SQSHOME/espa-container-tools/SQS/submit_multi.py \
         --batch \
-        --bucket lsaa-level1-data \
+        --bucket mvp-117k-l15-scenes-us-west-2 \
         --queue $AWSQueue \
-        --prefix L8 \
+        --full \
+        --prefix L08,L07,L05,L04 \
         $1
 
