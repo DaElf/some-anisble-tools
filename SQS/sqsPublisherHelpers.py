@@ -38,14 +38,15 @@ def formMessage(orderNo, inputproduictid, inputurl, messagegroupid):
     return jsonMessage
 
 
-def formCmd(orderNo, productId, inputURL, queue, args):
-    cmdConstant = ['python',
-            '/devel/daelf/espa-all/espa-processing/processing/espa_submit.py', \
+def formCmd(orderNo, productId, inputURL, queue, prefix, args):
+    cmdConstant = ['espa_submit.py', \
             '--product-type', 'landsat', \
             '--output-format', 'gtiff', \
             '--bridge-mode',
             '--dist-method', 's3', \
-            '--dist-s3-bucket', 'lsds-level2-data']
+            '--dist-s3-bucket', 'lsds-level2-data', \
+            '--no-submit', \
+            '--s3-job-prefix', prefix]
     cmdBasic = ['--include-top-of-atmosphere', \
             '--include-brightness-temperature', \
             '--include-surface-reflectance']
@@ -64,24 +65,58 @@ def formCmd(orderNo, productId, inputURL, queue, args):
     cmd.extend(['--input-url', inputURL])
     cmd.extend(['--input-product-id', productId])
     cmd.extend(['--queue', queue])
-    if args.batch:
-        cmd.append('--batch')
     if args.batch_cmd:
         cmd.extend(['--batch-command', args.batch_cmd])
 
     return cmd
 
+
+def parse_s3_object(s3_obj, blacklist):
+    """Parse an S3 object and return an S3 URL and product ID.
+
+    Args:
+        s3_obj <S3 object>: S3 object to be parsed
+        blacklist <list>: List of product IDs to skip
+
+    Returns:
+        (inputURL, inputProductId) (<str>, <str>):  an S3
+                URL and product ID corresponding to the object
+    """
+
+    inputUrl = 's3://' + s3_obj.bucket_name + '/' + s3_obj.key
+    inputProductId = s3_obj.key.split('/')[-1].split('.')[0]
+
+    # Get the path/row and check the value of the row.
+    # Ascending (nighttime) scenes have rows greater
+    # than 120.  We can't generate surface reflectance
+    # for them, so we don't add them to the list.
+    prod_split = inputProductId.split('_')
+    if len(prod_split) < 3:
+        return (None, None)
+    path_row = prod_split[2]
+    row = int(path_row[3:6])
+    if row > 120:
+        return (None, None)
+    if prod_split[1] == 'L1GT':
+        return (None, None)
+
+    if blacklist is not None:
+        if inputProductId in blacklist:
+            return (None, None)
+
+    return (inputUrl, inputProductId)
+
+
 def getS3ObjectList(bucket, prefixList, blacklist):
     """Get a list of objects in an S3 bucket
 
-    Get a list of objects in an S3 bucket that have prefixes that
-    match those in the given list.  It's actually faster to get a
-    list of all the objects in the bucket by iterating through all
-    the prefixes, so we just do that.
+    Get a list of objects in an S3 bucket, either by using a
+    list of prefixes, or listing all the objects in the bucket.
 
     Args:
         bucket <str>: input bucket name
         prefixList <list>: list of prefixes (e.g. [L7, L8])
+        blacklist <list>: list of product IDs to skip
 
     Returns:
         List of the objects in the S3 bucket that start with
@@ -91,29 +126,20 @@ def getS3ObjectList(bucket, prefixList, blacklist):
     s3 = boto3.resource('s3')
     my_bucket = s3.Bucket(bucket)
     objectList = []
-    for prefix in prefixList:
-        for object in my_bucket.objects.filter(Prefix=prefix):
-            inputUrl = 's3://' + object.bucket_name + '/' + object.key
-            inputProductId = object.key.split('/')[-1].split('.')[0]
-
-            # Get the path/row and check the value of the row.
-            # Ascending (nighttime) scenes have rows greater
-            # than 120.  We can't generate surface reflectance
-            # for them, so we don't add them to the list.
-            prod_split = inputProductId.split('_')
-            path_row = prod_split[2]
-            row = int(path_row[3:6])
-            if row > 120:
-                continue
-            if prod_split[1] == 'L1GT':
-                continue
-
-            if blacklist is not None:
-                if inputProductId in blacklist:
-                    continue
-            objectList.append([inputUrl, inputProductId])
+    if prefixList is not None:
+        for prefix in prefixList:
+            for s3_obj in my_bucket.objects.filter(Prefix=prefix):
+                (inputUrl, inputProductId) = parse_s3_object(s3_obj, blacklist)
+                if inputUrl is not None:
+                    objectList.append([inputUrl, inputProductId])
+    else:
+        for s3_obj in my_bucket.objects.all():
+            (inputUrl, inputProductId) = parse_s3_object(s3_obj, blacklist)
+            if inputUrl is not None:
+                objectList.append([inputUrl, inputProductId])
 
     return objectList
+
 
 def getPrefixListFromFile(prefixfile):
     try:
@@ -122,6 +148,7 @@ def getPrefixListFromFile(prefixfile):
         return prefixList
     except IOError:
         return None
+
 
 def getListFromFile(filename):
     try:
