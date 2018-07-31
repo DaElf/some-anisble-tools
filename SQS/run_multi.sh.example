@@ -7,9 +7,8 @@
 
 # Batch stack output values here:
 AWSStack=espa-batch-costanalysisv3
-export AWSQueue=espa-batch-costanalysisv3-ESPABatchStack-1CCTGQJ445KBU-ESPA_ProcessJobQueueSpot
-export BatchQueue=$AWSQueue
-export JobDefinition=espa-batch-costanalysisv3-ESPABatchStack-1CCTGQJ445KBU-ESPA_ProcessJob
+export espaQueue=espa-batch-costanalysisv3-ESPABatchStack-1CCTGQJ445KBU-ESPA_ProcessJobQueueSpot
+export espaJobDefinition=espa-batch-costanalysisv3-ESPABatchStack-1CCTGQJ445KBU-ESPA_ProcessJob
 
 # Region and S3 log values here (note these are for the job submit JSON files, not the espa-processing logs)
 export espaJobBucket=jdc-test-dev
