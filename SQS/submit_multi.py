@@ -10,7 +10,6 @@ import boto3
 import argparse
 
 from sqsPublisherHelpers import formCmd, getS3ObjectList, getListFromFile
-from submit_array import parse_command_line, validate_args
 
 
 def parse_command_line():
