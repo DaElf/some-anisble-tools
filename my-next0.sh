@@ -1,5 +1,5 @@
 docker run --rm --tty -it\
-  --cap-add LINUX_IMMUTABLE \
+  --cap-add=SYS_ADMIN \
   --hostname $USER-next0 \
   --name $USER-next0 \
   -e DISPLAY=$DISPLAY \
@@ -11,3 +11,5 @@ docker run --rm --tty -it\
   --volume /tmp/.X11-unix:/tmp/.X11-unix:rw \
   --workdir /home/espa \
   epsa/ips-next0 bash
+
+  #--cap-add LINUX_IMMUTABLE \
