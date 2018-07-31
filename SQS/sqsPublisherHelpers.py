@@ -38,15 +38,13 @@ def formMessage(orderNo, inputproduictid, inputurl, messagegroupid):
     return jsonMessage
 
 
-def formCmd(orderNo, productId, inputURL, queue, prefix, args):
+def formCmd(orderNo, productId, inputURL, queue, prefix, switches, args):
     cmdConstant = ['espa_submit.py', \
             '--product-type', 'landsat', \
             '--output-format', 'gtiff', \
             '--bridge-mode',
             '--dist-method', 's3', \
-            '--dist-s3-bucket', 'lsds-level2-data', \
-            '--no-submit', \
-            '--s3-job-prefix', prefix]
+            '--dist-s3-bucket', 'lsds-level2-data']
     cmdBasic = ['--include-top-of-atmosphere', \
             '--include-brightness-temperature', \
             '--include-surface-reflectance']
@@ -67,6 +65,8 @@ def formCmd(orderNo, productId, inputURL, queue, prefix, args):
     cmd.extend(['--queue', queue])
     if args.batch_cmd:
         cmd.extend(['--batch-command', args.batch_cmd])
+    if switches is not None:
+        cmd.extend(switches)
 
     return cmd
 
