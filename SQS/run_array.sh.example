@@ -6,9 +6,9 @@
 # 3) Check your batch status and/or the L2 output S3 bucket for results
 
 SQSHOME=/devel/djt
-AWSQueue=djt-process-batch-ESPA_ProcessJobQueue
+espaQueue=djt-process-batch-ESPA_ProcessJobQueue
 export espaJobBucket=jdc-test-dev
-export JobDefinition=djt-process-batch-ESPA_ProcessJob
+export espaJobDefinition=djt-process-batch-ESPA_ProcessJob
 export AWSRegion=us-west-2
 export ESPA_PROCESS_TEMPLATE=/devel/daelf/espa-all/espa-processing/processing/order_template.json
 export ESPA_CONFIG_PATH=/devel/djt/espa-container-tools/
