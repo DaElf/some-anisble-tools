@@ -46,7 +46,7 @@ ephemeral_start() {
 
     /sbin/mkfs.xfs -f -Ljobtmp /dev/$VG_NAME/jobtmp || true
     [ -z "$(mount | grep " on /jobtmp ")" ] && rm -rf /jobtmp/*
-    /bin/mount -t xfs /dev/$VG_NAME/jobtmp /jobtmp
+    /bin/mount -o noatime -t xfs /dev/$VG_NAME/jobtmp /jobtmp
 
     /bin/chmod 777 /jobtmp
 
