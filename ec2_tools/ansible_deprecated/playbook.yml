@@ -51,7 +51,7 @@
       yum: name=mock,rpm-build,createrepo state=present
 
     - name: Install git
-      yum: name=git state=present
+      yum: name=git,git-lfs state=present
 
     - name: Install zsh
       yum: name=zsh state=present

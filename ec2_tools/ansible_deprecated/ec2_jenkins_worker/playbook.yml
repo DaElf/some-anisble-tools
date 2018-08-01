@@ -7,7 +7,8 @@
   vars:
       region: us-west-2
       instance_type: t2.small
-      ami: ami-28e07e50 # RedHat 7.5
+#      ami: ami-28e07e50 # RedHat 7.5
+      ami: ami-a9d09ed1  # AWS Linux  2
       keypair: daelf-us-west-2 # pem file name
       subnet: subnet-d42f6e9c
       ansible_ssh_private_key_file: ~/Dropbox/USGS/daelf-us-west-2.pem
