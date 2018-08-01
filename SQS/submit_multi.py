@@ -192,8 +192,9 @@ def main():
         if count == 0:
             count = len(objectList)
     else:
-        print("Getting list of scenes from S3 bucket {} ...".format(
-                args.input_bucket))
+        if not args.list_only:
+            print("Getting list of scenes from S3 bucket {} ...".format(
+                    args.input_bucket))
         objectList = getS3ObjectList(args.input_bucket, prefixList, blacklist)
         if count == 0:
             count = 1
@@ -225,7 +226,7 @@ def main():
                 orderPrefix, None, args)
         orderNo += 1
         # JDC Debug
-        print("Issuing command: " + " ".join(cmd))
+#       print("Issuing command: " + " ".join(cmd))
         try:
             subprocess.check_call(cmd)
         except subprocess.CalledProcessError as e:
