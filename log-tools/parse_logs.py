@@ -1,6 +1,5 @@
 #! /usr/bin/env python
 
-#
 # Parse a set of AWS Cloud Watch log files, looking for strings
 # that indicate errors.  I implemented two different searches.
 # One goes through the events in the logs, looking at each event
@@ -79,7 +78,10 @@ def classify_failure(message):
                     "Could not find TOMS auxiliary data"),
             ("Surface temperature failed", \
                     "surface_temperature failed:"),
-            ("Exception", "type 'exceptions.Exception'")
+            ("No such file", "No such file or directory"),
+            ("Log throttling exception",
+                    "(ThrottlingException) when calling the CreateLogStream"),
+            ("Exception", "Exception")
     ]
 
     for (reason, err_string) in failure_types:
@@ -89,13 +91,14 @@ def classify_failure(message):
     return None
 
 
-def search_log(client, group, log_stream, err_string,
+def search_log(client, group, log_stream, err_strings, success_strings,
         startTime=None, endTime=None):
     """Search a log stream for an occurrence of the given error string.
     Print a message for each error we find.
     """
 
     done = False
+    success = False
     next_token = ''
     exit_code = 0
     stream = log_stream['logStreamName']
@@ -112,32 +115,42 @@ def search_log(client, group, log_stream, err_string,
 
         for event in events['events']:
             msg = event['message']
-            if msg.find(err_string) != -1:
-                # Special check if we're searching the job run lob
-                if err_string == 'Exit now':
-                    exit_code = int(event['message'].split(' ')[-1])
-                    if exit_code != 0:
-                        print("Invalid exit code {}:".format(exit_code))
-                        print("    " + stream)
-                    return exit_code
-                else:
-                    reason = classify_failure(msg)
-                    if reason is not None:
-                        print("Error detected ({}):".format(reason))
+            for err_string in err_strings:
+                if msg.find(err_string) != -1:
+                    # Special check if we're searching the job run log
+                    if err_string == 'Exit now':
+                        exit_code = int(event['message'].split(' ')[-1])
+                        if exit_code != 0:
+                            print("Invalid exit code {}:".format(exit_code))
+                            print("    " + stream)
+                        return exit_code
                     else:
-                        print("Error detected:")
-                    print("    " + stream)
-                    return 1
+                        reason = classify_failure(msg)
+                        if reason is not None:
+                            print("Error detected ({}):".format(reason))
+                        else:
+                            print("Error detected:")
+                        print("    " + stream)
+                        return 1
+            for success_string in success_strings:
+                if msg.find(success_string) != -1:
+                    success = True
+                    break
 
         if 'nextToken' in events:
             next_token = events['nextToken']
         else:
             done = True
 
+    if not success:
+        print("Error detected (job did not complete):")
+        return 1
+
     return exit_code
 
 
-def search_log_streams(group, prefix, err_string, startTime=None, endTime=None):
+def search_log_streams(group, prefix, err_strings, success_strings,
+        startTime=None, endTime=None):
     """Search the streams in a log group for occurrences of
     the given error string.
     """
@@ -173,7 +186,8 @@ def search_log_streams(group, prefix, err_string, startTime=None, endTime=None):
             if endTime is not None and log_start_time > endTime:
                 continue
             stream_count += 1
-            exit_code = search_log(client, group, log_stream, err_string)
+            exit_code = search_log(client, group, log_stream,
+                    err_strings, success_strings)
             if exit_code != 0:
                 error_exit_count += 1
 
@@ -332,10 +346,11 @@ def main():
         if args.prefix is not None:
             job_stream = args.prefix
         search_log_streams('espa-process', job_stream,
-                "Errors during processing",
+                ['Errors during processing', 'Exception'],
+                ['Product Delivery Complete'],
                 startTime=start_timestamp, endTime=end_timestamp)
 
-# Set this to false if you want to use a --prefix
+# Set this to false if you want to use --prefix
 use_AWS_search = False
 if __name__ == '__main__':
     main()
