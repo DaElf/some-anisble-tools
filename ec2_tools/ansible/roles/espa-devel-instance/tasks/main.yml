@@ -1,0 +1,74 @@
+---
+- name: Add local repository
+  yum_repository:
+    name: local
+    description: EROS YUM repo
+    baseurl: file:///devel/CentOS/7/local/x86_64
+    gpgcheck: no
+    
+- name:  Add the epel repo
+  yum: name='https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm' state=present
+    
+- name: Install amazon-efs-utils
+  yum: name=amazon-efs-utils,python-boto3,tmux state=present
+
+- name: Creates directory /devel
+  file: path=/devel state=directory
+
+- name: Mount up /devel
+  mount:
+    path: /devel
+    src: fs-15a9c8bc:/
+    fstype: efs
+    opts:  defaults,_netdev
+    state: mounted
+
+- name: Update all packages to latest
+  yum: name=* state=latest
+
+- name: Install specific mock package for centos 7
+  yum: name=mock,rpm-build,createrepo state=present
+
+- name: Install git
+  yum: name=git,git-lfs state=present
+
+- name: Install zsh
+  yum: name=zsh state=present
+
+- name: Install ESPA python lib
+  yum: name=python-espa,python-watchtower state=present
+
+- name: Install fuse
+  yum: name=fuse state=present
+
+- name: Install docker
+  yum: name=docker state=present
+
+- name: adding existing user ec2-user to group sudo
+  user:
+    name: ec2-user
+    groups: docker
+    append: yes
+
+- name: enable service nfs and ensure it is not masked
+  systemd:
+    name: nfs
+    enabled: yes
+    state: started
+    masked: no
+
+- name: enable service docker and ensure it is not masked
+  systemd:
+    name: docker
+    enabled: yes
+    state: started
+    masked: no
+
+- name: Allow 'wheel' group to have passwordless sudo
+  lineinfile:
+    dest: /etc/sudoers
+    state: present
+    regexp: '^%wheel'
+    line: '%wheel ALL=(ALL) NOPASSWD: ALL'
+    validate: 'visudo -cf %s'
+
