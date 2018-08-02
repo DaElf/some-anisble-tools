@@ -311,11 +311,16 @@ def main():
         if count == 0:
             count = len(objectList)
     else:
-        print("Getting list of scenes from S3 bucket {} ...".format(
-                args.input_bucket))
+        if not args.list_only:
+            print("Getting list of scenes from S3 bucket {} ...".format(
+                    args.input_bucket))
         objectList = getS3ObjectList(args.input_bucket, prefixList, blacklist)
         if count == 0:
             count = 1
+    if count < 2:
+        sys.stderr.write("Error: the minimum number of entries in an array job is 2\n")
+        exit(1)
+
 
     if len(objectList) == 0:
         sys.stderr.write("Error: no input files selected\n")
