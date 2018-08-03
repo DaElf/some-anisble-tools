@@ -235,7 +235,9 @@ def set_up_first_job(orderId, inputId, inputUrl, queue, orderPrefix, args):
                 URL returned by espa-submit and the JSON-encoded order
     """
 
-    extra_switches = ['--no-submit', '--s3-job-prefix', orderPrefix]
+    extra_switches = ['--no-submit',
+            '--s3-job-prefix', orderPrefix,
+            '--job-bucket', job_bucket]
     cmd = formCmd(orderId, inputId, inputUrl, queue,
             orderPrefix, extra_switches, args)
     # JDC Debug
