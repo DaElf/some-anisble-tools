@@ -222,8 +222,10 @@ def main():
         orderId = orderPrefix + '-' + str(orderNo).zfill(5)
         print(orderId + ' : ' + inputUrl)
 
+        extra_switches =['--job-bucket', job_bucket,
+                '--job-definition', job_definition]
         cmd = formCmd(orderId, inputId, inputUrl, queue,
-                orderPrefix, None, args)
+                orderPrefix, extra_switches, args)
         orderNo += 1
         # JDC Debug
 #       print("Issuing command: " + " ".join(cmd))
