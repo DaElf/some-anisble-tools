@@ -19,5 +19,3 @@
         shell: /bin/sh
         home: /devel/cattelan
         create_home: false
-        password: $6$/JrOCM11$37j62aldAFHLI/sxWnnZ/XYpV65B85v22aoCZCm8P7oFCrsAdFoXGOEnlErWmAoKTbFRMR7Epa0LKbdjI/9C7/
-        update_password: always
