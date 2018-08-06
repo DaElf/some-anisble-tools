@@ -1,11 +1,4 @@
 ---
-- name: Add local repository
-  yum_repository:
-    name: local
-    description: EROS YUM repo
-    baseurl: file:///devel/CentOS/7/local/x86_64
-    gpgcheck: no
-    
 - name:  Add the epel repo
   yum: name='https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm' state=present
     
@@ -22,6 +15,13 @@
     fstype: efs
     opts:  defaults,_netdev
     state: mounted
+
+- name: Add local repository
+  yum_repository:
+    name: local
+    description: EROS YUM repo
+    baseurl: file:///devel/CentOS/7/local/x86_64
+    gpgcheck: no
 
 - name: Update all packages to latest
   yum: name=* state=latest
