@@ -22,6 +22,7 @@
     description: EROS YUM repo
     baseurl: file:///devel/CentOS/7/local/x86_64
     gpgcheck: no
+    skip_if_unavailable: yes
 
 - name: Update all packages to latest
   yum: name=* state=latest
