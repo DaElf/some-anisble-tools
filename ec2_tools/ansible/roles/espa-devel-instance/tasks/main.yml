@@ -28,7 +28,7 @@
   yum: name=* state=latest
 
 - name: Install specific mock package for centos 7
-  yum: name=mock,rpm-build,createrepo state=present
+  yum: name=mock,rpm-build,createrepo,createrepo_c state=present
 
 - name: Install git
   yum: name=git,git-lfs state=present
