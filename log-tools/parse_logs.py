@@ -144,6 +144,7 @@ def search_log(client, group, log_stream, err_strings, success_strings,
 
     if not success:
         print("Error detected (job did not complete):")
+        print("    " + stream)
         return 1
 
     return exit_code
