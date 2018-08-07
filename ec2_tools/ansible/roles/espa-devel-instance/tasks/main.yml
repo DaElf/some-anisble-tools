@@ -68,6 +68,12 @@
     state: started
     masked: no
 
+- name: adding existing user ec2-user to group sudo
+  user:
+    name: ec2-user
+    groups: docker
+    append: yes
+
 - name: Allow 'wheel' group to have passwordless sudo
   lineinfile:
     dest: /etc/sudoers

@@ -1,0 +1,69 @@
+---
+# tasks file for jenkin-docker-worker
+- name:  Add the epel repo
+  yum: name='https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm' state=present
+
+- name:  Add the IUS repo
+  yum: name='https://centos7.iuscommunity.org/ius-release.rpm' state=present
+  
+- name: Install nfs-utils
+  yum: name=nfs-utils state=present
+
+- name: Install java-1.8.0-openjdk
+  yum: name=java-1.8.0-openjdk state=present
+
+- name: Creates directory /devel
+  file: path=/devel state=directory
+
+- name: Mount up /devel
+  mount:
+    path: /devel
+    src: fs-15a9c8bc.efs.us-west-2.amazonaws.com:/
+    fstype: nfs4
+    opts: nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noatime
+    state: mounted
+
+- name: Update all packages to latest
+  yum: name=* state=latest
+
+- name: Install specific mock package for centos 7
+  yum: name=mock,rpm-build,createrepo,createrepo_c state=present
+
+- name: Install git
+  yum: name=git2u,git-lfs state=present
+
+- name: Install docker
+  yum: name=docker state=present
+
+- name: Install awscli
+  yum: name=awscli state=present
+
+- name: enable service nfs and ensure it is not masked
+  systemd:
+    name: nfs
+    enabled: yes
+    state: started
+    masked: no
+
+- name: enable service docker and ensure it is not masked
+  systemd:
+    name: docker
+    enabled: yes
+    state: started
+    masked: no
+
+- name: adding existing user ec2-user to group docker
+  user:
+    name: ec2-user
+    groups: docker
+    append: yes
+
+- name: Add the user 'jenkins' with a specific uid and a primary group of 'wheel'
+  user:
+    name: jenkins
+    comment: Jenkins Slave
+    uid: 6000
+    groups: wheel,docker
+    shell: /bin/zsh
+    home: /jenkins
+    create_home: true
