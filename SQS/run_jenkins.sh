@@ -13,11 +13,11 @@ export AWSRegion=us-west-2
 export ESPA_PROCESS_TEMPLATE=$SQSHOME/espa-processing/processing/order_template.json
 export ESPA_CONFIG_PATH=$SQSHOME/espa-container-tools/
 
-export PYTHONPATH=i$SQSHOME/espa-container-tools/SQS:$SQSHOME/espa-processing/processing
+export PYTHONPATH=$SQSHOME/espa-container-tools/SQS:$SQSHOME/espa-processing/processing
 export PATH=$PATH:$PYTHONPATH
 
 $SQSHOME/espa-container-tools/SQS/submit_array.py \
-	--input-job-file ./jenkins_scenelist.txt \
+	--input-job-file $SQSHOME/espa-container-tools/SQS/jenkins_scenelist.txt \
         --full \
         $1
 
