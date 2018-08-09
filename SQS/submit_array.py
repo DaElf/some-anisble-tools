@@ -120,7 +120,10 @@ def validate_args(args):
             sys.stderr.write("Error: queue not specified\n" +
                              "       Must use --queue or set espaQueue\n")
             exit(1)
-        client = boto3.client('batch')
+        if 'AWSRegion' in os.environ:
+            client = boto3.client('batch', region_name=os.environ['AWSRegion'])
+        else:
+            client = boto3.client('batch')
         job_queues = client.describe_job_queues(jobQueues=[queue])
         if len(job_queues['jobQueues']) == 0:
             sys.stderr.write("Error: queue {} not found\n".format(queue))
@@ -148,7 +151,10 @@ def validate_args(args):
             sys.stderr.write("Error: job bucket not specified\n" +
                              "       Must use --job-bucket or set espaJobBucket\n")
             exit(1)
-        client = boto3.client('s3')
+        if 'AWSRegion' in os.environ:
+            client = boto3.client('s3', region_name=os.environ['AWSRegion'])
+        else:
+            client = boto3.client('s3')
         try:
             acl = client.get_bucket_acl(Bucket=job_bucket)
         except Exception:
@@ -195,11 +201,17 @@ def submit_job(job_prefix, job_file_name, size):
     """
 
     s3_key = job_prefix + '/' + job_file_name.split('/')[-1]
-    s3_client = boto3.client('s3')
+    if 'AWSRegion' in os.environ:
+        s3_client = boto3.client('s3', region_name=os.environ['AWSRegion'])
+    else:
+        s3_client = boto3.client('s3')
     s3_client.upload_file(job_file_name, job_bucket, s3_key)
     s3_url = 's3://' + job_bucket + '/' + s3_key
 
-    client = boto3.client('batch')
+    if 'AWSRegion' in os.environ:
+        client = boto3.client('batch', region_name=os.environ['AWSRegion'])
+    else:
+        client = boto3.client('batch')
 
     client.submit_job(
             jobName = s3_key.split('/')[-1].split('.')[0],
@@ -250,7 +262,10 @@ def set_up_first_job(orderId, inputId, inputUrl, queue, orderPrefix, args):
         exit(1)
 
     (bucket, s3_key) = parse_s3_url(order_file_url)
-    client = boto3.client('s3')
+    if 'AWSRegion' in os.environ:
+        client = boto3.client('s3', region_name=os.environ['AWSRegion'])
+    else:
+        client = boto3.client('s3')
     waiter = client.get_waiter('object_exists')
     try:
         waiter.wait(Bucket=bucket, Key=s3_key)
@@ -343,7 +358,10 @@ def main():
     job_count = 0
     batch_index = 1
     (filename, file) = create_job_control_file(orderPrefix, batch_index)
-    s3_client = boto3.client('s3')
+    if 'AWSRegion' in os.environ:
+        s3_client = boto3.client('s3', region_name=os.environ['AWSRegion'])
+    else:
+        s3_client = boto3.client('s3')
     for s3Obj in objectList[:count]:
         inputUrl = s3Obj[0]
         inputId = s3Obj[1]

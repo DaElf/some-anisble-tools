@@ -116,7 +116,11 @@ def validate_args(args):
             sys.stderr.write("Error: queue not specified\n" +
                              "       Must use --queue or set espaQueue\n")
             exit(1)
-        client = boto3.client('batch')
+        if 'AWSRegion' in os.environ:
+            print("JDC: found AWS region {}".format(os.environ['AWSRegion']))
+            client = boto3.client('batch', region_name=os.environ['AWSRegion'])
+        else:
+            client = boto3.client('batch')
         job_queues = client.describe_job_queues(jobQueues=[queue])
         if len(job_queues['jobQueues']) == 0:
             sys.stderr.write("Error: queue {} not found\n".format(queue))
@@ -144,7 +148,10 @@ def validate_args(args):
             sys.stderr.write("Error: job bucket not specified\n" +
                              "       Must use --job-bucket or set espaJobBucket\n")
             exit(1)
-        client = boto3.client('s3')
+        if 'AWSRegion' in os.environ:
+            client = boto3.client('s3', region_name=os.environ['AWSRegion'])
+        else:
+            client = boto3.client('s3')
         try:
             acl = client.get_bucket_acl(Bucket=job_bucket)
         except Exception:
