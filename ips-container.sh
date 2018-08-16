@@ -8,7 +8,7 @@ docker run --rm --tty -it\
   --volume /LOSRLPGD03/data2:/LOSRLPGD03/data2:rw \
   --volume /home/$USER:/home/$USER:rw \
   --volume /tmp/.X11-unix:/tmp/.X11-unix:rw \
-  --volume /sno4:/sno4:rw \
+  --volume /sno04:/sno04:rw \
   --workdir /LOSRLPGD03/development/$USER \
   707566951618.dkr.ecr.us-west-2.amazonaws.com/ips-process/develop \
   bash
