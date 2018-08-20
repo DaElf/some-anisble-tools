@@ -10,7 +10,9 @@
     keypair: daelf-us-west-2 # pem file name
     subnet: subnet-d42f6e9c
     ansible_ssh_private_key_file: ~/Dropbox/USGS/daelf-us-west-2.pem
-    my_tag: daelf-ansible-devel
+    name_tag: daelf-devel
+    vol_size: 32
+    proj_tag: l2pgsv2
     
   roles:
     - ec2-instance
