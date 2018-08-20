@@ -45,7 +45,10 @@
   yum: name=zsh state=present
 
 - name: Install ESPA python lib
-  yum: name=python-espa,python-watchtower state=present
+  yum: pkg={{item}} state=present disable_gpg_check=yes update_cache=yes
+  with_items:
+    - python-espa
+    - python-watchtower
 
 - name: Install jq
   yum: name=jq state=present
