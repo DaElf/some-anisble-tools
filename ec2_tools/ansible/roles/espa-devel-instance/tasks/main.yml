@@ -107,3 +107,4 @@
     - oracle-instantclient12.2-basic
     - oracle-instantclient12.2-odbc
     - oracle-instantclient12.2-tools
+    - perl-DBD-Oracle
