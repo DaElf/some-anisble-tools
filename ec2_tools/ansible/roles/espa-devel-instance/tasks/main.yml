@@ -1,7 +1,7 @@
 ---
 - name:  Add the epel repo
   yum: name='https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm' state=present
-    
+
 - name: Install amazon-efs-utils
   yum: name=amazon-efs-utils,python-boto3,tmux state=present
 
@@ -20,7 +20,15 @@
   yum_repository:
     name: local
     description: EROS YUM repo
-    baseurl: file:///devel/CentOS/7/local/x86_64
+    baseurl: file:///devel/jenkins-rpms-local/x86_64
+    gpgcheck: no
+    skip_if_unavailable: yes
+
+- name: Add oracle repository
+  yum_repository:
+    name: oracle-client
+    description: Oracle client rpm repo
+    baseurl: file:///devel/oracle-rpms-repo/x86_64
     gpgcheck: no
     skip_if_unavailable: yes
 
@@ -82,3 +90,17 @@
     line: '%wheel ALL=(ALL) NOPASSWD: ALL'
     validate: 'visudo -cf %s'
 
+- copy: src=files/etc/ld.so.conf.d/oracle-x86_64.conf dest=/etc/ld.so.conf.d/oracle-x86_64.conf
+
+- name: Update ldconfig
+  command: ldconfig
+
+- name: Oracle rpms
+  yum: pkg={{item}} state=present disable_gpg_check=yes update_cache=yes
+  with_items:
+    - oracle-instantclient12.2-jdbc
+    - oracle-instantclient12.2-sqlplus
+    - oracle-instantclient12.2-devel
+    - oracle-instantclient12.2-basic
+    - oracle-instantclient12.2-odbc
+    - oracle-instantclient12.2-tools
