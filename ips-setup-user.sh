@@ -39,6 +39,10 @@ mkdir -p $DATA2/ias_sys/collection1/proddata/log
 export IAS_LOG=$DATA2/ias_sys/collection1/proddata/log
 export COTS=null
 
+# Set up PERL paths
+export PERL5LIB=/opt/perllib:/opt/perllib/lib/perl5
+export PATH=$PATH:/opt/bin
+
 cd $SRCDIR
 ./ips/ias_base/setup/setup_dirs.csh
 export IAS_SERVICES=http://LOSRLIAT02:9002
