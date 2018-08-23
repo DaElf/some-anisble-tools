@@ -34,7 +34,7 @@ export COTS=null
 export PERL5LIB=/opt/perllib:/opt/perllib/lib/perl5
 
 ./ips/ias_base/setup/setup_dirs.csh
-export IAS_WO /jobtmp
+export IAS_WO=/jobtmp
 export PROCESSING_SYSTEM=IAS
 
 ips/create_setup_file.csh ias dev
