@@ -36,19 +36,19 @@ export ODBC_INC=/usr/include
 export ODBC_LIB=/usr/lib64
 
 export ORACLE_HOME=/usr/lib/oracle/12.2/client64
-setenv ORACLE_SID ORCL
-setenv TWO_TASK ORCL
-setenv IAS_DB_COM ias_ops_wo_common/cloud123
-setenv IAS_DB_L8_OLITIRS l8_ias/cloud123
-setenv IAS_DB_L8_OLITIRS_EVAL l8_ias_eval/cloud123
-setenv IAS_DB_L7_ETM etmops/cloud123
-setenv IAS_DB_L5_TM tmops/cloud123
-setenv IAS_DB_L4_TM l4tmops/cloud123
-setenv IAS_DB_L5_MSS l5mssops/cloud123
-setenv IAS_DB_L4_MSS l4mssops/cloud123
-setenv IAS_DB_L3_MSS l3mssops/cloud123
-setenv IAS_DB_L2_MSS l2mssops/cloud123
-setenv IAS_DB_L1_MSS l1mssops/cloud123
+export ORACLE_SID=ORCL
+export TWO_TASK=ORCL
+export IAS_DB_COM=ias_ops_wo_common/cloud123
+export IAS_DB_L8_OLITIRS=l8_ias/cloud123
+export IAS_DB_L8_OLITIRS_EVAL=l8_ias_eval/cloud123
+export IAS_DB_L7_ETM=etmops/cloud123
+export IAS_DB_L5_TM=tmops/cloud123
+export IAS_DB_L4_TM=l4tmops/cloud123
+export IAS_DB_L5_MSS=l5mssops/cloud123
+export IAS_DB_L4_MSS=l4mssops/cloud123
+export IAS_DB_L3_MSS=l3mssops/cloud123
+export IAS_DB_L2_MSS=l2mssops/cloud123
+export IAS_DB_L1_MSS=l1mssops/cloud123
 
 export IAS_BUILD_64BIT=1
 export IASBASE_PERLLIB=$DEVDIR/perllib
