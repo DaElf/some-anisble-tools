@@ -18,7 +18,7 @@ fi
 ln -s /s3/auxiliaries/landsat/rlut/ rlut; \
 ln -s /s3/auxiliaries/dem .; \
 cd sysdata; \
-ln -s /s3/auxiliaries/stray_light_vectors/ .)
+ln -s /s3/auxiliaries/landsat/stray_light_vectors/ .)
 
 # Fix up NOVAS home directory
 (cd $DATA2/ias_sys/collection1/setup \
