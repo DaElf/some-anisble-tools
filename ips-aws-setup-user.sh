@@ -11,7 +11,7 @@ if [ -f setup_db-aws ]; then
 fi
 
 # Initialize environment variables
-. env-rpmbuild.sh
+. env-aws.sh
 
 # Set symbolic links to input data
 (cd $DATA2/ias_sys/collection1/proddata; \
