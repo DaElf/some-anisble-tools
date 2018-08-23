@@ -37,4 +37,5 @@ export PERL5LIB=/opt/perllib:/opt/perllib/lib/perl5
 export IAS_WO=/jobtmp
 export PROCESSING_SYSTEM=IAS
 
+export IAS_SERVICES=junk
 ips/create_setup_file.csh ias dev
