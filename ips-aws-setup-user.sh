@@ -1,13 +1,22 @@
 #!/usr/bin/bash -x
 
 # User configuration parameters
-#
+SRCDIR=/devel/jdc/ips-all
 
 DATA2=/data2
+IPS_HOME=/home/ips
+
+pushd $SRCDIR
 
 # Copy in fixed up setup_db script
 if [ -f setup_db-aws ]; then
 	cp setup_db-aws $DATA2/ias_sys/collection1/setup/setup_db
+fi
+
+# Copy in fixed up setup_db script
+if [ -f .odbc.ini ]; then
+	cp .odbc.ini $IPS_HOME/.odbc.ini
+	cp tnsnames.ora $IPS_HOME/tnsnames.ora
 fi
 
 # Initialize environment variables
@@ -38,4 +47,6 @@ export IAS_WO=/jobtmp
 export PROCESSING_SYSTEM=IAS
 
 export IAS_SERVICES=junk
-ips/create_setup_file.csh ias dev
+./ips/create_setup_file.csh ias dev
+
+popd
