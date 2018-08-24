@@ -1,5 +1,0 @@
-# tnsnames.ora Network Configuration File: 
-
-# Entries for L8 DEV/IT/ST/OPS
-
-ORCL=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=oracledb9ewwsherj.capy19ykmq2e.us-west-2.rds.amazonaws.com)(PORT=1521))(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=ORCL)))

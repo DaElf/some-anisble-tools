@@ -1,1 +1,5 @@
-build_ias
+BUILD
+RPMS
+SRPMS
+BUILDROOT
+mock_result
