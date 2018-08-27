@@ -1,5 +1,6 @@
 docker run --rm --tty -it\
   --cap-add=SYS_ADMIN \
+  --cap-add=SYS_PTRACE \
   --hostname $USER-ips \
   --name $USER-ips \
   -e DISPLAY=$DISPLAY \
@@ -8,7 +9,7 @@ docker run --rm --tty -it\
   --volume /s3:/s3:ro \
   --volume /jobtmp:/jobtmp:rw \
   --volume /tmp/.X11-unix:/tmp/.X11-unix:rw \
-  --workdir /devel/$USER \
+  --workdir $(pwd) \
   707566951618.dkr.ecr.us-west-2.amazonaws.com/ips-process/develop \
   bash
 
