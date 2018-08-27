@@ -1,52 +1,35 @@
-#!/usr/bin/bash -x
-
-# User configuration parameters
-SRCDIR=/devel/jdc/ips-all
+#!/bin/sh -x
+set -x
 
 DATA2=/data2
 IPS_HOME=/home/ips
 
-pushd $SRCDIR
-
 # Copy in fixed up setup_db script
-if [ -f setup_db-aws ]; then
-	cp setup_db-aws $DATA2/ias_sys/collection1/setup/setup_db
-fi
-
-# Copy in fixed up setup_db script
-if [ -f .odbc.ini ]; then
-	cp .odbc.ini $IPS_HOME/.odbc.ini
-	cp tnsnames.ora $IPS_HOME/tnsnames.ora
-fi
+#if [ -f setup_db-aws ]; then
+#	cp setup_db-aws $DATA2/ias_sys/collection1/setup/setup_db
+#fi
 
 # Initialize environment variables
-. env-aws.sh
+. ./setup_db-aws
+. ./env-aws.sh
 
+sudo chown -R ips $IAS_DATA_DIR
 # Set symbolic links to input data
-(cd $DATA2/ias_sys/collection1/proddata; \
-ln -s /s3/auxiliaries/landsat/rlut/ rlut; \
-ln -s /s3/auxiliaries/dem .; \
-cd sysdata; \
-ln -s /s3/auxiliaries/landsat/stray_light_vectors/ .)
+(cd $IAS_DATA_DIR; \
+ ln -sf /s3/auxiliaries/landsat/rlut . ; \
+ ln -sf /s3/auxiliaries/dem . \
+)
 
-# Fix up NOVAS home directory
-(cd $DATA2/ias_sys/collection1/setup \
-sed --in-place -e's/setenv NOVAS_HOME \$COTS\/novas3.1/setenv NOVAS_HOME \/usr\/share\/novas/' iaslib_setup)
+(cd  $IAS_DATA_DIR/sysdata; \
+ ln -sf /s3/auxiliaries/landsat/stray_light_vectors . ;\
+ ln -sf /s3/auxiliaries/landsat/water_mask . \
+)
 
 # Set more environment variables
-export IAS_LOGGING=FILE
-mkdir -p $DATA2/ias_sys/collection1/proddata/log
-export IAS_LOG=$DATA2/ias_sys/collection1/proddata/log
-export COTS=null
+install -d -m 775 $IAS_DATA_DIR/log
+install -d -m 775 $IAS_DATA_DIR/temp/tar
+#install -d -m 775 $IAS_SYS_DIR/share/rps
+#install -d -m 775 $IAS_SYS_DIR/share/sys
+#install -d -m 775 $IAS_SYS_DIR/share/tools
+sudo install -d -m 775 $IAS_SYS_DIR/test_script
 
-# Set up PERL paths
-export PERL5LIB=/opt/perllib:/opt/perllib/lib/perl5
-
-./ips/ias_base/setup/setup_dirs.csh
-export IAS_WO=/jobtmp
-export PROCESSING_SYSTEM=IAS
-
-export IAS_SERVICES=junk
-./ips/create_setup_file.csh ias dev
-
-popd
