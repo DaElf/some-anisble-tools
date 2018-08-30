@@ -11,7 +11,7 @@ docker run --rm --tty -it\
   --volume /tmp/.X11-unix:/tmp/.X11-unix:rw \
   --workdir $(pwd) \
   707566951618.dkr.ecr.us-west-2.amazonaws.com/ips-process/develop \
-  bash
+  sudo -u ips bash --rcfile env-aws.sh
 
   #--cap-add LINUX_IMMUTABLE \
   #-p 11022:22 \

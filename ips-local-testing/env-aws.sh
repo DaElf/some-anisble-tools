@@ -1,3 +1,8 @@
+#!/bin/sh
+
+dir=$(dirname "$0")
+. $dir/setup_db-aws
+
 DATA2=/data2
 PREFIX=/opt
 export TNS_ADMIN=/home/ips
