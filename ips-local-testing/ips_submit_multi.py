@@ -2,6 +2,7 @@
 
 import sys
 import os
+import os.path
 import boto3
 import random
 import string
@@ -35,6 +36,12 @@ def parse_command_line():
             action = 'store',
             default = 'dev-lsds-l8-test-l0rp',
             help = "Input S3 bucket (default: dev-lsds-l8-test-l0rp)")
+    parser.add_argument('--job-bucket',
+            type = str,
+            dest = 'job_bucket',
+            action = 'store',
+            default = None,
+            help = "S3 job bucket")
     parser.add_argument('--job-definition',
             type = str,
             dest = 'job_definition',
@@ -107,17 +114,41 @@ def validate_args(args):
         sys.stderr.write("Error: job definition not specified\n" +
                 "       Must use --job-definition or set ipsJobDefinition\n")
         exit(1)
+
     defs = client.describe_job_definitions(jobDefinitionName=job_definition)
     if len(defs['jobDefinitions']) == 0:
         sys.stderr.write("Error: job definition {} not found\n".
                 format(job_definition))
         exit(1)
 
+    if args.job_bucket is not None:
+        job_bucket = args.job_bucket
+    elif 'ipsJobDefinition' in os.environ:
+        job_bucket = args.job_bucket
+    elif 'ipsJobDefinition' in os.environ:
+        job_bucket = os.environ['ipsJobBucket']
+    else:
+        sys.stderr.write("Error: job bucket not specified\n" +
+                "       Must use --job-bucket or set ipsJobBucket\n")
+        exit(1)
+
+    if 'AWSRegion' in os.environ:
+        client = boto3.client('s3', region_name=os.environ['AWSRegion'])
+    else:
+        client = boto3.client('s3')
+    try:
+        acl = client.get_bucket_acl(Bucket=job_bucket)
+    except Exception:
+        sys.stderr.write("Error: job bucket {} not found\n".
+                format(job_bucket))
+        exit(1)
+
+
     # Provide a default for the batch command
     if args.batch_cmd is not None:
         batch_cmd = args.batch_cmd
     else:
-        batch_cmd = 'ips-worker.sh'
+        batch_cmd = 'ips-batch-worker.sh'
 
 
 def parse_s3_object(bucket, s3_obj):
@@ -194,39 +225,11 @@ def getListFromFile(filename):
     return objectList
 
 
-def formPWG(productId, inputURL, args):
-    cmdConstant = ['PWG', \
-            '-i', \
-            '-scene', productId, \
-            '-l0r_data_path', '/jobtmp/' + productId]
-    cmdPackaging = ['-procedure', '"L1T with Quality Band"', \
-            '-parm DFP:L1G_PACKAGE=1', \
-            '-parm DFP:NAME_USING_PRODUCT_ID=1']
-    cmdNoPackaging = ['-procedure', '"L1T Product"']
-
-    cmd = cmdConstant[:]
-    if args.package:
-        cmd.extend(cmdPackaging)
-    else:
-        cmd.extend(cmdNoPackaging)
-
-    scene_date = productId[9:16]
-
-    # XXX Find the appropriate auxiliary data
-    JDC_stuff = ['-parm DSW:CAL_PARM_FILENAME=' + 'XXX', \
-            '-parm DSW:BIAS_PARM_FILENAME_OLI=' + 'XXX', \
-            '-parm DSW:BIAS_PARM_FILENAME_TIRS=' + 'XXX', \
-            '-parm DSW:RLUT_FILENAME=' + 'XXX']
-
-    return cmd
-
-
 def create_job_file(uniq, batch_index):
 
     dir = tempfile.gettempdir()
     fn = dir + '/ips-' + uniq + '-' +  str(batch_index).zfill(3) + '.jobctl'
     try:
-        print("JDC: creating job file '{}'".format(fn))
         job_file = open(fn, 'w')
     except IOError as e:
         sys.stderr.write("Error: can't create batch array file {}: {}\n".
@@ -246,22 +249,37 @@ def submit_job(job_file_name, size):
 
     if 'AWSRegion' in os.environ:
         client = boto3.client('batch', region_name=os.environ['AWSRegion'])
+        s3_client = boto3.client('s3', region_name=os.environ['AWSRegion'])
     else:
         client = boto3.client('batch')
+        s3_client = boto3.client('s3')
 
-    job_prefix = job_file_name.split('/')[-1].split('.')[0]
+    # Copy the job file to the job bucket
+    job_name_base = os.path.basename(job_file_name).split('.')[0]
+    prefix = '-'.join(job_name_base.split('-')[:-1])
+    s3_key = prefix + '/' + os.path.basename(job_file_name)
+    s3_client.upload_file(job_file_name, job_bucket, s3_key)
+    s3_url = 's3://' + job_bucket + '/' + s3_key
 
+    # Put the batch command into an array
+    cmd_array = ['sudo', '-E', '-u', 'ips']
+    cmd_array.extend(batch_cmd.split(' '))
+    cmd_array.append('Ref::order_url')
+
+    # Submit the job to AWS
     client.submit_job(
-            jobName = job_prefix,
+            jobName = job_name_base,
             jobQueue = queue,
             jobDefinition = job_definition,
-#           parameters = {'order_url': s3_url},
+            parameters = {'order_url': s3_url},
             containerOverrides = {
-#               'command': [batch_cmd, 'Ref::order_url']
-                'command': [batch_cmd]
+                'command': cmd_array
             },
             arrayProperties={
                 'size': size
+            },
+            retryStrategy={
+                'attempts': 1
             }
     )
 
@@ -283,22 +301,12 @@ def main():
 
     obj_list = getS3ObjectList(args.input_bucket, None)
     for (url, pid) in obj_list:
-#       cmd = formPWG(pid, url, args)
-#       try:
-#           print("JDC: executing '{}'".format(' '.join(cmd)))
-#           pwg_out = subprocess.check_output(cmd).strip()
-#           print("JDC: PWG says '{}'".format(pwg_out))
-#       except subprocess.CalledProcessError as e:
-#           sys.stderr.write("Error: PWG returned {}\n".
-#                   format(e.returncode))
-#           exit(1)
-#       work_order = XXX(pwg_out)
 
         if job_file is None:
             job_file = create_job_file(uniq, batch_index)
             batch_index += 1
 
-        job_file.write(url + '\n')
+        job_file.write(url + ' ' + pid + '\n')
         array_count += 1
         job_count += 1
         if job_count == args.count:
@@ -316,10 +324,11 @@ def main():
         job_file.close()
         submit_job(job_file_name, array_count)
 
-    print("{} jobs submitted".format(job_count))
+    print("{} jobs submitted, prefix is {}".format(job_count, uniq))
 
 
 batch_cmd = None
+job_bucket = None
 job_definition = None
 queue = None
 
