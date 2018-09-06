@@ -11,7 +11,7 @@
 - name: Mount up /devel
   mount:
     path: /devel
-    src: fs-15a9c8bc:/
+    src: fs-ea567b43:/
     fstype: efs
     opts:  defaults,_netdev
     state: mounted
