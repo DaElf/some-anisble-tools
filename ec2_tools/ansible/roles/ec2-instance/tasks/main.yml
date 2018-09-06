@@ -4,7 +4,7 @@
 - name: Create an ec2 instance
   ec2:
     key_name: "{{ keypair }}"
-    group: daelf-default # security group name
+    group_id: "{{ security_group }}"# security group name
     instance_type: "{{ instance_type}}"
     image: "{{ ami }}"
     wait: true

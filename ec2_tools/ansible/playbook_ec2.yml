@@ -9,6 +9,7 @@
     ami: ami-a9d09ed1  # AWS Linux  2
     keypair: daelf-us-west-2 # pem file name
     subnet: subnet-044c596c6b1ad7906
+    security_group: sg-0c305038ba5d8d1fb
     ansible_ssh_private_key_file: ~/Dropbox/USGS/daelf-us-west-2.pem
     name_tag: daelf-devel
     vol_size: 32
