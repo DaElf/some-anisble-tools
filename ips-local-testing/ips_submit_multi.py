@@ -148,7 +148,7 @@ def validate_args(args):
     if args.batch_cmd is not None:
         batch_cmd = args.batch_cmd
     else:
-        batch_cmd = 'ips-batch-worker.sh'
+        batch_cmd = '/opt/bin/ips-batch-worker.sh'
 
 
 def parse_s3_object(bucket, s3_obj):
@@ -204,6 +204,16 @@ def getS3ObjectList(bucket, prefixList):
 
 
 def getListFromFile(filename):
+    """ Read a list of scenes from a file.  This is an alternative
+    to getting the list from the S3 bucket.
+
+    Args:
+        filename <str>: The name of the file with the list of scenes
+
+    Returns:
+        objectList <list>: A list of scenes from the file
+    """
+
     try:
         file = open(filename)
     except IOError:
@@ -226,6 +236,15 @@ def getListFromFile(filename):
 
 
 def create_job_file(uniq, batch_index):
+    """Create a file with the list of scenes for an array job.
+
+    Args:
+        uniq <str>: The unique prefix for the job
+        batch_index <int>: The index of this file in the sequence
+
+    Returns:
+        job_file <file>: the file object associated with the new file
+    """
 
     dir = tempfile.gettempdir()
     fn = dir + '/ips-' + uniq + '-' +  str(batch_index).zfill(3) + '.jobctl'
@@ -291,6 +310,13 @@ def main():
     args = parse_command_line()
     validate_args(args)
 
+    prefixList = None
+    if args.prefix is not None:
+        prefixList = []
+        prefixes = args.prefix.split(',')
+        for prefix in prefixes:
+            prefixList.append(prefix)
+
     uniq = ''.join(random.choice(string.ascii_lowercase)
             for _ in range(4))
 
@@ -299,7 +325,9 @@ def main():
     batch_index = 0
     job_file = None
 
-    obj_list = getS3ObjectList(args.input_bucket, None)
+    sys.stdout.write("Gathering list of scenes ... ")
+    obj_list = getS3ObjectList(args.input_bucket, prefixList)
+    sys.stdout.write("done\n")
     for (url, pid) in obj_list:
 
         if job_file is None:
