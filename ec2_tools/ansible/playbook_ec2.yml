@@ -1,14 +1,14 @@
-- name: Create a new Demo EC2 instance
+- name: Create a new EC2 instance
   hosts: localhost
   connection: local
   gather_facts: False
 
   vars:
     region: us-west-2
-    instance_type: t2.small
+    instance_type: t2.large
     ami: ami-a9d09ed1  # AWS Linux  2
     keypair: daelf-us-west-2 # pem file name
-    subnet: subnet-d42f6e9c
+    subnet: subnet-044c596c6b1ad7906
     ansible_ssh_private_key_file: ~/Dropbox/USGS/daelf-us-west-2.pem
     name_tag: daelf-devel
     vol_size: 32
