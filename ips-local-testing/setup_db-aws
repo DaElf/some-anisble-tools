@@ -1,7 +1,15 @@
+MODE=LPGS
+
+if [ $MODE == "LPGS" ]; then
+  export IAS_DB_COM=ops/cloud123
+  export IAS_DB_L8_OLITIRS=l8_lpgs/cloud123
+else
+  export IAS_DB_COM=ias_ops/cloud123
+  export IAS_DB_L8_OLITIRS=l8_ias/cloud123
+fi
+
 export ORACLE_SID=ORCL
 export TWO_TASK=ORCL
-export IAS_DB_COM=ias_ops/cloud123
-export IAS_DB_L8_OLITIRS=l8_ias/cloud123
 export IAS_DB_L8_OLITIRS_EVAL=l8_ias_eval/cloud123
 export IAS_DB_L7_ETM=etmops/cloud123
 export IAS_DB_L5_TM=tmops/cloud123

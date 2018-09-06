@@ -2,13 +2,12 @@
 
 . ./setup_db-aws
 
-DATA2=/data2
+MODE=LPGS
+DATA2=
 PREFIX=/opt
 export TNS_ADMIN=/home/ips
 
-#export IAS_WO=/jobtmp
-export PROCESSING_SYSTEM=IAS
-
+export IAS_WO=/jobtmp
 export QTDIR=/usr/lib64/qt4
 
 export PERL5LIB=$PREFIX/perllib:$PREFIX/perllib/lib/perl5
@@ -40,15 +39,24 @@ export IASLIB_PYLIB=$PREFIX/python
 export IAS_JAVA_LIB=$PREFIX/javalib
 
 export IAS_SYSTEM_USER_ID=$USER
-export IAS_SYSTEM_ID=I
 export IAS_DEVELOPMENT_ENV=yes
 export IAS_INSTANCE_NAME=Collection1
 export IAS_TEMP=/usr/tmp
-export LEVEL1_MODE=IAS
 
+if [ $MODE == "LPGS" ]; then
+  export LEVEL1_MODE=LPGS
+  export L1_SYSTEM_ID=L
+  export IAS_SYSTEM_ID=L
+  export PROCESSING_SYSTEM=LPGS
+else
+  export LEVEL1_MODE=IAS
+  export L1_SYSTEM_ID=I
+  export IAS_SYSTEM_ID=I
+  export PROCESSING_SYSTEM=IAS
+fi
 export IAS_IT_TEST_DATA_DIR=/home/iasit/testdata
 
-export IAS_UNIT_TEST_DATA_DIR=$DATA2/test_data
+#export IAS_UNIT_TEST_DATA_DIR=$DATA2/test_data
 export IAS_SYS=$DATA2/ias_sys/collection1
 export IAS_OPS=$DATA2/ias_sys/collection1
 export IAS_SYS_DIR=$DATA2/ias_sys/collection1
