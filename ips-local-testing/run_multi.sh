@@ -9,5 +9,4 @@ $IPS_ALL_DIR/espa-container-tools/ips-local-testing/ips_submit_multi.py \
                --job-definition $IPS_JOBDEF \
                --input-bucket dev-lsds-l8-test-l0rp \
                --job-bucket jdc-test-dev \
-               --batch-command $IPS_ALL_DIR/ips/ips-batch-worker.sh \
                $1 
