@@ -21,29 +21,25 @@
 - name: Update all packages to latest
   yum: name=* state=latest
 
-- name: Install specific mock package for centos 7
-  yum: name=mock,rpm-build,createrepo,createrepo_c state=present
-
-- name: Install git
-  yum: name=git,git-lfs state=present
-
-- name: Install zsh
-  yum: name=zsh state=present
+- name: Install devel tools
+  yum: pkg={{item}} state=present update_cache=yes
+  with_items:
+    - zsh
+    - cscope
+    - git
+    - git-lfs
+    - mock
+    - rpm-build
+    - createrepo_c
+    - fuse
+    - jq
+    - docker
 
 - name: Install ESPA python lib
   yum: pkg={{item}} state=present disable_gpg_check=yes update_cache=yes
   with_items:
     - python-espa
     - python-watchtower
-
-- name: Install jq
-  yum: name=jq state=present
-
-- name: Install fuse
-  yum: name=fuse state=present
-
-- name: Install docker
-  yum: name=docker state=present
 
 - name: adding existing user ec2-user to group sudo
   user:
@@ -64,12 +60,6 @@
     enabled: yes
     state: started
     masked: no
-
-- name: adding existing user ec2-user to group sudo
-  user:
-    name: ec2-user
-    groups: docker
-    append: yes
 
 - name: Allow 'wheel' group to have passwordless sudo
   lineinfile:
