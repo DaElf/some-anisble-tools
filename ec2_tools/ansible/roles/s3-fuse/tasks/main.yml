@@ -1,0 +1,22 @@
+---
+# tasks file for roles/s3-fuse
+- name: Install fuse
+  yum: name=fuse state=present
+
+- name: Mount s3 goofys mounts
+  mount:
+    path: "{{ item.path }}"
+    src: "{{ item.src }}"
+    fstype: fuse
+    opts:  _netdev,allow_other,--file-mode=0666,ro
+    state: mounted
+  with_items:
+    - { path: /s3/auxiliaries/elevation, src: 'goofys#lsds-mvp-elevation-aux' }
+    - { path: /s3/auxiliaries/aster, src: 'goofys#lsds-mvp-aster-aux' }
+    - { path: /s3/auxiliaries/L47, src: 'goofys#lsds-mvp-l47-sr-aux' }
+    - { path: /s3/auxiliaries/L8 , src: 'goofys#lsds-mvp-l8-sr-aux' }
+    - { path: /s3/auxiliaries/NARR, src: 'goofys#lsds-mvp-narr-aux:/NARR' }
+    - { path: /s3/auxiliaries/MODTRAN-DATA, src: 'goofys#modtran-data-landsat.io' }
+    - { path: /s3/auxiliaries/landsat, src: 'goofys#landsat-auxiliary' }
+    - { path: /s3/auxiliaries/dem, src:  'goofys#lsds-elevation-data' }
+    - { path: /s3/l0rp, src: 'goofys#dev-lsds-l8-test-l0rp' }
