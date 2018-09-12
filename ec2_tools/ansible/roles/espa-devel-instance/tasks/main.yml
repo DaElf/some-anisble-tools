@@ -2,20 +2,6 @@
 - name:  Add the epel repo
   yum: name='https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm' state=present
 
-- name: Install amazon-efs-utils
-  yum: name=amazon-efs-utils,python-boto3,tmux state=present
-
-- name: Creates directory /devel
-  file: path=/devel state=directory
-
-- name: Mount up /devel
-  mount:
-    path: /devel
-    src: fs-ea567b43:/
-    fstype: efs
-    opts:  defaults,_netdev
-    state: mounted
-
 - name: Add local repository
   yum_repository:
     name: local

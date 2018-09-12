@@ -2,20 +2,22 @@
 - hosts: aws-devel-instance
   remote_user: ec2-user
   vars:
-    ansible_ssh_private_key_file: ~/Dropbox/USGS/daelf-us-west-2.pem
+    ansible_ssh_private_key_file: ~/.ssh/djt-us-west-2.pem
   become: yes
   
   roles:
-     - espa-devel-instance
+    - efs-mount
+    - espa-devel-instance
+    
 
   tasks:
-    - name: Add the user 'cattelan' with a specific uid and a primary group of 'wheel'
+    - name: Add the user 'dtonkin' with a specific uid and a primary group of 'wheel'
       user:
-        name: cattelan
-        comment: Russell Cattelan
-        uid: 7000
+        name: dtonkin
+        comment: Dan Tonkin
+        uid: 5550
         groups: wheel,docker
         append: yes
         shell: /bin/sh
-        home: /devel/cattelan
+        home: /devel/dtonkin
         create_home: false
