@@ -55,9 +55,21 @@
     - name: Install docker
       yum: name=docker state=present
 
+    - name: enable service docker and ensure it is not masked
+      systemd:
+        name: docker
+        enabled: yes
+        state: started
+        masked: no
+
+    - name: adding existing user ec2-user to group docker
+      user:
+        name: ec2-user
+        groups: docker
+        append: yes
+
     - name: Install awscli
       yum: name=awscli state=present
-##Configure nginx
 
 - name: Start AMI build process
   hosts: localhost
