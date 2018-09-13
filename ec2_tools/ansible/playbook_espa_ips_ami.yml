@@ -32,13 +32,12 @@
   remote_user: ec2-user
   vars:
     ansible_ssh_private_key_file: ~/.ssh/djt-us-west-2.pem
-    ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
+    ansible_ssh_common_args: '-o StrictHostKeyChecking=no' #Have to include this or it fails unattended
   become: yes
 
   roles:
     - s3-fuse
     - efs-mount
-    - jenkins-docker-worker
 
   tasks:
     - name:  Add the epel repo
