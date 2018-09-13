@@ -8,6 +8,8 @@ PREFIX=/opt
 export TNS_ADMIN=/home/ips
 
 export IAS_WO=/jobtmp
+export IAS_LOG=/jobtmp/log
+
 export QTDIR=/usr/lib64/qt4
 
 export PERL5LIB=$PREFIX/perllib:$PREFIX/perllib/lib/perl5
@@ -71,7 +73,6 @@ export IASIMAGES=$IAS_OPS/proddata/sysdata/l17_image
 
 export IAS_LOGGING=FILE
 export IAS_IMG=$IAS_OPS/proddata/sysdata/image
-export IAS_LOG=$IAS_OPS/proddata/log
 export IAS_RPS=$IAS_OPS/share/rps
 export IAS_RPSDATA=$IAS_OPS/share/rps
 export IAS_SCRT=$IAS_OPS/proddata/temp/test_script
