@@ -1,5 +1,5 @@
 ---
-# tasks file for ec2-instance
+# tasks file for ec2-espa-ips-ami
 
 - name: Create an ec2 instance
   ec2:
@@ -16,6 +16,15 @@
         volume_type: gp2
         volume_size: "{{ vol_size}}"
         delete_on_termination: yes
+        tags: 
+          - Project: "{{ proj_tag }}"
+      - device_name: /dev/sdb
+        volume_type: io1
+        iops: "{{ jobtmp_iops }}"
+        volume_size: "{{ jobtmp_size }}"
+        delete_on_termination: yes
+        tags: 
+          - Project: "{{ proj_tag }}"
     count_tag:
       Name: "{{ name_tag }}"
       Project: "{{ proj_tag }}"

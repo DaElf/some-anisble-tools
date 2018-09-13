@@ -3,6 +3,14 @@
 - name: Install fuse
   yum: name=fuse state=present
 
+- name: Copy in goofys binary
+  copy:
+    src: goofys
+    dest: /usr/bin/goofys
+    owner: root
+    group: root
+    mode: 0755
+
 - name: Mount s3 goofys mounts
   mount:
     path: "{{ item.path }}"
@@ -11,12 +19,13 @@
     opts:  _netdev,allow_other,--file-mode=0666,ro
     state: mounted
   with_items:
-    - { path: /s3/auxiliaries/elevation, src: 'goofys#lsds-mvp-elevation-aux' }
-    - { path: /s3/auxiliaries/aster, src: 'goofys#lsds-mvp-aster-aux' }
-    - { path: /s3/auxiliaries/L47, src: 'goofys#lsds-mvp-l47-sr-aux' }
-    - { path: /s3/auxiliaries/L8 , src: 'goofys#lsds-mvp-l8-sr-aux' }
-    - { path: /s3/auxiliaries/NARR, src: 'goofys#lsds-mvp-narr-aux:/NARR' }
-    - { path: /s3/auxiliaries/MODTRAN-DATA, src: 'goofys#modtran-data-landsat.io' }
-    - { path: /s3/auxiliaries/landsat, src: 'goofys#landsat-auxiliary' }
-    - { path: /s3/auxiliaries/dem, src:  'goofys#lsds-elevation-data' }
-    - { path: /s3/l0rp, src: 'goofys#dev-lsds-l8-test-l0rp' }
+# Removed as part of the bucket consolidation, may need to update espa code or symlink
+#    - { path: /s3/auxiliaries/elevation, src: 'goofys#lsds-mvp-elevation-aux' }
+    - { path: /s3/auxiliaries/aster, src: 'goofys#usgs-landsat:/data/auxiliary/aster' }
+    - { path: /s3/auxiliaries/L47, src: 'goofys#usgs-landsat:/data/auxiliary/sr/l47' }
+    - { path: /s3/auxiliaries/L8 , src: 'goofys#usgs-landsat:/data/auxiliary/sr/l8' }
+    - { path: /s3/auxiliaries/NARR, src: 'goofys#usgs-landsat:/data/auxiliary/narr' }
+    - { path: /s3/auxiliaries/MODTRAN-DATA, src: 'goofys#usgs-landsat:/data/auxiliary/modtran' }
+    - { path: /s3/auxiliaries/landsat, src: 'goofys#usgs-landsat:/data/auxiliary' }
+    - { path: /s3/auxiliaries/dem, src:  'goofys#usgs-landsat:/data/auxiliary/dem' }
+    - { path: /s3/l0rp, src: 'goofys#usgs-landsat:/data/scene/l0rp/samples' }
