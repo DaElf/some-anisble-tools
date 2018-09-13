@@ -153,6 +153,11 @@ def validate_args(args):
 
 def parse_s3_object(bucket, s3_obj):
     """Parse an S3 object and return an S3 directory and product ID.
+    Tar file names have (at least) two formats:
+        LC80170392013141LGN03.tar.gz
+        LC80220292013112LGN03_L0R.tar.gz
+    This function attempts to extract the product ID from either
+    format.
 
     Args:
         s3_obj <S3 object>: S3 object to be parsed
@@ -165,7 +170,9 @@ def parse_s3_object(bucket, s3_obj):
     if not s3_obj.key.endswith('tar.gz'):
         return (None, None)
     inputURL = 's3://' + bucket + '/' + s3_obj.key
-    inputProductId = s3_obj.key.split('/')[-1].split('.')[0]
+    tarfile = os.path.basename(s3_obj.key)
+    file_root = tarfile.replace('.tar.gz', '')
+    inputProductId = file_root.split('_')[0]
 
     return (inputURL, inputProductId)
 
