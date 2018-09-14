@@ -10,7 +10,7 @@
     jobtmp_size: 256
     jobtmp_iops: 2500
     security_group: sg-0c305038ba5d8d1fb
-    name_tag: TEST-ESPA-IPS-AMI-Builder
+    name_tag: ESPA-IPS-AMI-Builder
     proj_tag: l2pgsv2
     region: us-west-2
     instance_type: t2.xlarge
@@ -72,9 +72,15 @@
     - name: Install docker from amzn-updates repo
       yum: name=docker state=present
 
-    - name: enable service docker and ensure it is not masked
+    - name: enable service docker and ensure it is started
       service:
         name: docker
+        enabled: yes
+        state: started
+
+    - name: enable service nginx and ensure it is started
+      service:
+        name: nginx
         enabled: yes
         state: started
 
@@ -103,9 +109,9 @@
         instance_id: "{{ ec2_provision_result.instances[0].id }}"
         wait: yes
         delete_snapshot: yes
-        name: TEST-ESPA-IPS-AMI
+        name: ESPA-IPS-AMI
         tags:
-          Name:  TEST-ESPA-IPS-AMI
+          Name:  ESPA-IPS-AMI
           Project: "{{ proj_tag }}"
 
     - name: Terminate instances that were previously launched
