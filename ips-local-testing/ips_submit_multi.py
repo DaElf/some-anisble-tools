@@ -333,6 +333,7 @@ def main():
     job_file = None
 
     sys.stdout.write("Gathering list of scenes ... ")
+    sys.stdout.flush()
     obj_list = getS3ObjectList(args.input_bucket, prefixList)
     sys.stdout.write("done\n")
     for (url, pid) in obj_list:
