@@ -46,11 +46,12 @@
       filesystem:
         fstype: xfs
         dev: /dev/xvdb1
+        opts: "-L jobtmp"
 
     - name: Mount /jobtmp from /dev/xvdb1
       mount:
         path: "/jobtmp"
-        src: "/dev/xvdb1"
+        src: LABEL=jobtmp
         fstype: xfs
         state: mounted
 
