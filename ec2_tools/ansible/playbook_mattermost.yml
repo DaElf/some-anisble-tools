@@ -1,0 +1,19 @@
+- name: Create a new EC2 instance
+  hosts: localhost
+  connection: local
+  gather_facts: False
+
+  vars:
+    region: us-west-2
+    instance_type: t2.large
+    ami: ami-a9d09ed1  # AWS Linux  2
+    keypair: daelf-us-west-2 # pem file name
+    subnet: subnet-044c596c6b1ad7906
+    security_group: [sg-0c305038ba5d8d1fb, sg-0b1e63cedd29ccd42]
+    ansible_ssh_private_key_file: ~/Dropbox/USGS/daelf-us-west-2.pem
+    name_tag: mattermost 
+    vol_size: 32
+    proj_tag: l2pgsv2
+    
+  roles:
+    - ec2-instance
