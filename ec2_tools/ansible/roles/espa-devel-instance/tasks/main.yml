@@ -34,6 +34,9 @@
     - fuse
     - jq
     - docker
+    - amazon-efs-utils
+    - python-boto3
+    - tmux
 
 - name: Install ESPA python lib
   yum: pkg={{item}} state=present disable_gpg_check=yes update_cache=yes
