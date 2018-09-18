@@ -6,7 +6,7 @@
 # 3) Check your batch status and/or the L2 output S3 bucket for results
 
 SQSHOME=.
-export espaQueue=test-vpc-Batch-ESPA_ProcessJobQueueSpot
+export espaQueue=test-vpc-Batch-ProcessJobQueueSpot
 export espaJobBucket=jdc-test-dev
 export espaJobDefinition=test-vpc-Batch-ESPA_ProcessJob
 export AWSRegion=us-west-2
