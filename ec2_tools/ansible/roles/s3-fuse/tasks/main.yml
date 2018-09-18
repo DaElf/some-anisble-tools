@@ -19,8 +19,6 @@
     opts:  _netdev,allow_other,--file-mode=0666,ro
     state: mounted
   with_items:
-# Removed as part of the bucket consolidation, may need to update espa code or symlink
-#    - { path: /s3/auxiliaries/elevation, src: 'goofys#lsds-mvp-elevation-aux' }
     - { path: /s3/auxiliaries/aster, src: 'goofys#usgs-landsat:/data/auxiliary/aster' }
     - { path: /s3/auxiliaries/L47, src: 'goofys#usgs-landsat:/data/auxiliary/sr/l47' }
     - { path: /s3/auxiliaries/L8 , src: 'goofys#usgs-landsat:/data/auxiliary/sr/l8' }
