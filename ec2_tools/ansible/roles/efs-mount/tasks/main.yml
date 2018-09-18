@@ -1,10 +1,17 @@
 ---
 # tasks file for roles/efs-mount
 - name: Install amazon-efs-utils
-  yum: name=amazon-efs-utils,python-boto3,tmux state=present
+  yum: pkg={{item}} state=present disable_gpg_check=yes update_cache=yes
+  with_items:
+    - amazon-efs-utils
 
-- name: Creates directory /devel
-  file: path=/devel state=directory
+- name: Mount up /users
+  mount:
+    path: /users
+    src: fs-ea567b43:/
+    fstype: efs
+    opts:  defaults,_netdev
+    state: mounted
 
 - name: Mount up /devel
   mount:

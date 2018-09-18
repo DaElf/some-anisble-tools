@@ -1,0 +1,13 @@
+---
+users:
+  - username: cattelan
+    use_sudo: yes
+    uid: 7000
+
+  - username: jzubke
+    use_sudo: yes
+    uid: 7777
+
+  - username: dtonkin
+    use_sudo: yes
+    uid: 5550

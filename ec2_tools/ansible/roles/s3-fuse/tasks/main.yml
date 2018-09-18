@@ -1,15 +1,18 @@
 ---
 # tasks file for roles/s3-fuse
-- name: Install fuse
-  yum: name=fuse state=present
+- name: Add local repository
+  yum_repository:
+    name: local
+    description: EROS YUM repo
+    baseurl: file:///devel/jenkins-rpms-local/x86_64
+    gpgcheck: no
+    skip_if_unavailable: yes
 
-- name: Copy in goofys binary
-  copy:
-    src: goofys
-    dest: /usr/bin/goofys
-    owner: root
-    group: root
-    mode: 0755
+- name: Install goofys
+  yum: pkg={{item}} state=present update_cache=yes
+  with_items:
+    - fuse
+    - goofys
 
 - name: Mount s3 goofys mounts
   mount:
