@@ -9,11 +9,11 @@
     ami: ami-6cd6f714  # AWS Linux  2
     subnet: subnet-044c596c6b1ad7906
     security_group: sg-0c305038ba5d8d1fb
-    keypair: djt-us-west-2 # pem file name
-    ansible_ssh_private_key_file: ~/.ssh/djt-us-west-2.pem
-    name_tag: djt-dev-spot-host
+    keypair: "{{ keyfilename }}" # pem file name
+    ansible_ssh_private_key_file: "{{ keyfilepath }}"
+    name_tag: "{{ nametag }}"
     vol_size: 32
     proj_tag: l2pgsv2
-    
+
   roles:
     - ec2-instance
