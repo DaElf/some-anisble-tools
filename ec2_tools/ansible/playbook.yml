@@ -2,7 +2,8 @@
 - hosts: aws-devel-instance
   remote_user: ec2-user
   vars:
-    ansible_ssh_private_key_file: "{{ privatekeyfilepath }}"
+    username: "{{ lookup('env','USER') }}"
+    ansible_ssh_private_key_file: "~/.ssh/{{ username }}.pem"
   become: yes
 
   roles:

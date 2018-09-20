@@ -12,6 +12,6 @@ users:
     use_sudo: yes
     uid: 5550
 
-  - username: dilley
-    use_sudo: yes
-    uid: 7200
+#  - username: dilley
+#    use_sudo: yes
+#    uid: 7200

@@ -9,9 +9,10 @@
     ami: ami-6cd6f714  # AWS Linux  2
     subnet: subnet-044c596c6b1ad7906
     security_group: sg-0c305038ba5d8d1fb
-    keypair: "{{ keyfilename }}" # pem file name
-    ansible_ssh_private_key_file: "{{ keyfilepath }}"
-    name_tag: "{{ nametag }}"
+    username: "{{ lookup('env','USER') }}"
+    keypair: "{{ username }}" # pem file name
+    ansible_ssh_private_key_file: "~/.ssh/{{ username }}.pem"
+    name_tag: "{{ user-name }}-devel"
     vol_size: 32
     proj_tag: l2pgsv2
 
