@@ -44,6 +44,7 @@ def classify_failure(message):
             ("Missing TIRS BPF file", "Error: can't find BPF_TIRS"),
             ("Missing CPF file", "Error: can't find CPF"),
             ("Missing RLUT file", "Error: can't find RLUT"),
+            ("Invalid tar file", "tar: Unexpected EOF in archive"),
             ("Error exit", "exit 1"),
             ("Exception", "Exception")
     ]
@@ -65,7 +66,8 @@ def search_log(client, group, log_stream, startTime=None, endTime=None):
     exit_code = 0
     stream = log_stream['logStreamName']
 
-    err_strings = ['Error:']
+    err_strings = ['Error:', 
+            'tar: Unexpected EOF in archive']
     exit_string = '+ exit '
 
     while not done:
