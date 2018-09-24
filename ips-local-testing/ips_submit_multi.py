@@ -36,12 +36,6 @@ def parse_command_line():
             action = 'store',
             default = 'dev-lsds-l8-test-l0rp',
             help = "Input S3 bucket (default: dev-lsds-l8-test-l0rp)")
-    parser.add_argument('--job-bucket',
-            type = str,
-            dest = 'job_bucket',
-            action = 'store',
-            default = None,
-            help = "S3 job bucket")
     parser.add_argument('--job-definition',
             type = str,
             dest = 'job_definition',
@@ -82,7 +76,6 @@ def validate_args(args):
     """
 
     global batch_cmd
-    global job_bucket
     global job_definition
     global queue
 
@@ -107,8 +100,6 @@ def validate_args(args):
     if args.job_definition is not None:
         job_definition = args.job_definition
     elif 'ipsJobDefinition' in os.environ:
-        job_definition = args.job_definition
-    elif 'ipsJobDefinition' in os.environ:
         job_definition = os.environ['ipsJobDefinition']
     else:
         sys.stderr.write("Error: job definition not specified\n" +
@@ -120,29 +111,6 @@ def validate_args(args):
         sys.stderr.write("Error: job definition {} not found\n".
                 format(job_definition))
         exit(1)
-
-    if args.job_bucket is not None:
-        job_bucket = args.job_bucket
-    elif 'ipsJobDefinition' in os.environ:
-        job_bucket = args.job_bucket
-    elif 'ipsJobDefinition' in os.environ:
-        job_bucket = os.environ['ipsJobBucket']
-    else:
-        sys.stderr.write("Error: job bucket not specified\n" +
-                "       Must use --job-bucket or set ipsJobBucket\n")
-        exit(1)
-
-    if 'AWSRegion' in os.environ:
-        client = boto3.client('s3', region_name=os.environ['AWSRegion'])
-    else:
-        client = boto3.client('s3')
-    try:
-        acl = client.get_bucket_acl(Bucket=job_bucket)
-    except Exception:
-        sys.stderr.write("Error: job bucket {} not found\n".
-                format(job_bucket))
-        exit(1)
-
 
     # Provide a default for the batch command
     if args.batch_cmd is not None:
@@ -173,6 +141,10 @@ def parse_s3_object(bucket, s3_obj):
     tarfile = os.path.basename(s3_obj.key)
     file_root = tarfile.replace('.tar.gz', '')
     inputProductId = file_root.split('_')[0]
+
+    # Don't return TIRS-only or OLI-only scenes
+    if inputProductId.startswith('LT8') or inputProductId.startswith('LO8'):
+        return (None, None)
 
     return (inputURL, inputProductId)
 
@@ -281,8 +253,10 @@ def submit_job(job_file_name, size):
         s3_client = boto3.client('s3')
 
     # Copy the job file to the job bucket
+    job_bucket = 'usgs-landsat'
+    job_key_prefix = 'projects/lpip/test/job'
     job_name_base = os.path.basename(job_file_name).split('.')[0]
-    prefix = '-'.join(job_name_base.split('-')[:-1])
+    prefix = job_key_prefix + '/' + '-'.join(job_name_base.split('-')[:-1])
     s3_key = prefix + '/' + os.path.basename(job_file_name)
     s3_client.upload_file(job_file_name, job_bucket, s3_key)
     s3_url = 's3://' + job_bucket + '/' + s3_key
@@ -364,7 +338,6 @@ def main():
 
 
 batch_cmd = None
-job_bucket = None
 job_definition = None
 queue = None
 
