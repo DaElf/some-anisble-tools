@@ -34,8 +34,8 @@ def parse_command_line():
             type = str,
             dest = 'input_bucket',
             action = 'store',
-            default = 'dev-lsds-l8-test-l0rp',
-            help = "Input S3 bucket (default: dev-lsds-l8-test-l0rp)")
+            default = 'usgs-landsat',
+            help = "Input S3 bucket (default: usgs-landsat)")
     parser.add_argument('--job-definition',
             type = str,
             dest = 'job_definition',
@@ -110,6 +110,18 @@ def validate_args(args):
     if len(defs['jobDefinitions']) == 0:
         sys.stderr.write("Error: job definition {} not found\n".
                 format(job_definition))
+        exit(1)
+
+    # Validate the imput bucket name
+    if 'AWSRegion' in os.environ:
+        client = boto3.client('s3', region_name=os.environ['AWSRegion'])
+    else:
+        client = boto3.client('s3')
+    try:
+        acl = client.get_bucket_acl(Bucket=args.input_bucket)
+    except Exception:
+        sys.stderr.write("Error: input bucket {} not found\n".
+                format(args.input_bucket))
         exit(1)
 
     # Provide a default for the batch command
