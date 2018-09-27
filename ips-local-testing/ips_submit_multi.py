@@ -36,6 +36,12 @@ def parse_command_line():
             action = 'store',
             default = 'usgs-landsat',
             help = "Input S3 bucket (default: usgs-landsat)")
+    parser.add_argument('--input-job-file',
+            type = str,
+            dest = 'input_job_file',
+            action = 'store',
+            default = None,
+            help = "File of input file names to submit")
     parser.add_argument('--job-definition',
             type = str,
             dest = 'job_definition',
@@ -194,7 +200,7 @@ def getS3ObjectList(bucket, prefixList):
     return objectList
 
 
-def getListFromFile(filename):
+def get_list_from_file(filename):
     """ Read a list of scenes from a file.  This is an alternative
     to getting the list from the S3 bucket.
 
@@ -219,7 +225,7 @@ def getListFromFile(filename):
         url = s[0].strip()
         if len(url) == 0:
             continue
-        inputProductId = url.split('/')[-1].split('.')[0]
+        inputProductId = url.split('/')[-1].split('.')[0].split('_')[0]
         objectList.append([url, inputProductId])
 
     file.close()
@@ -318,10 +324,14 @@ def main():
     batch_index = 0
     job_file = None
 
-    sys.stdout.write("Gathering list of scenes ... ")
-    sys.stdout.flush()
-    obj_list = getS3ObjectList(args.input_bucket, prefixList)
-    sys.stdout.write("done\n")
+    if args.input_job_file is not None:
+        obj_list = get_list_from_file(args.input_job_file)
+    else:
+        sys.stdout.write("Gathering list of scenes ... ")
+        sys.stdout.flush()
+        obj_list = getS3ObjectList(args.input_bucket, prefixList)
+        sys.stdout.write("done\n")
+
     for (url, pid) in obj_list:
 
         if job_file is None:
