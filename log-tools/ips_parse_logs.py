@@ -7,6 +7,7 @@ import datetime
 import dateutil.parser
 import calendar
 import argparse
+import time
 
 
 def parse_command_line():
@@ -27,6 +28,12 @@ def parse_command_line():
             action = 'store',
             default = None,
             help = "End time for search")
+    parser.add_argument('--log-stream-prefix',
+            type = str,
+            dest = 'log_stream_prefix',
+            action = 'store',
+            default = 'ips-devel-batch-IPS_ProcessJob',
+            help = "Prefix of log stream to search (default: ips-devel-batch-IPS_ProcessJob)")
 
     args = parser.parse_args()
 
@@ -45,6 +52,11 @@ def classify_failure(message):
             ("Missing CPF file", "Error: can't find CPF"),
             ("Missing RLUT file", "Error: can't find RLUT"),
             ("Invalid tar file", "tar: Unexpected EOF in archive"),
+            ("Tar file download failed", "download failed"),
+            ("S3 slow down", "error occurred (SlowDown)"),
+            ("S3 time-out", "The read operation timed out"),
+            ("S3 client error", "botocore.exceptions.ClientError"),
+            ("Incompelete S3 read", "IncompleteRead(0 bytes read)"),
             ("Error exit", "exit 1"),
             ("Exception", "Exception")
     ]
@@ -64,10 +76,15 @@ def search_log(client, group, log_stream, startTime=None, endTime=None):
     done = False
     next_token = ''
     exit_code = 0
+    productId = None
     stream = log_stream['logStreamName']
 
     err_strings = ['Error:', 
-            'tar: Unexpected EOF in archive']
+            'tar: Unexpected EOF in archive',
+            'botocore.exceptions.ClientError',
+            'download failed',
+            'The read operation timed out',
+            'IncompleteRead(0 bytes read)']
     exit_string = '+ exit '
 
     while not done:
@@ -83,6 +100,8 @@ def search_log(client, group, log_stream, startTime=None, endTime=None):
 
         for event in events['events']:
             msg = event['message']
+            if msg.find('product=') >= 0:
+                productId = msg.split('=')[-1]
             for err_string in err_strings:
                 if msg.find(err_string) != -1:
                     reason = classify_failure(msg)
@@ -90,6 +109,8 @@ def search_log(client, group, log_stream, startTime=None, endTime=None):
                         print("Error detected ({}):".format(reason))
                     else:
                         print("Error detected:")
+                    if productId is not None:
+                        print("    " + productId)
                     print("    " + stream)
                     return 1
 
@@ -97,6 +118,8 @@ def search_log(client, group, log_stream, startTime=None, endTime=None):
                     exit_code = int(msg.split(' ')[-1])
                     if exit_code != 0:
                         print("Error exit code {}:".format(exit_code))
+                        if productId is not None:
+                            print("    " + productId)
                         print("    " + stream)
                     return exit_code
 
@@ -106,6 +129,8 @@ def search_log(client, group, log_stream, startTime=None, endTime=None):
             done = True
 
         print("Error detected (job did not complete):")
+        if productId is not None:
+            print("    " + productId)
         print("    " + stream)
         return 1
 
@@ -123,15 +148,20 @@ def search_log_streams(group, prefix, startTime=None, endTime=None):
     next_token = ''
     client = boto3.client('logs')
     while not done:
-        if next_token != '':
-            streams = client.describe_log_streams(
-                    logGroupName=group,
-                    logStreamNamePrefix=prefix,
-                    nextToken=next_token)
-        else:
-            streams = client.describe_log_streams(
-                    logGroupName=group,
-                    logStreamNamePrefix=prefix)
+        try:
+            if next_token != '':
+                streams = client.describe_log_streams(
+                        logGroupName=group,
+                        logStreamNamePrefix=prefix,
+                        nextToken=next_token)
+            else:
+                streams = client.describe_log_streams(
+                        logGroupName=group,
+                        logStreamNamePrefix=prefix)
+        except Exception as e:
+            sys.stderr.write("Got CloudWatch exception {}\n".format(e))
+            time.sleep(.1)
+            continue
 
         for log_stream in streams['logStreams']:
 
@@ -196,7 +226,7 @@ def main():
         sys.stderr.write("Error: end time earlier than start time\n")
         sys.exit(1)
 
-    search_log_streams('/aws/batch/job', 'ips-devel-batch-IPS_ProcessJob',
+    search_log_streams('/aws/batch/job', args.log_stream_prefix,
             startTime=start_timestamp, endTime=end_timestamp)
 
 # Set this to false if you want to use --prefix
