@@ -9,6 +9,7 @@ import string
 import argparse
 import subprocess
 import tempfile
+import shutil
 
 
 def parse_command_line():
@@ -48,11 +49,6 @@ def parse_command_line():
             action = 'store',
             default = None,
             help = "Batch job definition")
-    parser.add_argument('--package',
-            dest = 'package',
-            action = 'store_true',
-            default = False,
-            help = "Perform packaging (default: False)")
     parser.add_argument('--prefix',
             type = str,
             dest = 'prefix',
@@ -71,6 +67,31 @@ def parse_command_line():
     return args
 
 
+def get_arg_value(arg_value, environ_var, default_value):
+    """Get the value of an argument based on the values from
+    the command-line arguments, the value of an associated
+    environment variable, and a default value for the argument.
+
+    Args:
+        arg_value <str>: the value from the command line arguments
+        environ_var <str>: the name of the environment variable
+        default_value <str>: the default value
+
+    Returns:
+        value <str>: the value for the argument
+    """
+
+    value = None
+    if arg_value is not None:
+        value = arg_value
+    elif environ_var in os.environ:
+        value = os.environ[environ_var]
+    elif default_value is not None:
+        value = default_value
+
+    return value
+
+
 def validate_args(args):
     """Validate the command line arguments and check for
     environment variables where appropriate.  We make some of
@@ -85,11 +106,8 @@ def validate_args(args):
     global job_definition
     global queue
 
-    if args.queue is not None:
-        queue = args.queue
-    elif 'ipsQueue' in os.environ:
-        queue = os.environ['ipsQueue']
-    else:
+    queue = get_arg_value(args.queue, 'ipsQueue', None)
+    if queue is None:
         sys.stderr.write("Error: queue not specified\n" +
                 "       Must use --queue or set ipsQueue\n")
         exit(1)
@@ -103,11 +121,9 @@ def validate_args(args):
         sys.stderr.write("Error: queue {} not found\n".format(queue))
         exit(1)
 
-    if args.job_definition is not None:
-        job_definition = args.job_definition
-    elif 'ipsJobDefinition' in os.environ:
-        job_definition = os.environ['ipsJobDefinition']
-    else:
+    job_definition = get_arg_value(args.job_definition,
+            'ipsJobDefinition', None)
+    if job_definition is None:
         sys.stderr.write("Error: job definition not specified\n" +
                 "       Must use --job-definition or set ipsJobDefinition\n")
         exit(1)
@@ -137,6 +153,20 @@ def validate_args(args):
         batch_cmd = '/opt/bin/ips-batch-worker.sh'
 
 
+def get_satellite_from_product_id(pid):
+    """Get the number of the satellite associate with a scene.
+
+    Args:
+        pid <str>: The product ID of the scene
+
+    Returns:
+        satellite <str>: A single digit identifying the satellite
+                that acquired the image
+    """
+
+    return pid[2:3]
+
+
 def parse_s3_object(bucket, s3_obj):
     """Parse an S3 object and return an S3 directory and product ID.
     Tar file names have (at least) two formats:
@@ -155,7 +185,7 @@ def parse_s3_object(bucket, s3_obj):
 
     if not s3_obj.key.endswith('tar.gz'):
         return (None, None)
-    inputURL = 's3://' + bucket + '/' + s3_obj.key
+    inputURL = os.path.join('s3://', bucket, s3_obj.key)
     tarfile = os.path.basename(s3_obj.key)
     file_root = tarfile.replace('.tar.gz', '')
     inputProductId = file_root.split('_')[0]
@@ -202,7 +232,9 @@ def getS3ObjectList(bucket, prefixList):
 
 def get_list_from_file(filename):
     """ Read a list of scenes from a file.  This is an alternative
-    to getting the list from the S3 bucket.
+    to getting the list from the S3 bucket.  Each line of the file
+    contains an S3 URL pointing to a tar file with the scene to
+    be processed.
 
     Args:
         filename <str>: The name of the file with the list of scenes
@@ -225,11 +257,122 @@ def get_list_from_file(filename):
         url = s[0].strip()
         if len(url) == 0:
             continue
-        inputProductId = url.split('/')[-1].split('.')[0].split('_')[0]
+        inputProductId = os.path.basename(url).split('.')[0].split('_')[0]
         objectList.append([url, inputProductId])
 
     file.close()
     return objectList
+
+
+def write_list_to_file(filename, list):
+    """Write the contents of a list to a file.  The list is
+    assumed to consist of strings and a new line is put at
+    the end of each list element, so the file will have a
+    line for each item in the list.
+
+    Args:
+        filename <str>: The name for the file
+        list <list>: The list to be written to the file
+    """
+
+    try:
+        ofile = open(filename, 'w')
+    except Exception as e:
+        sys.stderr.write("Error: can't create file '{}': {}\n".
+                format(filename, e))
+        exit(1)
+
+    for item in list:
+        try:
+            ofile.write("{}\n".format(item))
+        except Exception as e:
+            sys.stderr.write("Error: can't write file '{}': {}\n".
+                    format(filename, e))
+            exit(1)
+
+    ofile.close()
+
+
+def get_bpf_lists(bucket, prefix):
+    """Get a list of objects in an S3 bucket
+
+    Get a list of objects in an S3 bucket, either by using a
+    list of prefixes, or listing all the objects in the bucket.
+
+    Args:
+        bucket <str>: input bucket name
+        prefixList <list>: list of prefixes (e.g. [L7, L8])
+
+    Returns:
+        List of the objects in the S3 bucket that start with
+        one of the given prefixes.
+    """
+
+    s3 = boto3.resource('s3')
+    my_bucket = s3.Bucket(bucket)
+    oli_list = []
+    tirs_list = []
+
+    sys.stdout.write("Gathering list of BPF file names ... ")
+    sys.stdout.flush()
+    for s3_obj in my_bucket.objects.filter(Prefix=prefix):
+        filename = os.path.basename(s3_obj.key).rstrip()
+        if filename.startswith('LO8BPF'):
+            oli_list.append(filename)
+        elif filename.startswith('LT8BPF'):
+            tirs_list.append(filename)
+    print('done')
+
+    return (oli_list, tirs_list)
+
+
+def create_bpf_name_files(job_bucket, job_prefix):
+    """ Create two files containing lists of the BPF files
+    in the auxiliary data subdirectory of the usgs-landsat bucket.
+    One file will contain names of all the OLI BPF files, the
+    other will contain names of all the TIRS BPF files.  The
+    files are provided so that find_aux_files.py can use them
+    instead of gathering the list itself.  A large number of
+    jobs hitting the bucket at the same time causes problems.
+
+    Args:
+        job_bucket <str>: The name of the bucket holding the job files
+        job_prefix <str>: The prefix (directory path) for the files
+    """
+
+    bpf_oli_fn = 'bpf_oli_filenames.txt'
+    bpf_tirs_fn = 'bpf_tirs_filenames.txt'
+
+    (oli_list, tirs_list) = get_bpf_lists('usgs-landsat', 'data/auxiliary/bpf')
+    oli_list.sort()
+    tirs_list.sort()
+
+    tmpdir = tempfile.mkdtemp()
+    oli_file = os.path.join(tmpdir, bpf_oli_fn)
+    write_list_to_file(oli_file, oli_list)
+    tirs_file = os.path.join(tmpdir, bpf_tirs_fn)
+    write_list_to_file(tirs_file, tirs_list)
+
+    s3 = boto3.client('s3')
+    s3.upload_file(oli_file, job_bucket,
+            os.path.join(job_prefix, bpf_oli_fn))
+    s3.upload_file(tirs_file, job_bucket,
+            os.path.join(job_prefix, bpf_tirs_fn))
+
+    shutil.rmtree(tmpdir)
+
+
+def job_prefix(uniq):
+    """Return the job prefix associated with a random string.
+
+    Args:
+        A randomly-chosen string that assures uniqueness for the job prefix
+
+    Returns:
+        The job prefix (subdirectory name in the job bucket)
+    """
+
+    return 'ips-' + uniq
 
 
 def create_job_file(uniq, batch_index):
@@ -244,7 +387,8 @@ def create_job_file(uniq, batch_index):
     """
 
     dir = tempfile.gettempdir()
-    fn = dir + '/ips-' + uniq + '-' +  str(batch_index).zfill(3) + '.jobctl'
+    fn = os.path.join(dir,
+            job_prefix(uniq) + '-' +  str(batch_index).zfill(3) + '.jobctl')
     try:
         job_file = open(fn, 'w')
     except IOError as e:
@@ -274,10 +418,12 @@ def submit_job(job_file_name, size):
     job_bucket = 'usgs-landsat'
     job_key_prefix = 'projects/lpip/test/job'
     job_name_base = os.path.basename(job_file_name).split('.')[0]
-    prefix = job_key_prefix + '/' + '-'.join(job_name_base.split('-')[:-1])
-    s3_key = prefix + '/' + os.path.basename(job_file_name)
+    prefix = os.path.join(job_key_prefix,
+            '-'.join(job_name_base.split('-')[:-1]))
+    s3_key = os.path.join(prefix, os.path.basename(job_file_name))
     s3_client.upload_file(job_file_name, job_bucket, s3_key)
-    s3_url = 's3://' + job_bucket + '/' + s3_key
+    s3_url = os.path.join('s3://', job_bucket, s3_key)
+    os.remove(job_file_name)
 
     # Put the batch command into an array
     cmd_array = ['sudo', '-E', '-u', 'ips']
@@ -333,6 +479,12 @@ def main():
         sys.stdout.write("done\n")
 
     for (url, pid) in obj_list:
+        if get_satellite_from_product_id(pid) == '8':
+            create_bpf_name_files(job_bucket,
+                    os.path.join(job_key_prefix, job_prefix(uniq)))
+            break
+
+    for (url, pid) in obj_list:
 
         if job_file is None:
             job_file = create_job_file(uniq, batch_index)
@@ -362,6 +514,8 @@ def main():
 batch_cmd = None
 job_definition = None
 queue = None
+job_bucket = 'usgs-landsat'
+job_key_prefix = 'projects/lpip/test/job'
 
 if __name__ == '__main__':
         main()
