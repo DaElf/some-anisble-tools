@@ -16,6 +16,6 @@ users:
 #    use_sudo: yes
 #    uid: 7200
 
-  - username: jdc
+  - username: jcavanaugh
     use_sudo: yes
     uid: 7002
