@@ -43,6 +43,7 @@
   with_items:
     - python-espa
     - python-watchtower
+    - h5py
 
 - name: adding existing user ec2-user to group sudo
   user:
