@@ -12,7 +12,7 @@
     username: "{{ lookup('env','USER') }}"
     keypair: "{{ username }}" # pem file name
     ansible_ssh_private_key_file: "~/.ssh/{{ username }}.pem"
-    name_tag: "{{ user-name }}-devel"
+    name_tag: "{{ username }}-devel"
     vol_size: 32
     proj_tag: l2pgsv2
 
