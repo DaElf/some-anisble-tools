@@ -63,6 +63,7 @@
     - name: Install ecs-init from amzn-updates repo
       yum: name=ecs-init state=present
 
+    # Nginx serves as a proxy for the aster data because the code assumes the aster data is available via http.  
     - name: Install nginx from amzn-main repo
       yum: name=nginx state=present
 
