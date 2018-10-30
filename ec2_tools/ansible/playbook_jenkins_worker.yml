@@ -4,15 +4,16 @@
   gather_facts: False
 
   vars:
-    keypair: daelf-us-west-2 # pem file name
-    ansible_ssh_private_key_file: ~/Dropbox/USGS/daelf-us-west-2.pem
+    keypair: jenkins-master # pem file name
+    ansible_ssh_private_key_file: ~/.ssh/jenkins-master.pem
     vol_size: 32
+    security_group: sg-0c305038ba5d8d1fb
     name_tag: jenkins-worker
     proj_tag: l2pgsv2
     region: us-west-2
     instance_type: t2.xlarge
     ami: ami-a9d09ed1  # AWS Linux  2
-    subnet: subnet-d42f6e9c
+    subnet: subnet-044c596c6b1ad7906
     
   roles:
     - ec2-instance
@@ -28,7 +29,7 @@
   hosts: ec2_server
   remote_user: ec2-user
   vars:
-    ansible_ssh_private_key_file: ~/Dropbox/USGS/daelf-us-west-2.pem
+    ansible_ssh_private_key_file: ~/.ssh/jenkins-master.pem
   become: yes
   
   roles:
