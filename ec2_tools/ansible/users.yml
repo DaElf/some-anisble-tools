@@ -8,14 +8,6 @@ users:
     use_sudo: yes
     uid: 7777
 
-  - username: dtonkin
-    use_sudo: yes
-    uid: 5550
-
-#  - username: dilley
-#    use_sudo: yes
-#    uid: 7200
-
   - username: jcavanaugh
     use_sudo: yes
     uid: 7010
