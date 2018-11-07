@@ -25,6 +25,7 @@
     vpc_subnet_id: "{{ subnet }}"
     assign_public_ip: true
     spot_price: 0.24
+    spot_type: one-time
   register: ec2_provision_result
 
 #- debug: var: ec2_provision_result
