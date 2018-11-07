@@ -22,6 +22,8 @@
       createhome: no
       home: "/users/{{ item.username }}"
       comment: 'create with ansible'
+      groups: docker
+      append: yes
     with_items: '{{users}}'
 
   - name: Setup | authorized key upload
