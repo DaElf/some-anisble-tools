@@ -18,4 +18,4 @@ users:
 
   - username: jcavanaugh
     use_sudo: yes
-    uid: 7002
+    uid: 7010
