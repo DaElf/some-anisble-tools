@@ -9,6 +9,7 @@
     baseurl: file:///devel/jenkins-rpms-local/x86_64
     gpgcheck: no
     skip_if_unavailable: yes
+    priority: 9
 
 - name: Add oracle repository
   yum_repository:
