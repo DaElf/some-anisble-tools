@@ -32,3 +32,12 @@
     - { path: /s3/auxiliaries/landsat, src: 'goofys#usgs-landsat:/data/auxiliary' }
     - { path: /s3/auxiliaries/dem, src:  'goofys#usgs-landsat:/data/auxiliary/dem' }
     - { path: /s3/l0rp, src: 'goofys#usgs-landsat:/data/scene/l0rp/samples' }
+    - { path: /s3/devel, src: 'goofys#usgs-landsat:/projects/dev' }
+
+- name: Mount up s3 /devel
+  mount:
+    path: /s3/devel
+    src: 'goofys#usgs-landsat:/projects/dev'
+    fstype: fuse
+    opts: _netdev,allow_other,--file-mode=0666,rw
+    state: mounted
