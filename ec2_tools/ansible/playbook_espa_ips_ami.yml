@@ -28,8 +28,8 @@
   become: yes
 
   roles:
-    - s3-fuse
     - efs-mount
+    - s3-fuse
 
   tasks:
     - name: Install xfs utilities from amzn-main
