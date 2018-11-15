@@ -1,9 +1,11 @@
 ---
 # tasks file for roles/efs-mount
 - name: Install amazon-efs-utils
-  yum: pkg={{item}} state=present disable_gpg_check=yes update_cache=yes
-  with_items:
-    - amazon-efs-utils
+  yum:
+    state: present
+    disable_gpg_check: yes
+    name:
+      - amazon-efs-utils
 
 - name: Mount up /users
   mount:

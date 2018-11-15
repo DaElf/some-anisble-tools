@@ -35,8 +35,30 @@
 
     # Nginx serves as a proxy for the aster data because the code assumes the aster data is available via http.
   tasks:
-    - name: Install xfs utilities from amzn-main
-      yum: name=xfsprogs state=present
+    - name: upgrade all packages
+      yum:
+        state: latest
+        name: '*'
+
+    - name: Enable amazon-linux-extras nginx
+      shell: "amazon-linux-extras enable nginx1.12"
+      become: yes
+
+    - name: Enable amazon-linux-ecs
+      shell: "amazon-linux-extras enable ecs"
+      become: yes
+
+    - name: Install additional tools
+      yum:
+        state: present
+        update_cache: yes
+        name:
+          - xfsprogs
+          - parted
+          - ecs-init
+          - nginx
+          - docker
+          - aws-cli
 
     - name: Create partition 1 on /dev/xvdb
       parted:
@@ -62,18 +84,8 @@
         path: "/jobtmp"
         mode: 0777
 
-    - name: Install ecs-init from amzn-updates repo
-      yum: name=ecs-init state=present
-
-    # Nginx serves as a proxy for the aster data because the code assumes the aster data is available via http.  
-    - name: Install nginx from amzn-main repo
-      yum: name=nginx state=present
-
     - name: Update root filesystem in nginx config
       lineinfile: dest=/etc/nginx/nginx.conf regexp="^[\s]+root"  line="        root         /s3/auxiliaries/aster;"
-
-    - name: Install docker from amzn-updates repo
-      yum: name=docker state=present
 
     - name: enable service docker and ensure it is started
       service:
@@ -87,14 +99,17 @@
         enabled: yes
         state: started
 
+    - name: enable service ecs and ensure it is started
+      service:
+        name: ecs
+        enabled: yes
+        state: started
+
     - name: adding existing user ec2-user to group docker
       user:
         name: ec2-user
         groups: docker
         append: yes
-
-    - name: Install aws-cli from amzn-updates repo
-      yum: name=aws-cli state=present
 
 - name: Start AMI build process
   hosts: localhost

@@ -10,10 +10,11 @@
     priority: 9
 
 - name: Install goofys
-  yum: pkg={{item}} state=present update_cache=yes
-  with_items:
-    - fuse
-    - goofys
+  yum:
+    state: present
+    name:
+      - fuse
+      - goofys
 
 - name: Mount s3 goofys mounts
   mount:
