@@ -15,10 +15,12 @@
     instance_type: t2.xlarge
     ami: ami-a0cfeed8  # AWS Linux  1 - required for ECS/Batch
     subnet: subnet-044c596c6b1ad7906
-    
+
+#  https://docs.aws.amazon.com/AmazonECS/latest/developerguide/al2ami.html
+
   roles:
     - ec2-espa-ips-ami
-    
+
 - name: Configure worker
   hosts: ec2_server
   remote_user: ec2-user
@@ -31,6 +33,7 @@
     - efs-mount
     - s3-fuse
 
+    # Nginx serves as a proxy for the aster data because the code assumes the aster data is available via http.
   tasks:
     - name: Install xfs utilities from amzn-main
       yum: name=xfsprogs state=present
