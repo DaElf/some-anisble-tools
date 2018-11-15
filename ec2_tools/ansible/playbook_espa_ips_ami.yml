@@ -1,16 +1,15 @@
-- name: Create a ESPA/IPS AMI from Base 
+- name: Create a EROS Image Processing AMI
   hosts: localhost
   connection: local
   gather_facts: False
 
   vars:
-    keypair: djt-us-west-2 # pem file name
-    ansible_ssh_private_key_file: ~/.ssh/djt-us-west-2.pem
+    keypair: EROS-Batch-Processing # pem file name
     vol_size: 32
     jobtmp_size: 256
     jobtmp_iops: 2500
     security_group: sg-0c305038ba5d8d1fb
-    name_tag: ESPA-IPS-AMI-Builder
+    name_tag: EROS-AMI-Builder
     proj_tag: l2pgsv2
     region: us-west-2
     instance_type: t2.xlarge
@@ -24,7 +23,7 @@
   hosts: ec2_server
   remote_user: ec2-user
   vars:
-    ansible_ssh_private_key_file: ~/.ssh/djt-us-west-2.pem
+    ansible_ssh_private_key_file: ~/.ssh/EROS-Batch-Processing.pem
     ansible_ssh_common_args: '-o StrictHostKeyChecking=no' #Have to include this or it fails unattended
   become: yes
 
@@ -101,18 +100,19 @@
   vars:
     region: us-west-2
     proj_tag: l2pgsv2
-    
+
   tasks:
     - debug: var=ec2_provision_result.instances[0]
-      
+
     - name : Create AMI
       ec2_ami:
         instance_id: "{{ ec2_provision_result.instances[0].id }}"
         wait: yes
         delete_snapshot: yes
-        name: ESPA-IPS-AMI
+        name: EROS-IPS-AMI
+        region: us-west-2
         tags:
-          Name:  ESPA-IPS-AMI
+          Name:  EROS-IPS-AMI
           Project: "{{ proj_tag }}"
 
     - name: Terminate instances that were previously launched
