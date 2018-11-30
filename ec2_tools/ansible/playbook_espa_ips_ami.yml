@@ -1,30 +1,31 @@
-- name: Create a ESPA/IPS AMI from Base 
+- name: Create a EROS Image Processing AMI
   hosts: localhost
   connection: local
   gather_facts: False
 
   vars:
-    keypair: sshrestha_key # pem file name
-    ansible_ssh_private_key_file: ~/.ssh/ec2-user.pem
+    keypair: EROS-Batch-Processing # pem file name
     vol_size: 32
     jobtmp_size: 256
     jobtmp_iops: 2500
     security_group: sg-0c305038ba5d8d1fb
-    name_tag: ESPA-IPS-AMI-Builder-LINUX-2
+    name_tag: EROS-AMI-Builder
     proj_tag: l2pgsv2
     region: us-west-2
     instance_type: t2.xlarge
-    ami: ami-061e7ebbc234015fe  # AWS Linux 2 - required for ECS/Batch
+    ami: ami-04a4fb062c609f55b
     subnet: subnet-044c596c6b1ad7906
-    
+
+#  https://docs.aws.amazon.com/AmazonECS/latest/developerguide/al2ami.html
+
   roles:
     - ec2-espa-ips-ami
-    
+
 - name: Configure worker
   hosts: ec2_server
   remote_user: ec2-user
   vars:
-    ansible_ssh_private_key_file: ~/.ssh/ec2-user.pem
+    ansible_ssh_private_key_file: ~/.ssh/EROS-Batch-Processing.pem
     ansible_ssh_common_args: '-o StrictHostKeyChecking=no' #Have to include this or it fails unattended
   become: yes
 
@@ -32,9 +33,32 @@
     - efs-mount
     - s3-fuse
 
+    # Nginx serves as a proxy for the aster data because the code assumes the aster data is available via http.
   tasks:
-    - name: Install xfs utilities from amzn-main
-      yum: name=xfsprogs state=present
+    - name: upgrade all packages
+      yum:
+        state: latest
+        name: '*'
+
+    - name: Enable amazon-linux-extras nginx
+      shell: "amazon-linux-extras enable nginx1.12"
+      become: yes
+
+    - name: Enable amazon-linux-ecs
+      shell: "amazon-linux-extras enable ecs"
+      become: yes
+
+    - name: Install additional tools
+      yum:
+        state: present
+        update_cache: yes
+        name:
+          - xfsprogs
+          - parted
+          - ecs-init
+          - nginx
+          - docker
+          - aws-cli
 
     - name: Create partition 1 on /dev/xvdb
       parted:
@@ -60,28 +84,8 @@
         path: "/jobtmp"
         mode: 0777
 
-    - name: Enable  amazon-linux-ecs
-      shell: "amazon-linux-extras enable ecs"
-      become: yes
-
-    - name: Install ecs-init from amzn-updates repo
-      yum: name=ecs-init state=present   
-     
-    - name: Enable service ecs and ensure it is started
-      service:
-        name: ecs
-        enabled: yes
-        state: started
-
-    - name: Install nginx1.12 from amazon-linux-extras
-      shell: "amazon-linux-extras install nginx1.12"
-      become: yes
-
     - name: Update root filesystem in nginx config
       lineinfile: dest=/etc/nginx/nginx.conf regexp="^[\s]+root"  line="        root         /s3/auxiliaries/aster;"
-
-    - name: Install docker from amzn-updates repo
-      yum: name=docker state=present
 
     - name: enable service docker and ensure it is started
       service:
@@ -95,14 +99,17 @@
         enabled: yes
         state: started
 
+    - name: enable service ecs and ensure it is started
+      service:
+        name: ecs
+        enabled: yes
+        state: started
+
     - name: adding existing user ec2-user to group docker
       user:
         name: ec2-user
         groups: docker
         append: yes
-
-    - name: Install aws-cli from amzn-updates repo
-      yum: name=aws-cli state=present
 
 - name: Start AMI build process
   hosts: localhost
@@ -111,23 +118,20 @@
   vars:
     region: us-west-2
     proj_tag: l2pgsv2
-    
+
   tasks:
     - debug: var=ec2_provision_result.instances[0]
-      
+
     - name : Create AMI
       ec2_ami:
         instance_id: "{{ ec2_provision_result.instances[0].id }}"
         wait: yes
         delete_snapshot: yes
-        name: ESPA-IPS-AMI-LINUX-2
+        name: EROS-IPS-AMI
         region: us-west-2
         tags:
-          Name:  ESPA-IPS-AMI-LINUX-2
+          Name:  EROS-IPS-AMI
           Project: "{{ proj_tag }}"
-      register: ami_creation_result
-     
-    - debug: var=ami_creation_result
 
     - name: Terminate instances that were previously launched
       ec2:
