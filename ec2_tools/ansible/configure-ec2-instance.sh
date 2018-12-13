@@ -6,6 +6,7 @@ docker run --rm \
     -v ${HOME}/.aws:/root/.aws \
     --workdir $(pwd) \
     --env USER=${USER} \
+    --env KEYPAIR=${KEYPAIR} \
     ansiblecm:2.6.4 \
     -i /ansible/playbooks/hosts \
     /ansible/playbooks/playbook.yml

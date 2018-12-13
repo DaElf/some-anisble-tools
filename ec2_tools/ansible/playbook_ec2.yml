@@ -10,7 +10,7 @@
     subnet: subnet-044c596c6b1ad7906
     security_group: sg-0c305038ba5d8d1fb
     username: "{{ lookup('env','USER') }}"
-    keypair: "{{ username }}" # pem file name
+    keypair: "{{ lookup('env','KEYPAIR') }}" # pem file name
     ansible_ssh_private_key_file: "~/.ssh/{{ username }}.pem"
     name_tag: "{{ username }}-devel"
     vol_size: 32
