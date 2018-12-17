@@ -37,6 +37,7 @@ pipeline{
         stage("Run Ansible provisioning script"){
             steps { 
                 dir('ec2_tools/ansible') {
+                    sh 'ls'
                     sh 'create-ec2-instance.sh'
                 }
             }
