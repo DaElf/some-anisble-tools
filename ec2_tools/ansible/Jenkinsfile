@@ -18,6 +18,10 @@ pipeline{
             args '-u root'
         }
     }
+    environment {
+        USER = "${params.User}"
+        KEYPAIR = "${params.KeyPair}-self-delete"
+    }
     options {
         gitLabConnection('code.usgs.gov')
     }
