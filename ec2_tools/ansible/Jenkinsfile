@@ -49,9 +49,8 @@ pipeline{
         stage("Run Ansible configuration script"){
             steps {
                 dir('ec2_tools/ansible') {
-                    echo "Configure Script. \"                
+                    echo "Configure Script."                
                 }
-
             }
         }
     }
