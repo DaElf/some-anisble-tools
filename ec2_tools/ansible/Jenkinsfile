@@ -39,6 +39,11 @@ pipeline{
                 dir('ec2_tools/ansible') {
                     sh 'ls'
                     sh './create-ec2-instance.sh'
+                    ansiColor('xterm') {
+                        ansiblePlaybook(
+                            credentialsId: 'pmartin-dev', 
+                            playbook: 'playbook_ec2.yml')
+                    }
                 }
             }
         }
