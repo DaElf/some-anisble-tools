@@ -1,0 +1,34 @@
+pipeline{
+    agent {
+        docker {
+            image 'cloudformation-builder:latest'
+            label 'docker-build-small'
+            registryUrl 'https://707566951618.dkr.ecr.us-west-2.amazonaws.com'
+            registryCredentialsId 'ecr:us-west-2:jenkins-deploy'
+            args '-u root'
+        }
+    }
+    options {
+        gitLabConnection('code.usgs.gov')
+    }
+    triggers {
+        gitlab( triggerOnPush: true, 
+                triggerOnMergeRequest: true, 
+                branchFilterType: 'NameBasedFilter',
+                skipWorkInProgressMergeRequest: true,
+                ciSkip: true,
+                setBuildDescription: true)
+    }
+    stages {
+        stage("Run Ansible provisioning script"){
+            steps { 
+                sh 'create-ec2-instance.sh'
+            }
+        }
+        stage("Run Ansible configuration script"){
+            steps {
+                sh 'configure-ec2-instance.sh'
+            }
+        }
+    }
+}
