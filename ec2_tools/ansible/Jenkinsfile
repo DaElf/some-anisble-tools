@@ -40,6 +40,7 @@ pipeline{
                     sh 'ls'
                     ansiColor('xterm') {
                         ansiblePlaybook(
+                            inventoryPath('hosts')
                             credentialsId: 'pmartin-dev', 
                             playbook: 'playbook_ec2.yml')
                     }

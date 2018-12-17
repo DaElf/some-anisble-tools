@@ -9,4 +9,4 @@ docker run --rm \
     --env KEYPAIR=${KEYPAIR} \
     ansiblecm:2.6.4 \
     -i /ansible/playbooks/hosts \
-    /ansible/playbooks/playbook.yml
+    /ansible/playbooks/playbook_configure_ec2.yml
