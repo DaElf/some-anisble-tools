@@ -38,7 +38,6 @@ pipeline{
             steps { 
                 dir('ec2_tools/ansible') {
                     sh 'ls'
-                    sh './create-ec2-instance.sh'
                     ansiColor('xterm') {
                         ansiblePlaybook(
                             credentialsId: 'pmartin-dev', 
@@ -50,7 +49,7 @@ pipeline{
         stage("Run Ansible configuration script"){
             steps {
                 dir('ec2_tools/ansible') {
-                    sh './configure-ec2-instance.sh'                
+                    echo "Configure Script. \"                
                 }
 
             }
