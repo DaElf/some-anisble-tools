@@ -38,14 +38,14 @@ pipeline{
             steps { 
                 dir('ec2_tools/ansible') {
                     sh 'ls'
-                    sh 'create-ec2-instance.sh'
+                    sh './create-ec2-instance.sh'
                 }
             }
         }
         stage("Run Ansible configuration script"){
             steps {
                 dir('ec2_tools/ansible') {
-                    sh 'configure-ec2-instance.sh'                
+                    sh './configure-ec2-instance.sh'                
                 }
 
             }
