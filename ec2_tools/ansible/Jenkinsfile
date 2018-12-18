@@ -37,7 +37,6 @@ pipeline{
         stage("Run Ansible provisioning script"){
             steps { 
                 dir('ec2_tools/ansible') {
-                    sh 'ls'
                     ansiColor('xterm') {
                         ansiblePlaybook(
                             inventory: 'hosts',
@@ -50,7 +49,13 @@ pipeline{
         stage("Run Ansible configuration script"){
             steps {
                 dir('ec2_tools/ansible') {
-                    echo "Configure Script."                
+                    sh 'printenv'
+                    ansiColor('xterm') {
+                        ansiblePlaybook(
+                            inventory: 'hosts',
+                            credentialsId: 'pmartin-dev', 
+                            playbook: 'playbook_configure_ec2.yml')
+                    }                
                 }
             }
         }
