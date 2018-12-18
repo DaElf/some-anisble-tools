@@ -15,7 +15,7 @@ pipeline{
             label 'docker-build-small'
             registryUrl 'https://707566951618.dkr.ecr.us-west-2.amazonaws.com'
             registryCredentialsId 'ecr:us-west-2:jenkins-deploy'
-            args '-u root'
+            args "-u root --env ${params.KeyPair} --env ${params.User}"
         }
     }
     environment {
