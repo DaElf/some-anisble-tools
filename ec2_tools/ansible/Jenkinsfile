@@ -20,7 +20,7 @@ pipeline{
     }
     environment {
         USER = "${params.User}"
-        KEYPAIR = "${params.KeyPair}-self-delete"
+        KEYPAIR = "${params.KeyPair}"
     }
     options {
         gitLabConnection('code.usgs.gov')
