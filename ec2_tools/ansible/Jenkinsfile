@@ -40,7 +40,8 @@ pipeline{
                     ansiColor('xterm') {
                         ansiblePlaybook(
                             inventory: 'hosts',
-                            credentialsId: 'pmartin-dev', 
+                            credentialsId: 'pmartin-dev',
+                            hostKeyChecking: false,
                             playbook: 'playbook_ec2.yml')
                     }
                 }
@@ -53,7 +54,8 @@ pipeline{
                     ansiColor('xterm') {
                         ansiblePlaybook(
                             inventory: 'hosts',
-                            credentialsId: 'pmartin-dev', 
+                            credentialsId: 'pmartin-dev',
+                            hostKeyChecking: false,
                             playbook: 'playbook_configure_ec2.yml')
                     }                
                 }
