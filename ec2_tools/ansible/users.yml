@@ -11,3 +11,7 @@ users:
   - username: jcavanaugh
     use_sudo: yes
     uid: 7010
+
+  - username: epost
+    use_sudo: yes
+    uid: 7575
