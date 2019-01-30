@@ -1,0 +1,16 @@
+---
+- name: Update IP route53
+  hosts: localhost
+  
+  tasks:
+    - name: add host to route 53
+      route53:
+        state: present
+        zone: landsat.io
+        record: daelf.landsat.io
+        overwrite: true
+        type: A
+        ttl: 7200
+        value:
+          - 54.218.243.25
+        wait: yes
