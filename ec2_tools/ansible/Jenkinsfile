@@ -45,7 +45,7 @@ pipeline{
                             playbook: 'playbook_ec2.yml')
                     }
                 }
-                sh('update-hosts-file.sh')
+                sh('./update-hosts-file.sh')
             }
         }
         stage("Run Ansible configuration script"){
