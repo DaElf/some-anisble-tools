@@ -1,11 +1,11 @@
 pipeline{
     parameters {
         text(
-            defaultValue: '', 
+            defaultValue: 'epost', 
             description: 'The name of the user to launch the ec2 instance.', 
             name: 'User')
         text(
-            defaultValue: '', 
+            defaultValue: 'epostdev', 
             description: 'The key pair associated with the EC2 instance.', 
             name: 'KeyPair')
     }
