@@ -11,8 +11,8 @@
     security_group: sg-0c305038ba5d8d1fb
     username: "{{ lookup('env','USER') }}"
     keypair: "{{ lookup('env','KEYPAIR') }}" # pem file name
-    ansible_ssh_private_key_file: "./pub_keys/{{ lookup('env','USER') }}.pem"
-    name_tag: "{{ lookup('env','USER') }}-devel"
+    ansible_ssh_private_key_file: "/ansible/playbooks/{{ username }}.pem"
+    name_tag: "{{ username }}-devel"
     vol_size: 32
     proj_tag: l2pgsv2
 

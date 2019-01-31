@@ -2,7 +2,6 @@
 
 docker run --rm \
     -v $(pwd):/ansible/playbooks \
-    -v ${HOME}/.ssh:/root/.ssh \
     -v ${HOME}/.aws:/root/.aws \
     --workdir $(pwd) \
     --env USER=${USER} \
