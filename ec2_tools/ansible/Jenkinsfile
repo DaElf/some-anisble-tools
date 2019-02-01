@@ -33,7 +33,7 @@ pipeline{
             steps {
                 script {
                     withCredentials([[
-                    $class: 'AmazonWebServiceCredentialsBinding',
+                    $class: 'AmazonWebServicesCredentialsBinding',
                     credentialsId: 'jenkins-deploy',
                     accessKeyVariable: 'AWS_ACCESS_KEY_ID',
                     secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
