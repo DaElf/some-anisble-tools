@@ -4,10 +4,6 @@ pipeline{
             defaultValue: 'epost', 
             description: 'The name of the user to launch the ec2 instance.', 
             name: 'User')
-        text(
-            defaultValue: 'epostdev', 
-            description: 'The key pair associated with the EC2 instance.', 
-            name: 'KeyPair')
     }
     agent {
         docker {
@@ -15,12 +11,11 @@ pipeline{
             label 'docker-build-small'
             registryUrl 'https://707566951618.dkr.ecr.us-west-2.amazonaws.com'
             registryCredentialsId 'ecr:us-west-2:jenkins-deploy'
-            args "-u root --env KEYPAIR=${params.KeyPair} --env USER=${params.User}"
+            args "-u root --env USER=${params.User}"
         }
     }
     environment {
         USER = "${params.User}"
-        KEYPAIR = "${params.KeyPair}"
     }
     options {
         gitLabConnection('code.usgs.gov')
@@ -34,21 +29,29 @@ pipeline{
                 setBuildDescription: true)
     }
     stages {
-        stage("Run Ansible provisioning script"){
-            steps { 
-                dir('ec2_tools/ansible') {
-                    ansiColor('xterm') {
-                        ansiblePlaybook(
-                            inventory: 'hosts',
-                            credentialsId: 'jenkins-master-key',
-                            hostKeyChecking: false,
-                            playbook: 'playbook_ec2.yml')
+        stage("Run EC2 playbook"){
+            steps {
+                script {
+                    withCredentials([[
+                    $class: 'AmazonWebServiceCredentialsBinding',
+                    credentialsId: 'jenkins-deploy',
+                    accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                    secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+                    ]]) {
+                        dir('ec2_tools/ansible') {
+                            ansiColor('xterm') {
+                                ansiblePlaybook(
+                                    inventory: 'hosts',
+                                    credentialsId: 'jenkins-master-key',
+                                    hostKeyChecking: false,
+                                    playbook: 'playbook_jenkins_ec2.yml')
+                            }
+                        }
                     }
                 }
-                sh('./update-hosts-file.sh')
             }
         }
-        stage("Run Ansible configuration script"){
+/*        stage("Run Ansible configuration script"){
             steps {
                 dir('ec2_tools/ansible') {
                     sh 'printenv'
@@ -61,6 +64,6 @@ pipeline{
                     }                
                 }
             }
-        }
+        }*/
     }
 }
