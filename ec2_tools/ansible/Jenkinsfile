@@ -53,8 +53,15 @@ pipeline{
         }
         stage("Update Hosts File"){
             steps {
-                dir('ec2_tools/ansible') {
-                    sh('./update-hosts-file.sh')
+                withCredentials([[
+                $class: 'AmazonWebServicesCredentialsBinding',
+                credentialsId: 'jenkins-deploy',
+                accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                accessKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+                ]]) {
+                    dir('ec2_tools/ansible') {
+                        sh('./update-hosts-file.sh')
+                    }
                 }
             }
         }
