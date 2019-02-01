@@ -1,7 +1,7 @@
 pipeline{
     parameters {
         text(
-            defaultValue: 'epost', 
+            defaultValue: 'NamelessDeveloper', 
             description: 'The name of the user to launch the ec2 instance.', 
             name: 'User')
     }
@@ -44,26 +44,42 @@ pipeline{
                                     inventory: 'hosts',
                                     credentialsId: 'jenkins-master-key',
                                     hostKeyChecking: false,
-                                    playbook: 'playbook_jenkins_ec2.yml')
+                                    playbook: 'playbook_ec2.yml')
                             }
                         }
                     }
                 }
             }
         }
-/*        stage("Run Ansible configuration script"){
+        stage("Update Hosts File"){
             steps {
                 dir('ec2_tools/ansible') {
-                    sh 'printenv'
-                    ansiColor('xterm') {
-                        ansiblePlaybook(
-                            inventory: 'hosts',
-                            credentialsId: 'jenkins-master-key',
-                            hostKeyChecking: false,
-                            playbook: 'playbook_configure_ec2.yml')
-                    }                
+                    sh('update-hosts-file.sh')
                 }
             }
-        }*/
+        }
+        stage("Run Ansible configuration script"){
+            steps {
+                script {
+                    withCredentials([[
+                    $class: 'AmazonWebServicesCredentialsBinding',
+                    credentialsId: 'jenkins-deploy',
+                    accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                    accessKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+                    ]]) {
+                        dir('ec2_tools/ansible') {
+                            sh 'printenv'
+                            ansiColor('xterm') {
+                                ansiblePlaybook(
+                                    inventory: 'hosts',
+                                    credentialsId: 'jenkins-master-key',
+                                    hostKeyChecking: false,
+                                    playbook: 'playbook_configure_ec2.yml')
+                            }                
+                        }
+                    }
+                }
+            }
+        }
     }
 }
