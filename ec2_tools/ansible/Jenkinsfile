@@ -54,7 +54,7 @@ pipeline{
         stage("Update Hosts File"){
             steps {
                 dir('ec2_tools/ansible') {
-                    sh('update-hosts-file.sh')
+                    sh('update_hosts_file.sh')
                 }
             }
         }
