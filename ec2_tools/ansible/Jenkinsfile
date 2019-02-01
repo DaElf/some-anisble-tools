@@ -46,6 +46,7 @@ pipeline{
                                     hostKeyChecking: false,
                                     playbook: 'playbook_ec2.yml')
                             }
+                            sh 'cat hosts'
                         }
                     }
                 }
