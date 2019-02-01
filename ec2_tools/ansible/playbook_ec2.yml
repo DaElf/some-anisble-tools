@@ -31,6 +31,6 @@
     lineinfile:
       path: hosts
       regexp: 'aws-devel-instance*'
-      line: 'aws-devel-instance ansible_ssh_common_args="-o StrictHostKeyChecking=no" ansible_ssh_host={{ item }}'
+      line: 'aws-devel-instance ansible_ssh_extra_args="-o StrictHostKeyChecking=no" ansible_ssh_host={{ item }}'
     with_items: "{{ ec2_info.instances[0].private_ip_address }}"
 #    with_items: "{{ ec2_info.instances[0].private_ip_address }}"
