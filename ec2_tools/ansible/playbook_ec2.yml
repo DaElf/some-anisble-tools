@@ -10,27 +10,53 @@
     subnet: subnet-044c596c6b1ad7906
     security_group: sg-0c305038ba5d8d1fb
     username: "{{ lookup('env','USER') }}"
-    keypair: jenkins-master # pem file name
+    keypair: "jenkins-master" # pem file name
     name_tag: "{{ username }}-devel"
     vol_size: 32
     proj_tag: l2pgsv2
+    ec2build: true
 
   roles:
-    - ec2-instance
+    - { role: 'ec2-instance', when: ec2build }
+
+- name: Configure instance(s)
+  hosts: ec2_server
+  become: True
+  gather_facts: True
+  vars:
+    ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
+
+  roles:
+    - efs-mount
+    - s3-fuse
+    - espa-devel-instance
 
   tasks:
-  - name: Get EC2 IP
-    ec2_instance_facts:
-      region: "us-west-2"
-      filters:
-        "tag:Name": "{{ username }}-devel"
-        instance-state-name: running
-    register: ec2_info
+  - include_vars: users.yml
 
-  - name: Store EC2 IP
-    lineinfile:
-      path: hosts
-      regexp: 'aws-devel-instance*'
-      line: 'aws-devel-instance ansible_ssh_extra_args="-o StrictHostKeyChecking=no" ansible_ssh_host={{ item }}'
-    with_items: "{{ ec2_info.instances[0].private_ip_address }}"
-#    with_items: "{{ ec2_info.instances[0].private_ip_address }}"
+  - name: Add users | create users, shell, home dirs
+    user:
+      name: '{{ item.username }}'
+      shell: /bin/bash
+      uid: '{{ item.uid }}'
+      createhome: no
+      home: "/users/{{ item.username }}"
+      comment: 'create with ansible'
+      groups: docker
+      append: yes
+    with_items: '{{users}}'
+
+  - name: Setup | authorized key upload
+    authorized_key:
+      user: "{{ item.username }}"
+      key: "{{ lookup('file', 'pub_keys/{{ item.username }}.pub') }}"
+    with_items: '{{users}}'
+
+  - name: sudoers | update sudoers file and validate
+    lineinfile: "dest=/etc/sudoers
+    insertafter=EOF
+    line='{{ item.username }} ALL=(ALL) NOPASSWD: ALL'
+    regexp='^{{ item.username }} .*'
+    state=present"
+    when: item.use_sudo
+    with_items: '{{users}}'
