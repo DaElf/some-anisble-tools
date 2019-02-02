@@ -1,7 +1,7 @@
 pipeline {
     parameters {
 	string(
-	    defaultValue: 'mr-cool',
+	    defaultValue: 'Sir-cool',
 	    description: 'The name of the user to launch the ec2 instance.',
 	    name: 'User')
     }
