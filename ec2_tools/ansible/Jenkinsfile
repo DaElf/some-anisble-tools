@@ -34,17 +34,16 @@ pipeline {
 			accessKeyVariable: 'AWS_ACCESS_KEY_ID',
 			secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
 		    ]]) {
-			sh '''
-			    printenv
-			    '''
-			ansiColor('xterm') {
-			    ansiblePlaybook(
-				colorized: true,
-				inventory: 'hosts',
-				credentialsId: 'jenkins-master-key',
-				hostKeyChecking: false,
-				playbook: 'playbook_ec2.yml'
-			    )
+			dir('ec2_tools/ansible') {
+			    ansiColor('xterm') {
+				ansiblePlaybook(
+				    colorized: true,
+				    inventory: 'hosts',
+				    credentialsId: 'jenkins-master-key',
+				    hostKeyChecking: false,
+				    playbook: 'playbook_ec2.yml'
+				)
+			    }
 			}
 		    }
 		}
