@@ -6,7 +6,7 @@
   vars:
     region: us-west-2
     instance_type: t2.large
-    ami: ami-6cd6f714  # AWS Linux  2
+    ami: ami-032509850cf9ee54e  # AWS Linux  2
     subnet: subnet-044c596c6b1ad7906
     security_group: sg-0c305038ba5d8d1fb
     username: "{{ lookup('env','USER') }}"
