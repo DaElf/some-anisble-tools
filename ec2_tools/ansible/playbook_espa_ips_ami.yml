@@ -13,7 +13,7 @@
     proj_tag: l2pgsv2
     region: us-west-2
     instance_type: t2.xlarge
-    ami: ami-04a4fb062c609f55b
+    ami: ami-032509850cf9ee54e
     subnet: subnet-044c596c6b1ad7906
 
 #  https://docs.aws.amazon.com/AmazonECS/latest/developerguide/al2ami.html
