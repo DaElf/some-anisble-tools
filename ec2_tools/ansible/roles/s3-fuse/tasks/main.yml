@@ -34,7 +34,7 @@
     - { path: /s3/l0rp, src: 'goofys#usgs-landsat:/data/scene/l0rp/samples' }
     - { path: /s3/devel, src: 'goofys#usgs-landsat:/projects/dev' }
 
-- name: Mount up s3 /devel
+- name: Mount up s3 /s3/devel
   mount:
     path: /s3/devel
     src: 'goofys#usgs-landsat:/projects/dev'
