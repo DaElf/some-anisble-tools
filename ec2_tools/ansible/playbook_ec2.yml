@@ -12,6 +12,13 @@
     vol_size: 32
     proj_tag: l2pgsv2
     ec2build: true
+  tasks:
+  - name: Add override host
+    when: override_host is defined
+    add_host:
+      hostname: "{{ override_host }}"
+      groups: ec2_server
+    changed_when: false
 
   roles:
     - { role: 'ec2-instance', when: ec2build }
