@@ -40,6 +40,8 @@
       - amazon-efs-utils
       - python-boto3
       - tmux
+      - ansible
+      - python2-boto
 
 - name: Install ESPA python lib
   yum:
