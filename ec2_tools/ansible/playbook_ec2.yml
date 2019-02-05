@@ -5,10 +5,7 @@
 
   vars:
     region: us-west-2
-    instance_type: t2.large
-    ami: ami-6cd6f714  # AWS Linux  2
-    subnet: subnet-044c596c6b1ad7906
-    security_group: sg-0c305038ba5d8d1fb
+    instance_type: "{{ instance_type | default('t2.large') }}"
     username: "{{ lookup('env','USER') }}"
     keypair: "jenkins-master" # pem file name
     name_tag: "{{ username }}-devel"
@@ -21,6 +18,7 @@
 
 - name: Configure instance(s)
   hosts: ec2_server
+  remote_user: ec2-user
   become: True
   gather_facts: True
   vars:
