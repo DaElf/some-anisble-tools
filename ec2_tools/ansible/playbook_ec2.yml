@@ -5,7 +5,7 @@
 
   vars:
     region: us-west-2
-    instance_type: "{{ instance_type | default('t2.large') }}"
+    instance_type: "{{ my_inst_type | default('t2.large') }}"
     username: "{{ lookup('env','USER') }}"
     keypair: "jenkins-master" # pem file name
     name_tag: "{{ username }}-devel"
