@@ -15,3 +15,7 @@ users:
   - username: epost
     use_sudo: yes
     uid: 7575
+
+  - username: sshrestha
+    use_sudo: yes
+    uid: 7272
