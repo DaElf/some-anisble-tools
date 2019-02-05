@@ -39,7 +39,7 @@
       name: '{{ item.username }}'
       shell: /bin/bash
       uid: '{{ item.uid }}'
-      createhome: no
+      createhome: yes
       home: "/users/{{ item.username }}"
       comment: 'create with ansible'
       groups: docker
