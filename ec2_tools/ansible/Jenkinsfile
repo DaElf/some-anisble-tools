@@ -1,79 +1,53 @@
-pipeline{
+pipeline {
     parameters {
-        text(
-            defaultValue: 'NamelessDeveloper', 
-            description: 'The name of the user to launch the ec2 instance.', 
-            name: 'User')
-    }
-    agent {
-        docker {
-            image 'cloudformation-builder:latest'
-            label 'docker-build-small'
-            registryUrl 'https://707566951618.dkr.ecr.us-west-2.amazonaws.com'
-            registryCredentialsId 'ecr:us-west-2:jenkins-deploy'
-            args "-u root --env USER=${params.User}"
-        }
+	string(
+	    defaultValue: 'Sir-cool',
+	    description: 'The name of the user to launch the ec2 instance.',
+	    name: 'User')
     }
     environment {
-        USER = "${params.User}"
+	USER = "${params.User}"
     }
     options {
         gitLabConnection('code.usgs.gov')
     }
     triggers {
-        gitlab( triggerOnPush: true, 
-                triggerOnMergeRequest: true, 
-                branchFilterType: 'NameBasedFilter',
-                skipWorkInProgressMergeRequest: true,
-                ciSkip: true,
-                setBuildDescription: true)
+        gitlab( triggerOnPush: true,
+               triggerOnMergeRequest: true,
+               branchFilterType: 'NameBasedFilter',
+               skipWorkInProgressMergeRequest: true,
+               ciSkip: true,
+               setBuildDescription: true)
+    }
+    agent {
+	node {
+	    label "ansible"
+	}
     }
     stages {
-        stage("Run EC2 playbook"){
-            steps {
-                script {
-                    withCredentials([[
-                    $class: 'AmazonWebServicesCredentialsBinding',
-                    credentialsId: 'jenkins-deploy',
-                    accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-                    secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
-                    ]]) {
-                        dir('ec2_tools/ansible') {
-                            ansiColor('xterm') {
-                                ansiblePlaybook(
-                                    inventory: 'hosts',
-                                    credentialsId: 'jenkins-master-key',
-                                    hostKeyChecking: false,
-                                    playbook: 'playbook_ec2.yml')
-                            }
-                            sh 'cat hosts'
-                        }
-                    }
-                }
-            }
-        }
-        stage("Run Ansible configuration script"){
-            steps {
-                script {
-                    withCredentials([[
-                    $class: 'AmazonWebServicesCredentialsBinding',
-                    credentialsId: 'jenkins-deploy',
-                    accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-                    accessKeyVariable: 'AWS_SECRET_ACCESS_KEY'
-                    ]]) {
-                        dir('ec2_tools/ansible') {
-                            sh 'printenv'
-                            ansiColor('xterm') {
-                                ansiblePlaybook(
-                                    inventory: 'hosts',
-                                    credentialsId: 'jenkins-master-key',
-                                    hostKeyChecking: false,
-                                    playbook: 'playbook_configure_ec2.yml')
-                            }                
-                        }
-                    }
-                }
-            }
-        }
+	stage('Run EC2 playbook') {
+	    steps {
+		script {
+		    withCredentials([[
+			$class: 'AmazonWebServicesCredentialsBinding',
+			credentialsId: 'jenkins-deploy',
+			accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+			secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+		    ]]) {
+			dir('ec2_tools/ansible') {
+			    ansiColor('xterm') {
+				ansiblePlaybook(
+				    colorized: true,
+				    inventory: 'hosts',
+				    credentialsId: 'jenkins-master-key',
+				    hostKeyChecking: false,
+				    playbook: 'playbook_ec2.yml'
+				)
+			    }
+			}
+		    }
+		}
+	    }
+	}
     }
 }

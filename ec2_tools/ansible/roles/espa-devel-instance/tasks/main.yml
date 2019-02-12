@@ -40,6 +40,8 @@
       - amazon-efs-utils
       - python-boto3
       - tmux
+      - ansible
+      - python2-boto
 
 - name: Install ESPA python lib
   yum:
@@ -48,6 +50,7 @@
     update_cache: yes
     name:
     - python-espa
+    - python-eros-scene-processing-tools
     - python-watchtower
     - h5py
 
