@@ -30,7 +30,7 @@
   become: yes
 
   roles:
-    - efs-mount
+#   - { role: 'efs-mount', when: ec2devel}
     - s3-fuse
 
     # Nginx serves as a proxy for the aster data because the code assumes the aster data is available via http.
