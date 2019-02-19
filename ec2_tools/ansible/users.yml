@@ -23,3 +23,7 @@ users:
   - username: tluell
     use_sudo: yes
     uid: 7100
+
+  - username: sgould
+    use_sudo: yes
+    uid: 7070
