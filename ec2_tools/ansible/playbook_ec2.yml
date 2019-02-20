@@ -28,7 +28,7 @@
   remote_user: ec2-user
   become: True
   gather_facts: True
-  efsmount: false
+  efsmount: true
   vars:
     ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
 
