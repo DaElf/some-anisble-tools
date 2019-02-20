@@ -4,6 +4,7 @@ pipeline {
 	    defaultValue: 'Sir-cool',
 	    description: 'The name of the user to launch the ec2 instance.',
 	    name: 'User')
+        booleanParam(defaultValue: false, description: '', name: 'efsmount')
     }
     environment {
 	USER = "${params.User}"
@@ -42,6 +43,9 @@ pipeline {
 				    credentialsId: 'jenkins-master-key',
 				    hostKeyChecking: false,
 				    playbook: 'playbook_ec2.yml'
+                                    extraVars {
+                                        extraVar("efsmount", ${params.efsmount}, false)
+                                    }
 				)
 			    }
 			}

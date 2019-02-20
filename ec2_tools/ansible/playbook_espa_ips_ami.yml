@@ -15,6 +15,13 @@
     instance_type: t2.xlarge
     ami: ami-032509850cf9ee54e
     subnet: subnet-044c596c6b1ad7906
+  tasks:
+  - name: Add override host
+    when: override_host is defined
+    add_host:
+      hostname: "{{ override_host }}"
+      groups: ec2_server
+    changed_when: false
 
 #  https://docs.aws.amazon.com/AmazonECS/latest/developerguide/al2ami.html
 
@@ -22,15 +29,18 @@
     - ec2-espa-ips-ami
 
 - name: Configure worker
+
   hosts: ec2_server
   remote_user: ec2-user
+  become: True
+  gather_facts: True
   vars:
     ansible_ssh_private_key_file: ~/.ssh/EROS-Batch-Processing.pem
-    ansible_ssh_common_args: '-o StrictHostKeyChecking=no' #Have to include this or it fails unattended
-  become: yes
+    ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
+    efsmount: false
 
   roles:
-#   - { role: 'efs-mount', when: ec2devel}
+    - { role: 'efs-mount', when: efsmount }
     - s3-fuse
 
     # Nginx serves as a proxy for the aster data because the code assumes the aster data is available via http.
@@ -118,19 +128,34 @@
   vars:
     region: us-west-2
     proj_tag: l2pgsv2
+    ami_name: EROS-BATCH
 
   tasks:
     - debug: var=ec2_provision_result.instances[0]
+
+    - name: Check if AMI with the same name exists
+      ec2_ami_facts:
+        filters:
+          name: "{{ ami_name }}"
+      register: myami
+
+    - debug: var=myami
+
+    - name: Deregister AMI if it exists
+      ec2_ami:
+        image_id: "{{ myami.images[0].image_id }}"
+        state: absent
+      when: myami.images | length and myami.images[0].state == 'available'
 
     - name : Create AMI
       ec2_ami:
         instance_id: "{{ ec2_provision_result.instances[0].id }}"
         wait: yes
         delete_snapshot: yes
-        name: EROS-IPS-AMI
+        name: "{{ ami_name }}"
         region: us-west-2
         tags:
-          Name:  EROS-IPS-AMI
+          Name: "{{ ami_name }}"
           Project: "{{ proj_tag }}"
 
     - name: Terminate instances that were previously launched
