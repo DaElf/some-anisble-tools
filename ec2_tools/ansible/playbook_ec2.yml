@@ -12,6 +12,7 @@
     vol_size: 32
     proj_tag: l2pgsv2
     ec2build: true
+    efsmount: true
   tasks:
   - name: Add override host
     when: override_host is defined
@@ -28,7 +29,6 @@
   remote_user: ec2-user
   become: True
   gather_facts: True
-  efsmount: true
   vars:
     ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
 
