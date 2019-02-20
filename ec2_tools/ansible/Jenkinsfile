@@ -42,10 +42,10 @@ pipeline {
 				    inventory: 'hosts',
 				    credentialsId: 'jenkins-master-key',
 				    hostKeyChecking: false,
-				    playbook: 'playbook_ec2.yml'
-                                    extraVars {
-                                        extraVar("efsmount", ${params.efsmount}, false)
-                                    }
+				    playbook: 'playbook_ec2.yml',
+                                    extraVars: [
+                                        efsmount: "${params.efsmount}"
+                                    ]
 				)
 			    }
 			}
