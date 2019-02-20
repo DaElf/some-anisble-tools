@@ -40,6 +40,11 @@
   tasks:
   - include_vars: users.yml
 
+  - name: Creates /users directory
+    file:
+      path: /users
+      state: directory
+
   - name: Add users | create users, shell, home dirs
     user:
       name: '{{ item.username }}'
