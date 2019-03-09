@@ -8,7 +8,6 @@
     name: ephemeral
     state: started
     enabled: yes
-    state: mounted
 
 - name: Set permissions to open on /jobtmp
   file:

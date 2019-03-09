@@ -42,6 +42,7 @@
   roles:
     - { role: 'efs-mount', when: efsmount }
     - s3-fuse
+    - jobtmp-mount
 
     # Nginx serves as a proxy for the aster data because the code assumes the aster data is available via http.
   tasks:
@@ -69,30 +70,6 @@
           - nginx
           - docker
           - aws-cli
-
-    - name: Create partition 1 on /dev/xvdb
-      parted:
-        device: /dev/xvdb
-        number: 1
-        state: present
-
-    - name: Create a xfs filesystem on /dev/xvdb1
-      filesystem:
-        fstype: xfs
-        dev: /dev/xvdb1
-        opts: "-L jobtmp"
-
-    - name: Mount /jobtmp from /dev/xvdb1
-      mount:
-        path: "/jobtmp"
-        src: LABEL=jobtmp
-        fstype: xfs
-        state: mounted
-
-    - name: Set permissions to open on /jobtmp
-      file:
-        path: "/jobtmp"
-        mode: 0777
 
     - name: Update root filesystem in nginx config
       lineinfile: dest=/etc/nginx/nginx.conf regexp="^[\s]+root"  line="        root         /s3/auxiliaries/aster;"

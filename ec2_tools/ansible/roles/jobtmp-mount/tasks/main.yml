@@ -1,0 +1,33 @@
+---
+# tasks file for jobtmp-mount
+- name: Install additional tools
+  yum:
+    state: present
+    update_cache: yes
+    name:
+      - xfsprogs
+      - parted
+
+- name: Create partition 1 on /dev/sdb
+  parted:
+    device: /dev/sdb
+    number: 1
+    state: present
+
+- name: Create a xfs filesystem on /dev/sdb1
+  filesystem:
+    fstype: xfs
+    dev: /dev/sdb1
+    opts: "-L jobtmp"
+
+- name: Mount /jobtmp from /dev/sdb1
+  mount:
+    path: "/jobtmp"
+    src: LABEL=jobtmp
+    fstype: xfs
+    state: mounted
+
+- name: Set permissions to open on /jobtmp
+  file:
+    path: "/jobtmp"
+    mode: 0777
