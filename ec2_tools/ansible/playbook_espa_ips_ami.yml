@@ -12,7 +12,7 @@
     name_tag: EROS-AMI-Builder
     proj_tag: l2pgsv2
     region: us-west-2
-    instance_type: t2.xlarge
+    instance_type: c5d.xlarge
     ami: ami-032509850cf9ee54e
     subnet: subnet-044c596c6b1ad7906
   tasks:
@@ -43,6 +43,7 @@
     - { role: 'efs-mount', when: efsmount }
     - s3-fuse
     - jobtmp-mount
+    - ephemeral
 
     # Nginx serves as a proxy for the aster data because the code assumes the aster data is available via http.
   tasks:
