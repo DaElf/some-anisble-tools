@@ -10,7 +10,7 @@
     jobtmp_iops: 2500
     security_group: sg-0c305038ba5d8d1fb
     name_tag: EROS-AMI-Builder
-    proj_tag: l2pgsv2
+    proj_tag: LPIP
     region: us-west-2
     instance_type: c5d.xlarge
     ami: ami-032509850cf9ee54e
@@ -105,7 +105,7 @@
   gather_facts: False
   vars:
     region: us-west-2
-    proj_tag: l2pgsv2
+    proj_tag: LPIP
     ami_name: EROS-BATCH
 
   tasks:
