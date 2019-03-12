@@ -9,8 +9,6 @@
     username: "{{ lookup('env','USER') }}"
     keypair: "jenkins-master" # pem file name
     name_tag: "{{ username }}-devel"
-    vol_size: 32
-    proj_tag: l2pgsv2
     ec2build: true
     efsmount: true
   tasks:

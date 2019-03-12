@@ -4,17 +4,11 @@
   gather_facts: False
 
   vars:
-    keypair: EROS-Batch-Processing # pem file name
-    vol_size: 32
-    jobtmp_size: 256
-    jobtmp_iops: 2500
-    security_group: sg-0c305038ba5d8d1fb
-    name_tag: EROS-AMI-Builder
-    proj_tag: LPIP
     region: us-west-2
-    instance_type: c5d.xlarge
-    ami: ami-032509850cf9ee54e
-    subnet: subnet-044c596c6b1ad7906
+    keypair: "jenkins-master" # pem file name
+    instance_type: "{{ my_inst_type | default('c5d.xlarge') }}"
+    ec2build: true
+    efsmount: true
   tasks:
   - name: Add override host
     when: override_host is defined
@@ -26,18 +20,15 @@
 #  https://docs.aws.amazon.com/AmazonECS/latest/developerguide/al2ami.html
 
   roles:
-    - ec2-espa-ips-ami
+    - { role: 'ec2-espa-ips-ami', when: ec2build }
 
-- name: Configure worker
-
+- name: Configure instance(s)
   hosts: ec2_server
   remote_user: ec2-user
   become: True
   gather_facts: True
   vars:
-    ansible_ssh_private_key_file: ~/.ssh/EROS-Batch-Processing.pem
     ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
-    efsmount: false
 
   roles:
     - { role: 'efs-mount', when: efsmount }
