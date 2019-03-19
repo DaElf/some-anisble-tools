@@ -9,7 +9,7 @@
     vol_size: 32
     security_group: sg-0c305038ba5d8d1fb
     name_tag: jenkins-worker
-    proj_tag: l2pgsv2
+    proj_tag: LPIP
     region: us-west-2
     instance_type: t2.xlarge
     ami: ami-a9d09ed1  # AWS Linux  2
@@ -41,7 +41,7 @@
   gather_facts: False
   vars:
     region: us-west-2
-    proj_tag: l2pgsv2
+    proj_tag: LPIP
     
   tasks:
     - debug: var=ec2_provision_result.instances[0]
