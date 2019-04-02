@@ -35,6 +35,7 @@
     - s3-fuse
     - jobtmp-mount
     - ephemeral
+    - ec2-perf-metrics
 
     # Nginx serves as a proxy for the aster data because the code assumes the aster data is available via http.
   tasks:
