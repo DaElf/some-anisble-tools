@@ -34,6 +34,7 @@
     - { role: 'efs-mount', when: efsmount }
     - s3-fuse
     - espa-devel-instance
+    - ephemeral
 
   tasks:
   - include_vars: users.yml
