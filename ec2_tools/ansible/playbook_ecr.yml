@@ -1,0 +1,19 @@
+- name: Create ECR repo
+  hosts: localhost
+  connection: local
+  gather_facts: False
+
+  tasks:
+    - name: Create ESPA / IPS ECR repositories
+      ecs_ecr:
+        name: "{{ item }}"
+        policy: "{{ lookup('template', 'ecr_policy.json') }}"
+      with_items:
+        - espa-process/production
+        - ips-process/develop
+        - ips-process/production
+        - ips-process/full-production
+        - ips-process/subsetter
+        - ips-process/ingest
+          
+
