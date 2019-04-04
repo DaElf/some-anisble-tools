@@ -1,59 +1,72 @@
-- name: Create a new Demo EC2 instance
+- name: Create a EROS Jenkins Worker AMI
   hosts: localhost
   connection: local
   gather_facts: False
 
   vars:
-    keypair: jenkins-master # pem file name
-    ansible_ssh_private_key_file: ~/.ssh/jenkins-master.pem
-    vol_size: 32
-    security_group: sg-0c305038ba5d8d1fb
-    name_tag: jenkins-worker
-    proj_tag: LPIP
     region: us-west-2
-    instance_type: t2.xlarge
-    ami: ami-a9d09ed1  # AWS Linux  2
-    subnet: subnet-044c596c6b1ad7906
-    
-  roles:
-    - ec2-instance
-    
+    keypair: "jenkins-master" # pem file name
+    instance_type: "{{ my_inst_type | default('t2.large') }}"
+    ec2build: true
+    name_tag: "jenkins-worker-ami-builder"
   tasks:
-    - name: Create SSH Group to login dynamically to EC2 Instance
-      add_host:
-        hostname: "{{ item.public_ip }}"
-        groupname: ec2_server
-      with_items: "{{ ec2_provision_result.instances }}"
+  - name: Add override host
+    when: override_host is defined
+    add_host:
+      hostname: "{{ override_host }}"
+      groups: ec2_server
+    changed_when: false
 
-- name: Configure worker
+  roles:
+    - { role: 'ec2-instance', when: ec2build }
+
+- name: Configure instance(s)
   hosts: ec2_server
   remote_user: ec2-user
+  become: True
+  gather_facts: True
   vars:
-    ansible_ssh_private_key_file: ~/.ssh/jenkins-master.pem
-  become: yes
-  
+    ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
+    efsmount: false
+
   roles:
     - jenkins-docker-worker
 
-- name: Create a new Demo EC2 instance
+- name: Start AMI build process
   hosts: localhost
   connection: local
   gather_facts: False
   vars:
     region: us-west-2
     proj_tag: LPIP
-    
+    ami_name: jenkins-worker
+
   tasks:
     - debug: var=ec2_provision_result.instances[0]
-      
+
+    - name: Check if AMI with the same name exists
+      ec2_ami_facts:
+        filters:
+          name: "{{ ami_name }}"
+      register: myami
+
+    - debug: var=myami
+
+    - name: Deregister AMI if it exists
+      ec2_ami:
+        image_id: "{{ myami.images[0].image_id }}"
+        state: absent
+      when: myami.images | length and myami.images[0].state == 'available'
+
     - name : Create AMI
       ec2_ami:
         instance_id: "{{ ec2_provision_result.instances[0].id }}"
         wait: yes
         delete_snapshot: yes
-        name: jenkins-docker-worker
+        name: "{{ ami_name }}"
+        region: us-west-2
         tags:
-          Name:  jenkins-docker-worker
+          Name: "{{ ami_name }}"
           Project: "{{ proj_tag }}"
 
     - name: Terminate instances that were previously launched
