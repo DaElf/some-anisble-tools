@@ -4,34 +4,38 @@
   gather_facts: False
 
   vars:
-    keypair: EROS-Batch-Processing # pem file name
-    vol_size: 32
-    jobtmp_size: 256
-    jobtmp_iops: 2500
-    security_group: sg-0c305038ba5d8d1fb
-    name_tag: EROS-AMI-Builder
-    proj_tag: l2pgsv2
     region: us-west-2
-    instance_type: t2.xlarge
-    ami: ami-032509850cf9ee54e
-    subnet: subnet-044c596c6b1ad7906
+    keypair: "jenkins-master" # pem file name
+    instance_type: "{{ my_inst_type | default('c5d.xlarge') }}"
+    ec2build: true
+  tasks:
+  - name: Add override host
+    when: override_host is defined
+    add_host:
+      hostname: "{{ override_host }}"
+      groups: ec2_server
+    changed_when: false
 
 #  https://docs.aws.amazon.com/AmazonECS/latest/developerguide/al2ami.html
 
   roles:
-    - ec2-espa-ips-ami
+    - { role: 'ec2-espa-ips-ami', when: ec2build }
 
-- name: Configure worker
+- name: Configure instance(s)
   hosts: ec2_server
   remote_user: ec2-user
+  become: True
+  gather_facts: True
   vars:
-    ansible_ssh_private_key_file: ~/.ssh/EROS-Batch-Processing.pem
-    ansible_ssh_common_args: '-o StrictHostKeyChecking=no' #Have to include this or it fails unattended
-  become: yes
+    ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
+    efsmount: false
 
   roles:
-    - efs-mount
+    - { role: 'efs-mount', when: efsmount }
     - s3-fuse
+    - jobtmp-mount
+    - ephemeral
+    - ec2-perf-metrics
 
     # Nginx serves as a proxy for the aster data because the code assumes the aster data is available via http.
   tasks:
@@ -59,30 +63,6 @@
           - nginx
           - docker
           - aws-cli
-
-    - name: Create partition 1 on /dev/xvdb
-      parted:
-        device: /dev/xvdb
-        number: 1
-        state: present
-
-    - name: Create a xfs filesystem on /dev/xvdb1
-      filesystem:
-        fstype: xfs
-        dev: /dev/xvdb1
-        opts: "-L jobtmp"
-
-    - name: Mount /jobtmp from /dev/xvdb1
-      mount:
-        path: "/jobtmp"
-        src: LABEL=jobtmp
-        fstype: xfs
-        state: mounted
-
-    - name: Set permissions to open on /jobtmp
-      file:
-        path: "/jobtmp"
-        mode: 0777
 
     - name: Update root filesystem in nginx config
       lineinfile: dest=/etc/nginx/nginx.conf regexp="^[\s]+root"  line="        root         /s3/auxiliaries/aster;"
@@ -117,20 +97,35 @@
   gather_facts: False
   vars:
     region: us-west-2
-    proj_tag: l2pgsv2
+    proj_tag: LPIP
+    ami_name: EROS-BATCH
 
   tasks:
     - debug: var=ec2_provision_result.instances[0]
+
+    - name: Check if AMI with the same name exists
+      ec2_ami_facts:
+        filters:
+          name: "{{ ami_name }}"
+      register: myami
+
+    - debug: var=myami
+
+    - name: Deregister AMI if it exists
+      ec2_ami:
+        image_id: "{{ myami.images[0].image_id }}"
+        state: absent
+      when: myami.images | length and myami.images[0].state == 'available'
 
     - name : Create AMI
       ec2_ami:
         instance_id: "{{ ec2_provision_result.instances[0].id }}"
         wait: yes
         delete_snapshot: yes
-        name: EROS-IPS-AMI
+        name: "{{ ami_name }}"
         region: us-west-2
         tags:
-          Name:  EROS-IPS-AMI
+          Name: "{{ ami_name }}"
           Project: "{{ proj_tag }}"
 
     - name: Terminate instances that were previously launched

@@ -19,3 +19,11 @@ users:
   - username: sshrestha
     use_sudo: yes
     uid: 7272
+
+  - username: tluell
+    use_sudo: yes
+    uid: 7100
+
+  - username: sgould
+    use_sudo: yes
+    uid: 7070

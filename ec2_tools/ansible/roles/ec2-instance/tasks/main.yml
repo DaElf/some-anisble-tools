@@ -16,6 +16,8 @@
         volume_type: gp2
         volume_size: "{{ vol_size}}"
         delete_on_termination: yes
+        tags:
+          - Project: "{{ proj_tag }}"
     count_tag:
       Name: "{{ name_tag }}"
       Project: "{{ proj_tag }}"

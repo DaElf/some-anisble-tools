@@ -1,0 +1,37 @@
+---
+# tasks file for ec2-perf-metrics
+#
+# Monitoring Memory and Disk Metics for Amazon EC2 Linux Instances
+# https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/mon-scripts.html#new-cloudwatch-agent
+
+- name: Install prerquisites package
+  yum:
+    state: present
+    name:
+      - perl-Switch
+      - perl-DateTime
+      - perl-Sys-Syslog
+      - perl-LWP-Protocol-https
+      - perl-Digest-SHA.x86_64
+
+- name: Install the monitoring scripts
+  unarchive:
+    src: https://aws-cloudwatch.s3.amazonaws.com/downloads/CloudWatchMonitoringScripts-1.2.2.zip
+    dest: ~ec2-user
+    remote_src: yes
+
+- name: Run the monitoring scripts and send to cloudwatch for every 1 minute using cron job
+  cron:
+    name: "Run the monitoring scripts"
+    user: "ec2-user"
+    minute: "*/1"
+    job: "$HOME/aws-scripts-mon/mon-put-instance-data.pl \
+--mem-used-incl-cache-buff \
+--mem-util \
+--mem-used \
+--mem-avail \
+--swap-util \
+--swap-used \
+--disk-space-util \
+--disk-path=/jobtmp \
+--from-cron"

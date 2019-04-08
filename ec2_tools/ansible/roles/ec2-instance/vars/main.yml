@@ -1,6 +1,7 @@
 ---
 # vars file for ec2-instance
-ami: ami-032509850cf9ee54e
+ami: ami-061392db613a6357b
 subnet: subnet-044c596c6b1ad7906
 security_group: sg-0c305038ba5d8d1fb
-
+vol_size: 32
+proj_tag: LPIP

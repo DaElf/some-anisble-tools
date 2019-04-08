@@ -4,17 +4,39 @@
   yum_repository:
     name: local
     description: EROS YUM repo
-    baseurl: file:///devel/jenkins-rpms-local/x86_64
+    baseurl: file:///s3/jenkins-artifacts
     gpgcheck: no
     skip_if_unavailable: yes
     priority: 9
 
-- name: Install goofys
+- name: install botocore and boto3
   yum:
     state: present
     name:
-      - fuse
-      - goofys
+      - python2-botocore
+      - python2-boto3
+
+#- name: List keys simple
+#  aws_s3:
+#    bucket: a.out
+#    mode: list
+
+- name: Simple GET operation
+  aws_s3:
+    bucket: a.out
+    object: /goofys-master-1.eros.48.x86_64.rpm
+    dest: /tmp/goofys-master-1.eros.48.x86_64.rpm
+    mode: get
+
+- name: Install goofys
+  yum:
+    state: present
+    name: /tmp/goofys-master-1.eros.48.x86_64.rpm
+
+- name: Install fuse
+  yum:
+    state: present
+    name: fuse
 
 - name: Mount s3 goofys mounts
   mount:
@@ -33,6 +55,7 @@
     - { path: /s3/auxiliaries/dem, src:  'goofys#usgs-landsat:/data/auxiliary/dem' }
     - { path: /s3/l0rp, src: 'goofys#usgs-landsat:/data/scene/l0rp/samples' }
     - { path: /s3/devel, src: 'goofys#usgs-landsat:/projects/dev' }
+    - { path: /s3/jenkins-artifacts, src: 'goofys#usgs-landsat:/jenkins-artifacts' }
 
 - name: Mount up s3 /s3/devel
   mount:

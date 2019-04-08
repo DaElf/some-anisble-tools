@@ -2,3 +2,4 @@ image_id
 instance-details.json
 *.retry
 .DS_Store
+*~

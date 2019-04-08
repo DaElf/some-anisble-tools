@@ -1,0 +1,15 @@
+---
+# tasks file for ephemeral
+- name: install sysv ephemeral
+  copy: src=files/ephemeral dest=/etc/init.d/ephemeral owner=root group=root mode=0755
+
+- name: make sure ephemeral starts at boot
+  sysvinit:
+    name: ephemeral
+    state: started
+    enabled: yes
+
+- name: Set permissions to open on /jobtmp
+  file:
+    path: "/jobtmp"
+    mode: 0777

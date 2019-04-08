@@ -13,7 +13,7 @@
     ansible_ssh_private_key_file: ~/Dropbox/USGS/daelf-us-west-2.pem
     name_tag: mattermost 
     vol_size: 32
-    proj_tag: l2pgsv2
+    proj_tag: LPIP
     
   roles:
     - ec2-instance

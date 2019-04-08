@@ -1,2 +1,10 @@
 ---
 # vars file for ec2-espa-ips-ami
+ami: ami-061392db613a6357b
+subnet: subnet-044c596c6b1ad7906
+security_group: sg-0c305038ba5d8d1fb
+jobtmp_size: 256
+jobtmp_iops: 2500
+vol_size: 32
+name_tag: EROS-AMI-Builder
+proj_tag: LPIP
