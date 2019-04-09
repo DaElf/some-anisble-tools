@@ -4,7 +4,7 @@
   become: true
 
   vars:
-    jenkins_http_port: 8081
+    jenkins_http_port: 8080
 
   pre_tasks:
     - include_tasks: java-8.yml
