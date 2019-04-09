@@ -1,0 +1,21 @@
+- hosts: jenkins
+  remote_user: ec2-user
+  become: True
+  vars:
+    jenkins_hostname: jenkins-too.landsat.io
+  roles:
+    - role: geerlingguy.java
+      become: yes
+    - role: geerlingguy.jenkins
+      become: yes
+
+  tasks:
+    - name:  Add the epel repo
+      yum: name='https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm' state=present
+    - name:  Add the IUS repo
+      yum: name='https://centos7.iuscommunity.org/ius-release.rpm' state=present
+      
+    - name: Install git
+      yum: name=git2u,git-lfs state=present
+
+     
