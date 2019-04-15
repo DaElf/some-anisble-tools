@@ -1,5 +1,7 @@
 ---
 # tasks file for roles/efs-mount
+- include_vars: "{{ aws_account }}.yml"
+
 - name: Install amazon-efs-utils
   yum:
     state: present
@@ -10,7 +12,7 @@
 - name: Mount up /users
   mount:
     path: /users
-    src: fs-ea567b43:/
+    src: "{{ user_fs }}:/"
     fstype: efs
     opts:  defaults,_netdev
     state: mounted
@@ -18,7 +20,7 @@
 - name: Mount up /devel
   mount:
     path: /devel
-    src: fs-ba87af13:/
+    src: "{{ devel_fs }}:/"
     fstype: efs
     opts:  defaults,_netdev
     state: mounted
