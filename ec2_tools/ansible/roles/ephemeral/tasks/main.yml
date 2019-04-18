@@ -4,7 +4,7 @@
   copy: src=files/ephemeral dest=/etc/init.d/ephemeral owner=root group=root mode=0755
 
 - name: make sure ephemeral starts at boot
-  sysvinit:
+  service:
     name: ephemeral
     state: started
     enabled: yes
