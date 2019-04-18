@@ -29,6 +29,7 @@
   vars:
     ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
     efsmount: true
+    aws_account: "{{ my_aws_account | default('research') }}"
 
   roles:
     - { role: 'efs-mount', when: efsmount }

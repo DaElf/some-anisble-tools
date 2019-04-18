@@ -1,5 +1,7 @@
 ---
 # tasks file for roles/s3-fuse
+- include_vars: "{{ aws_account }}.yml"
+
 - name: Add local repository
   yum_repository:
     name: local
@@ -23,15 +25,15 @@
 
 - name: Simple GET operation
   aws_s3:
-    bucket: a.out
-    object: /goofys-master-1.eros.48.x86_64.rpm
-    dest: /tmp/goofys-master-1.eros.48.x86_64.rpm
+    bucket: usgs-landsat-dock
+    object: "misc/goofys-master-1.eros.x86_64.rpm"
+    dest: /tmp/goofys-master-1.eros.x86_64.rpm
     mode: get
 
 - name: Install goofys
   yum:
     state: present
-    name: /tmp/goofys-master-1.eros.48.x86_64.rpm
+    name: /tmp/goofys-master-1.eros.x86_64.rpm
 
 - name: Install fuse
   yum:
@@ -46,21 +48,21 @@
     opts:  _netdev,allow_other,--file-mode=0666,ro
     state: mounted
   with_items:
-    - { path: /s3/auxiliaries/aster, src: 'goofys#usgs-landsat:/data/auxiliary/aster' }
-    - { path: /s3/auxiliaries/L47, src: 'goofys#usgs-landsat:/data/auxiliary/sr/l47' }
-    - { path: /s3/auxiliaries/L8 , src: 'goofys#usgs-landsat:/data/auxiliary/sr/l8' }
-    - { path: /s3/auxiliaries/NARR, src: 'goofys#usgs-landsat:/data/auxiliary/narr' }
-    - { path: /s3/auxiliaries/MODTRAN-DATA, src: 'goofys#usgs-landsat:/data/auxiliary/modtran' }
-    - { path: /s3/auxiliaries/landsat, src: 'goofys#usgs-landsat:/data/auxiliary' }
-    - { path: /s3/auxiliaries/dem, src:  'goofys#usgs-landsat:/data/auxiliary/dem' }
-    - { path: /s3/l0rp, src: 'goofys#usgs-landsat:/data/scene/l0rp/samples' }
-    - { path: /s3/devel, src: 'goofys#usgs-landsat:/projects/dev' }
-    - { path: /s3/jenkins-artifacts, src: 'goofys#usgs-landsat:/jenkins-artifacts' }
+    - { path: /s3/auxiliaries/aster, src: 'goofys#{{ s3_bucket }}:/data/auxiliary/aster' }
+    - { path: /s3/auxiliaries/L47, src: 'goofys#{{ s3_bucket }}:/data/auxiliary/sr/l47' }
+    - { path: /s3/auxiliaries/L8 , src: 'goofys#{{ s3_bucket }}:/data/auxiliary/sr/l8' }
+    - { path: /s3/auxiliaries/NARR, src: 'goofys#{{ s3_bucket }}:/data/auxiliary/narr' }
+    - { path: /s3/auxiliaries/MODTRAN-DATA, src: 'goofys#{{ s3_bucket }}:/data/auxiliary/modtran' }
+    - { path: /s3/auxiliaries/landsat, src: 'goofys#{{ s3_bucket }}:/data/auxiliary' }
+    - { path: /s3/auxiliaries/dem, src:  'goofys#{{ s3_bucket }}:/data/auxiliary/dem' }
+    - { path: /s3/l0rp, src: 'goofys#{{ s3_bucket }}:/data/scene/l0rp/samples' }
+    - { path: /s3/devel, src: 'goofys#{{ s3_bucket }}:/projects/dev' }
+    - { path: /s3/jenkins-artifacts, src: 'goofys#{{ s3_bucket }}:/jenkins-artifacts' }
 
 - name: Mount up s3 /s3/devel
   mount:
     path: /s3/devel
-    src: 'goofys#usgs-landsat:/projects/dev'
+    src: 'goofys#{{ s3_bucket }}:/projects/dev'
     fstype: fuse
     opts: _netdev,allow_other,--file-mode=0666,rw
     state: mounted

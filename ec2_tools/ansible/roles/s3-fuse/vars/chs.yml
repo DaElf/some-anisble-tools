@@ -1,2 +1,3 @@
 ---
 # vars file for roles/s3-fuse
+s3_bucket: usgs-landsat-too
