@@ -1,0 +1,4 @@
+---
+# vars file for roles/efs-mount
+user_fs: fs-c1c2d369
+devel_fs: fs-1dd4c5b5
