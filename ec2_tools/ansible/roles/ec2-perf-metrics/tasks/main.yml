@@ -30,8 +30,7 @@
 --mem-util \
 --mem-used \
 --mem-avail \
---swap-util \
---swap-used \
 --disk-space-util \
 --disk-path=/jobtmp \
+--aggregated \
 --from-cron"
