@@ -1,8 +1,9 @@
 ---
 # vars file for ec2-espa-ips-ami
 ami: ami-061392db613a6357b
-subnet: subnet-044c596c6b1ad7906
-security_group: sg-0c305038ba5d8d1fb
+subnet: subnet-08f1118dd59133513
+# SSH-Server, SSH-Client, EFS-Client, ICMP, CPF-Client
+security_group: [sg-0d10c698f4475d184, sg-0e7e5fc0c08587980, sg-07169843fd464cc9f, sg-0ef8fe4c5f83581d5, sg-01298efe5a3c5dd23]
 jobtmp_size: 256
 jobtmp_iops: 2500
 vol_size: 32

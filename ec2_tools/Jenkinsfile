@@ -4,7 +4,7 @@ pipeline{
             image 'cloudformation-builder:latest'
             label 'docker-build-small'
             registryUrl 'https://707566951618.dkr.ecr.us-west-2.amazonaws.com'
-            registryCredentialsId 'ecr:us-west-2:jenkins-deploy'
+            registryCredentialsId 'ecr:us-west-2:jenkins-master-key'
             args '-u root'
         }
     }
