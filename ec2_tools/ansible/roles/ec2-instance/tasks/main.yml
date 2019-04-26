@@ -8,7 +8,7 @@
     instance_type: "{{ instance_type}}"
     image: "{{ ami }}"
     wait: true
-    instance_profile_name: ec2-full-rw-access-to-s3-buckets-this-account
+    instance_profile_name: csr-Ec2-Role
     region: "{{ region }}"
     count: 1  # default
     volumes:

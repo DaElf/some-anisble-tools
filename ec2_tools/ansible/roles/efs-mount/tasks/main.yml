@@ -1,6 +1,6 @@
 ---
 # tasks file for roles/efs-mount
-- include_vars: "{{ aws_account }}.yml"
+- include_vars: "{{ aws_account | default('chs') }}.yml"
 
 - name: Install amazon-efs-utils
   yum:

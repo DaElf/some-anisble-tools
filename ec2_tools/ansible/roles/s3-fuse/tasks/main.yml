@@ -1,6 +1,6 @@
 ---
 # tasks file for roles/s3-fuse
-- include_vars: "{{ aws_account }}.yml"
+- include_vars: "{{ aws_account | default('chs') }}.yml"
 
 - name: Add local repository
   yum_repository:
