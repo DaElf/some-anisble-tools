@@ -1,14 +1,15 @@
 ---
 # tasks file for ec2-instance
+- include_vars: "{{ aws_account }}.yml"
 
 - name: Create an ec2 instance
   ec2:
     key_name: "{{ keypair }}"
-    group_id: "{{ security_group }}" # security group name
+    groups: "{{ security_group }}"
     instance_type: "{{ instance_type}}"
     image: "{{ ami }}"
     wait: true
-    instance_profile_name: csr-Ec2-Role
+    instance_profile_name: "{{ profile_name }}"
     region: "{{ region }}"
     count: 1  # default
     volumes:

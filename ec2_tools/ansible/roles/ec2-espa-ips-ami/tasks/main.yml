@@ -1,14 +1,15 @@
 ---
+- include_vars: "{{ aws_account }}.yml"
 # tasks file for ec2-espa-ips-ami
 
 - name: Create an ec2 instance
   ec2:
     key_name: "{{ keypair }}"
-    group_id: "{{ security_group }}" # security group name
+    group: "{{ security_group }}"
     instance_type: "{{ instance_type}}"
     image: "{{ ami }}"
     wait: true
-    instance_profile_name: csr-Ec2-Role 
+    instance_profile_name: "{{ profile_name }}"
     region: "{{ region }}"
     count: 1  # default
     volumes:
@@ -32,7 +33,7 @@
       Name: "{{ name_tag }}"
       Project: "{{ proj_tag }}"
     vpc_subnet_id: "{{ subnet }}"
-    assign_public_ip: true
+    assign_public_ip: false
     spot_price: 0.24
     spot_type: one-time
   register: ec2_provision_result
