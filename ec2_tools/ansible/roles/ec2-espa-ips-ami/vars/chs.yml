@@ -1,0 +1,10 @@
+---
+profile_name: csr-Ec2-Role
+subnet: subnet-08f1118dd59133513
+# SSH-Server, SSH-Client, EFS-Client, ICMP, CPF-Client
+security_group:
+  - SG-LSDS-SSH-Client
+  - SG-LSDS-SSH-Server
+  - SG-LSDS-EFS-Client
+  - SG-LSDS-CPF-Client
+  - SG-LSDS-ICMP

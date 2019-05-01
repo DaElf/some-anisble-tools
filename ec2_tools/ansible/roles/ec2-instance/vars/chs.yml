@@ -1,0 +1,11 @@
+---
+subnet: subnet-08f1118dd59133513
+profile_name: csr-Ec2-Role
+security_group:
+  - SG-LSDS-SSH-Server
+  - SG-LSDS-SSH-Client
+  - SG-LSDS-ICMP
+  - SG-LSDS-CPF-Client
+  - SG-LSDS-EFS-Client
+  - SG-LSDS-OracleDB-Client
+  - SG-LSDS-PostgreSQL-Client
