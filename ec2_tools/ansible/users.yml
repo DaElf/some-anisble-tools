@@ -35,3 +35,8 @@ users:
   - username: rhoffman
     use_sudo: yes
     uid: 7111
+
+  - username: whowe
+    use_sudo: yes
+    uid: 7654
+
