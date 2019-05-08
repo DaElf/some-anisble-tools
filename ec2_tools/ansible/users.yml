@@ -27,3 +27,11 @@ users:
   - username: sgould
     use_sudo: yes
     uid: 7070
+
+  - username: wchowlin
+    use_sudo: yes
+    uid: 7071
+
+  - username: rhoffman
+    use_sudo: yes
+    uid: 7111
