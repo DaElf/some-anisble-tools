@@ -40,3 +40,7 @@ users:
     use_sudo: yes
     uid: 7654
 
+  - username: dbuswell
+    use_sudo: yes
+    uid: 3044
+
