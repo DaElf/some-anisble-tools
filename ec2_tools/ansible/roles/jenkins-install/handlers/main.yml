@@ -1,12 +1,15 @@
 ---
-- name: restart jenkins
-  service: name=jenkins state=restarted
+# handlers file for jenkins-install
+- name: Restart Jenkins
+  service:
+    name: jenkins
+    state: restarted
 
 - name: configure default users
   template:
-    src: basic-security.groovy.j2
-    dest: "{{ jenkins_home }}/init.groovy.d/basic-security.groovy"
-    owner: "{{ jenkins_process_user }}"
-    group: "{{ jenkins_process_group }}"
-    mode: 0775
+    src: security.groovy.j2
+    dest: "{{ jenkins_home }}/init.groovy.d/security.groovy"
+    owner: "{{ jenkins_user }}"
+    group: "{{ jnekins_group }}"
+    mode: 0755
   register: jenkins_users_config

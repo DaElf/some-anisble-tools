@@ -1,30 +1,39 @@
 # Ansible Role: Jenkins CI
+=========
 
 [![Build Status](https://travis-ci.org/geerlingguy/ansible-role-jenkins.svg?branch=master)](https://travis-ci.org/geerlingguy/ansible-role-jenkins)
 
+Requirements
 Installs Jenkins CI on RHEL/CentOS and Debian/Ubuntu servers.
 
 ## Requirements
 
-Requires `curl` to be installed on the server. Also, newer versions of Jenkins require Java 8+ (see the test playbooks inside the `molecule/default` directory for an example of how to use newer versions of Java for your OS).
+Requires `curl` to be installed on the server. Also, newer versions of Jenkins require Java 8+ (see the test playbooks inside the `tests/` directory for an example of how to use newer versions of Java for your OS).
+--------------
 
 ## Role Variables
 
+Dependencies
 Available variables are listed below, along with default values (see `defaults/main.yml`):
 
     jenkins_package_state: present
 
 The state of the `jenkins` package install. By default this role installs Jenkins but will not upgrade Jenkins (when using package-based installs). If you want to always update to the latest version, change this to `latest`.
+----------------
 
     jenkins_hostname: localhost
 
 The system hostname; usually `localhost` works fine. This will be used during setup to communicate with the running Jenkins instance via HTTP requests.
+      roles:
+         - { role: username.rolename, x: 42 }
 
+License
     jenkins_home: /var/lib/jenkins
 
 The Jenkins home directory which, amongst others, is being used for storing artifacts, workspaces and plugins. This variable allows you to override the default `/var/lib/jenkins` location.
 
     jenkins_http_port: 8080
+------------------
 
 The HTTP port for Jenkins' web interface.
 

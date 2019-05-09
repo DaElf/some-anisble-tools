@@ -1,0 +1,10 @@
+---
+subnet: subnet-08f1118dd59133513
+profile_name: Profile-LSDS-JenkinsMaster
+security_group:
+  - SG-LSDS-SSH-Server
+  - SG-LSDS-ICMP
+  - SG-LSDS-Web-Server
+  - SG-LSDS-EFS-Client
+  - SG-LSDS-OracleDB-Client
+  - SG-LSDS-PostgreSQL-Client

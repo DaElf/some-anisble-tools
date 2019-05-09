@@ -53,8 +53,8 @@
   file:
     path: "{{ jenkins_home }}/init.groovy.d"
     state: directory
-    owner: "{{ jenkins_process_user }}"
-    group: "{{ jenkins_process_group }}"
+    owner: "{{ jenkins_user }}"
+    group: "{{ jenkins_group }}"
     mode: 0775
 
 - name: Trigger handlers immediately in case Jenkins was installed
