@@ -21,37 +21,30 @@ pipeline {
                setBuildDescription: true)
     }
     agent {
-	node {
-	    label "ansible"
-	}
+	    node {
+	        label "ansible"
+	    }
     }
     stages {
-	stage('Run EC2 playbook') {
-	    steps {
-		script {
-		    withCredentials([[
-			$class: 'AmazonWebServicesCredentialsBinding',
-			credentialsId: 'jenkins-deploy',
-			accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-			secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
-		    ]]) {
-			dir('ec2_tools/ansible') {
-			    ansiColor('xterm') {
-				ansiblePlaybook(
-				    colorized: true,
-				    inventory: 'hosts',
-				    credentialsId: 'jenkins-master-key',
-				    hostKeyChecking: false,
-				    playbook: 'playbook_ec2.yml',
+	    stage('Run EC2 playbook') {
+	        steps {
+		        script {
+		   	        dir('ec2_tools/ansible') {
+			            ansiColor('xterm') {
+				            ansiblePlaybook(
+				                colorized: true,
+				                inventory: 'hosts',
+    				            credentialsId: 'jenkins-master-key',
+	    			            hostKeyChecking: false,
+		    		            playbook: 'playbook_ec2.yml',
                                     extraVars: [
                                         efsmount: "${params.efsmount}"
                                     ]
-				)
-			    }
-			}
-		    }
-		}
+				            )
+			            }
+			        }
+		        }
+	        }
 	    }
-	}
     }
 }
