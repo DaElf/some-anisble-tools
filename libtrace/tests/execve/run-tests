@@ -1,0 +1,6 @@
+#!/bin/sh -ex
+
+LD_PRELOAD=`pwd`/libtest.so
+export LD_PRELOAD
+
+./exec-env | grep -q "LD_PRELOAD=$LD_PRELOAD"
