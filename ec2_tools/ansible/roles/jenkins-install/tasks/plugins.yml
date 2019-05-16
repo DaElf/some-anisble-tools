@@ -37,16 +37,13 @@
     jenkins_home: "{{ jenkins_home }}"
     url_username: "{{ jenkins_admin_username }}"
     url_password: "{{ jenkins_admin_password }}"
-    state: "{{ 'present' if item.version is defined else 'latest' }}"
+    state: present
     timeout: 30
     updates_expiration: 86400
     updates_url: https://updates.jenkins.io
     url: "http://localhost:{{ jenkins_http_port }}{{ jenkins_url_prefix }}"
     with_dependencies: true
   with_items: "{{ jenkins_plugins }}"
-  when: jenkins_admin_password != ""
-  notify: Restart Jenkins
-  tags: ['skip_ansible_lint']
   register: plugin_result
   until: plugin_result is success
   retries: 3

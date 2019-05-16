@@ -39,8 +39,8 @@
   roles:
     - role: jenkins-install
       become: yes
-#    - role: jenkins-configure
-#      become: yes
+    - role: jenkins-configure
+      become: yes
 
   tasks:
     - name:  Add the epel repo
