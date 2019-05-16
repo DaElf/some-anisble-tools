@@ -49,7 +49,12 @@
     - name:  Add the IUS repo
       yum: name='https://centos7.iuscommunity.org/ius-release.rpm' state=present
       
-    - name: Install git
-      yum: name=git2u,git-lfs state=present
+    - name: Install Needed Software
+      yum:
+        name:
+          - git2u
+          - git-lfs
+          - ansible
+          - python2-boto
 
-     
+        state: present

@@ -2,3 +2,18 @@
 # vars file for jenkins-install
 jenkins_repo_url: https://pkg.jenkins.io/redhat/jenkins.repo
 jenkins_repo_key: https://pkg.jenkins.io/redhat/jenkins.io.key
+
+jenkins_plugins: [
+amazon-ecr,
+amazon-ecs,
+ansible,
+ansicolor,
+artifact-manager-s3,
+aws-bucket-credentials,
+blueocean,
+{ name: "ec2", version: "1.41" },
+git,
+gitlab-plugin,
+jira,
+node-iterator-api,
+ws-cleanup ]

@@ -57,13 +57,19 @@
     group: "{{ jenkins_group }}"
     mode: 0775
 
-- name: Trigger handlers immediately in case Jenkins was installed
-  meta: flush_handlers
+- name: Configure Default Users
+  template:
+    src: security.groovy.j2
+    dest: "{{ jenkins_home }}/init.groovy.d/security.groovy"
+    owner: "{{ jenkins_user }}"
+    group: "{{ jenkins_group }}"
+    mode: 0755
 
 - name: Immediately restart Jenkins on http or user changes.
-  service: name=jenkins state=restarted
+  service:
+    name: jenkins
   when: >
-    (jenkins_users_config is defined and jenkins_users_config.changed)
+    state: restarted
     or (jenkins_http_config is defined and jenkins_http_config.changed)
     or (jenkins_home_config is defined and jenkins_home_config.changed)
   tags: ['skip_ansible_lint']
