@@ -6,5 +6,3 @@ security_group:
   - SG-LSDS-ICMP
   - SG-LSDS-Web-Server
   - SG-LSDS-EFS-Client
-  - SG-LSDS-OracleDB-Client
-  - SG-LSDS-PostgreSQL-Client
