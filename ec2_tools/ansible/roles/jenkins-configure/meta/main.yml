@@ -10,20 +10,15 @@ galaxy_info:
   # Some suggested licenses:
   # - BSD (default)
   # - MIT
----
+  # - GPLv2
   # - GPLv3
   # - Apache
   # - CC-BY
   license: license (GPLv2, CC-BY, etc)
 
-galaxy_info:
-  author: geerlingguy
-  description: Jenkins CI
-  company: "Midwestern Mac, LLC"
-  license: "license (BSD, MIT)"
   min_ansible_version: 2.4
 
-  platforms:
+  # If this a Container Enabled role, provide the minimum Ansible Container version.
   # min_ansible_container_version:
 
   # Optionally specify the branch Galaxy will use when accessing the GitHub
@@ -31,35 +26,34 @@ galaxy_info:
   # Galaxy will use this branch. During import Galaxy will access files on
   # this branch. If Travis integration is configured, only notifications for this
   # branch will be accepted. Otherwise, in all cases, the repo's default branch
-    - name: EL
+  # (usually master) will be used.
   #github_branch:
 
   #
   # Provide a list of supported platforms, and for each platform a list of versions.
   # If you don't wish to enumerate all versions for a particular platform, use 'all'.
-      versions:
-        - 6
+  # To view available platforms and versions (or releases), visit:
+  # https://galaxy.ansible.com/api/v1/platforms/
   #
-        - 7
-    - name: Fedora
-      versions:
-        - all
+  # platforms:
+  # - name: Fedora
+  #   versions:
+  #   - all
   #   - 25
-    - name: Debian
-      versions:
-        - all
-    - name: Ubuntu
+  # - name: SomePlatform
+  #   versions:
+  #   - all
+  #   - 1.0
   #   - 7
-      versions:
-        - all
+  #   - 99.99
 
-  galaxy_tags:
-    - development
+  galaxy_tags: []
+    # List tags for your role here, one per line. A tag is a keyword that describes
     # and categorizes the role. Users find roles by searching for tags. Be sure to
-    - packaging
+    # remove the '[]' above, if you add tags to this list.
     #
-    - jenkins
-    - ci
+    # NOTE: A tag is limited to a single word comprised of alphanumeric characters.
+    #       Maximum 20 tags per role.
 
 dependencies: []
   # List your role dependencies here, one per line. Be sure to remove the '[]' above,

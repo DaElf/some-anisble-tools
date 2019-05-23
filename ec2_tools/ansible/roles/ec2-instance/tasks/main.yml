@@ -6,7 +6,7 @@
   ec2:
     key_name: "{{ keypair }}"
     groups: "{{ security_group }}"
-    instance_type: "{{ instance_type}}"
+    instance_type: "{{ instance_type }}"
     image: "{{ ami }}"
     wait: true
     instance_profile_name: "{{ profile_name }}"
@@ -26,7 +26,7 @@
       Name: "{{ name_tag }}"
       Project: "{{ proj_tag }}"
     vpc_subnet_id: "{{ subnet }}"
-    assign_public_ip: true
+    assign_public_ip: no
     spot_price: 0.24
     spot_type: one-time
   register: ec2_provision_result
@@ -50,5 +50,7 @@
 - name: Create SSH Group to login dynamically to EC2 Instance
   add_host:
     hostname: "{{ item.private_ip }}"
-    groupname: ec2_server
+    groups:
+      - ec2_server
+      - jenkins_server
   with_items: "{{ ec2_provision_result.instances }}"

@@ -1,0 +1,6 @@
+---
+# vars file for jenkins-configure
+groovy_scripts: [
+ec2,
+csrf,
+location ]

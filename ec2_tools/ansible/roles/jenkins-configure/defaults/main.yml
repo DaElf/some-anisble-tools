@@ -1,0 +1,7 @@
+---
+# defaults file for jenkins-configure
+jenkins_home: /var/lib/jenkins
+jenkins_http_port: 8080
+jenkins_url_prefix: ""
+jenkins_user: jenkins
+jenkins_group: "{{ jenkins_user }}"

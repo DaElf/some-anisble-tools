@@ -1,0 +1,59 @@
+# To run this playbook you need to provide a private key that match the keypair listed below
+# you also need to provide a vault password file that contains the vault password
+# this password can be found in secrets manager if you don't already have it
+
+- name: Create a new Jenkins instance
+  hosts: localhost
+  connection: local
+
+  vars:
+    region: us-west-2
+    project_tag: LPIP
+    name_tag: "jenkins-playbook-test"
+    proj_tag: "LPIP"
+    keypair: "jenkins-master" # pem file name
+    groups: "{{ security_gruops }}"
+    instance_type: "t3.medium"
+    aws_account: "{{ my_aws_account | default('chs-jenkins') }}"
+    build_jenkins_instance: yes
+  tasks:
+    - name: Add override host
+      when: override_host is defined
+      add_host:
+        hostname: "{{ override_host }}"
+        groups: jenkins_server
+      changed_when: false
+
+  roles:
+    - role: 'ec2-instance'
+      when: build_jenkins_instance
+
+- name: Configure Jenkins instance
+  hosts: jenkins_server
+  remote_user: ec2-user
+  become: True
+  gather_facts: True
+  vars:
+    ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
+
+  roles:
+    - role: jenkins-install
+      become: yes
+    - role: jenkins-configure
+      become: yes
+
+  tasks:
+    - name:  Add the epel repo
+      yum: name='https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm' state=present
+
+    - name:  Add the IUS repo
+      yum: name='https://centos7.iuscommunity.org/ius-release.rpm' state=present
+      
+    - name: Install Needed Software
+      yum:
+        name:
+          - git2u
+          - git-lfs
+          - ansible
+          - python2-boto
+        state: present
