@@ -1,3 +1,4 @@
+---
 galaxy_info:
   author: your name
   description: your description
@@ -10,7 +11,6 @@ galaxy_info:
   # Some suggested licenses:
   # - BSD (default)
   # - MIT
----
   # - GPLv3
   # - Apache
   # - CC-BY

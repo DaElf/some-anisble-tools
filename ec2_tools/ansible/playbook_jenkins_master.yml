@@ -12,7 +12,6 @@
     name_tag: "jenkins-playbook-test"
     proj_tag: "LPIP"
     keypair: "jenkins-master" # pem file name
-    groups: "{{ security_gruops }}"
     instance_type: "t3.medium"
     aws_account: "{{ my_aws_account | default('chs-jenkins') }}"
     build_jenkins_instance: yes
