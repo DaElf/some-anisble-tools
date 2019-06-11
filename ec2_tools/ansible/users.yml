@@ -52,4 +52,6 @@ users:
     use_sudo: yes
     uid: 7074
     
-
+  - username: jhdeman
+    use_sudo: yes
+    uid: 1215
