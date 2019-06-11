@@ -13,6 +13,7 @@
 
 - name: install botocore and boto3
   yum:
+    lock_timeout: 180
     state: present
     name:
       - python2-botocore
@@ -32,11 +33,13 @@
 
 - name: Install goofys
   yum:
+    lock_timeout: 180
     state: present
     name: /tmp/goofys-master-1.eros.x86_64.rpm
 
 - name: Install fuse
   yum:
+    lock_timeout: 180
     state: present
     name: fuse
 
