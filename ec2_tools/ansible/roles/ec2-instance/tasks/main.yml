@@ -27,6 +27,7 @@
       Project: "{{ proj_tag }}"
     vpc_subnet_id: "{{ subnet }}"
     assign_public_ip: no
+    instance_initiated_shutdown_behavior: terminate
     spot_price: 0.24
     spot_type: one-time
   register: ec2_provision_result
