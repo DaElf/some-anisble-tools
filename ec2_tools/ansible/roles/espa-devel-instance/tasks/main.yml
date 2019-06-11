@@ -1,6 +1,9 @@
 ---
 - name:  Add the epel repo
-  yum: name='https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm' state=present
+  yum:
+    lock_timeout: 180
+    name: 'https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm'
+    state: present
 
 - name: Add local repository
   yum_repository:
@@ -20,10 +23,14 @@
 #    skip_if_unavailable: yes
 
 - name: Update all packages to latest
-  yum: name=* state=latest
+  yum: 
+    lock_timeout: 180
+    name: '*'
+    state: latest
 
 - name: Install devel tools
   yum:
+    lock_timeout: 180
     state: present
     update_cache: yes
     name:
@@ -45,6 +52,7 @@
 
 - name: Install ESPA python lib
   yum:
+    lock_timeout: 180
     state: present
     disable_gpg_check: yes
     update_cache: yes
@@ -89,6 +97,7 @@
 
 - name: Oracle rpms
   yum:
+    lock_timeout: 180
     state: present
     disable_gpg_check: yes
     update_cache: yes

@@ -4,6 +4,7 @@
 
 - name: Install amazon-efs-utils
   yum:
+    lock_timeout: 180
     state: present
     disable_gpg_check: yes
     name:
