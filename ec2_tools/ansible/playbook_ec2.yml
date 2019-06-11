@@ -20,7 +20,8 @@
     changed_when: false
 
   roles:
-    - { role: 'ec2-instance', when: ec2build }
+    - role: 'ec2-instance'
+      when: ec2build | bool
 - name: Configure instance(s)
 
   hosts: ec2_server
@@ -33,7 +34,8 @@
     aws_account: "{{ my_aws_account | default('chs') }}"
 
   roles:
-    - { role: 'efs-mount', when: efsmount }
+    - role: 'efs-mount'
+      when: efsmount | bool
     - s3-fuse
     - espa-devel-instance
     - ephemeral
