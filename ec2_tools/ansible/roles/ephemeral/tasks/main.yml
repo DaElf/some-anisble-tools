@@ -1,7 +1,12 @@
 ---
 # tasks file for ephemeral
 - name: install sysv ephemeral
-  copy: src=files/ephemeral dest=/etc/init.d/ephemeral owner=root group=root mode=0755
+  copy:
+    src: files/ephemeral
+    dest: /etc/init.d/ephemeral
+    owner: root
+    group: root
+    mode: 0755
 
 - name: make sure ephemeral starts at boot
   service:

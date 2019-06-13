@@ -6,6 +6,7 @@
 
 - name: Install prerquisites package
   yum:
+    lock_timeout: 180
     state: present
     name:
       - perl-Switch
