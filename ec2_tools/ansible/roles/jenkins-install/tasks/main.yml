@@ -6,13 +6,15 @@
 
 # Install Java and dependencies
 - name: Ensure Java is installed
-  package:
+  yum:
+    lock_timeout: 180
     name:
       - java-1.8.0-openjdk
     state: present
 
 - name: Install dependencies
-  package:
+  yum:
+    lock_timeout: 180
     name:
       - curl
       - libselinux-python
@@ -33,6 +35,7 @@
 # Install Jenkins
 - name: Install Jenkins
   yum:
+    lock_timeout: 180
     name: jenkins
     state: present
 

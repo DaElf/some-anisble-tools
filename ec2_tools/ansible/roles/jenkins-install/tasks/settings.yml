@@ -15,7 +15,9 @@
     line: 'JENKINS_HOME={{ jenkins_home }}'
 
 - name: Immediately restart Jenkins on init config changes.
-  service: name=jenkins state=restarted
+  service:
+    name: jenkins
+    state: restarted
 
 - name: Set HTTP port in Jenkins config.
   lineinfile:

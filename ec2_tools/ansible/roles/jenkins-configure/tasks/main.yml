@@ -14,7 +14,9 @@
   with_items: "{{ groovy_scripts }}"
 
 - name: Restart Jenkins
-  service: name=jenkins state=restarted
+  service:
+    name: jenkins
+    state: restarted
 
 - name: Wait for Jenkins to start up before proceeding.
   command: >
