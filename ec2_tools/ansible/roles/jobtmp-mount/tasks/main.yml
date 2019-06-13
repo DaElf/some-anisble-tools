@@ -2,6 +2,7 @@
 # tasks file for jobtmp-mount
 - name: Install additional tools
   yum:
+    lock_timeout: 180
     state: present
     update_cache: yes
     name:

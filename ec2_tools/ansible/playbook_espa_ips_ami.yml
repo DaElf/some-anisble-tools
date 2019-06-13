@@ -20,7 +20,8 @@
 #  https://docs.aws.amazon.com/AmazonECS/latest/developerguide/al2ami.html
 
   roles:
-    - { role: 'ec2-espa-ips-ami', when: ec2build }
+    - role: 'ec2-espa-ips-ami'
+      when: ec2build | bool
 
 - name: Configure instance(s)
   hosts: ec2_server
@@ -33,7 +34,8 @@
     aws_account: "{{ my_aws_account | default('chs') }}"
 
   roles:
-    - { role: 'efs-mount', when: efsmount }
+    - role: 'efs-mount'
+      when: efsmount | bool
     - s3-fuse
     - jobtmp-mount
     - ephemeral
@@ -43,6 +45,7 @@
   tasks:
     - name: upgrade all packages
       yum:
+        lock_timeout: 180
         state: latest
         name: '*'
 
@@ -56,6 +59,7 @@
 
     - name: Install additional tools
       yum:
+        lock_timeout: 180
         state: present
         update_cache: yes
         name:
