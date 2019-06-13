@@ -55,3 +55,7 @@ users:
   - username: jhdeman
     use_sudo: yes
     uid: 1215
+
+  - username: jbeaujardiere
+    use_sudo: yes
+    uid: 7138
