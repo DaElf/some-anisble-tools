@@ -1,19 +1,33 @@
 ---
 # tasks file for jenkin-docker-worker
 - name:  Add the epel repo
-  yum: name='https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm' state=present
+  yum:
+    lock_timeout: 180
+    name: 'https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm'
+    state: present
 
 - name:  Add the IUS repo
-  yum: name='https://centos7.iuscommunity.org/ius-release.rpm' state=present
+  yum:
+    lock_timeout: 180
+    name: 'https://centos7.iuscommunity.org/ius-release.rpm'
+    state: present
   
 - name: Install nfs-utils
-  yum: name=nfs-utils state=present
+  yum:
+    lock_timeout: 180
+    name: nfs-utils
+    state: present
 
 - name: Install java-1.8.0-openjdk
-  yum: name=java-1.8.0-openjdk state=present
+  yum:
+    lock_timeout: 180
+    name: java-1.8.0-openjdk
+    state: present
 
 - name: Creates directory /devel
-  file: path=/devel state=directory
+  file:
+    path: /devel
+    state: directory
 
 - name: Mount up /devel
   mount:
@@ -24,19 +38,24 @@
     state: mounted
 
 - name: Update all packages to latest
-  yum: name=* state=latest
+  yum:
+    lock_timeout: 180
+    name: '*'
+    state: latest
 
 - name: Install specific mock package for centos 7
-  yum: name=mock,rpm-build,createrepo,createrepo_c state=present
-
-- name: Install git
-  yum: name=git2u,git-lfs state=present
-
-- name: Install docker
-  yum: name=docker state=present
-
-- name: Install awscli
-  yum: name=awscli state=present
+  yum:
+    lock_timeout: 180
+    name:
+      - mock
+      - rpm-build
+      - createrepo
+      - createrepo_c
+      - git2u
+      - git-lfs
+      - docker
+      - awscli
+    state: present
 
 - name: enable service nfs and ensure it is not masked
   systemd:

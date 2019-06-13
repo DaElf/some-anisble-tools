@@ -18,7 +18,8 @@
     changed_when: false
 
   roles:
-    - { role: 'ec2-instance', when: ec2build }
+    - role: 'ec2-instance'
+      when: ec2build | bool
 
 - name: Configure instance(s)
   hosts: ec2_server
