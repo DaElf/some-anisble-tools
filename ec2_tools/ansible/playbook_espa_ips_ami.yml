@@ -9,6 +9,7 @@
     instance_type: "{{ my_inst_type | default('c5d.xlarge') }}"
     ec2build: true
     aws_account: "{{ my_aws_account | default('chs') }}"
+    name_tag: EROS-Builder
   tasks:
   - name: Add override host
     when: override_host is defined
@@ -20,8 +21,10 @@
 #  https://docs.aws.amazon.com/AmazonECS/latest/developerguide/al2ami.html
 
   roles:
-    - role: 'ec2-espa-ips-ami'
+    - role: 'ec2-instance'
       when: ec2build | bool
+      vars:
+        jobtmp_size: "1024"
 
 - name: Configure instance(s)
   hosts: ec2_server
