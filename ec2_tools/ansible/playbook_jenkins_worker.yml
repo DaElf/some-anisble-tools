@@ -8,6 +8,7 @@
     keypair: "jenkins-master" # pem file name
     instance_type: "{{ my_inst_type | default('t2.large') }}"
     ec2build: true
+    aws_account: "{{ my_aws_account | default('chs') }}"
     name_tag: "jenkins-worker-ami-builder"
   tasks:
   - name: Add override host
@@ -31,6 +32,7 @@
     efsmount: false
 
   roles:
+    - efs-mount
     - jenkins-docker-worker
 
 - name: Start AMI build process

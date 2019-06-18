@@ -43,6 +43,11 @@
   tasks:
   - include_vars: users.yml
 
+  - sysctl:
+    name: kernel.msgmnb
+    value: 65536
+    state: present
+
   - name: Creates /users directory
     file:
       path: /users
