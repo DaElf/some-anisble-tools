@@ -3,3 +3,5 @@
 ami: ami-061392db613a6357b
 vol_size: 32
 proj_tag: LPIP
+jobtmp_iops: 2500
+jobtmp_size: 0
