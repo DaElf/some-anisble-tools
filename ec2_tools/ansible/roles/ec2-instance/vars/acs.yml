@@ -1,0 +1,6 @@
+---
+subnet: subnet-2f6b7759
+profile_name: daelf_EC2_S3
+security_group:
+  - default
+  - mattermost

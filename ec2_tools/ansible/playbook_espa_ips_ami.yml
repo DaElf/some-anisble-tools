@@ -6,10 +6,10 @@
   vars:
     region: us-west-2
     keypair: "jenkins-master" # pem file name
-    instance_type: "{{ my_inst_type | default('c5d.xlarge') }}"
+    instance_type: "{{ my_inst_type | default('t2.large') }}"
     ec2build: true
     aws_account: "{{ my_aws_account | default('acs') }}"
-    name_tag: EROS-Builder
+    name_tag: AMI-Builder
   tasks:
   - name: Add override host
     when: override_host is defined
