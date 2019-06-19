@@ -59,3 +59,8 @@ users:
   - username: jbeaujardiere
     use_sudo: yes
     uid: 7138
+
+  - username: rhassan
+    use_sudo: yes
+    uid: 7428
+ 
