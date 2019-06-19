@@ -19,6 +19,13 @@
         delete_on_termination: yes
         tags:
           - Project: "{{ proj_tag }}"
+      - device_name: /dev/sdb
+        volume_type: io1
+        iops: "{{ jobtmp_iops | default('2500') }}"
+        volume_size: "{{ jobtmp_size | default('0') }}"
+        delete_on_termination: yes
+        tags:
+          - Project: "{{ proj_tag }}"
     count_tag:
       Name: "{{ name_tag }}"
       Project: "{{ proj_tag }}"

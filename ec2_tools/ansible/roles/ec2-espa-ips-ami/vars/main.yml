@@ -1,8 +1,0 @@
----
-# vars file for ec2-espa-ips-ami
-ami: ami-061392db613a6357b
-jobtmp_size: 256
-jobtmp_iops: 2500
-vol_size: 32
-name_tag: EROS-AMI-Builder
-proj_tag: LPIP
