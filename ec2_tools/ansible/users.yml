@@ -54,7 +54,7 @@ users:
     
   - username: jhedman
     use_sudo: yes
-    uid: 1215
+    uid: 7215
 
   - username: jbeaujardiere
     use_sudo: yes
@@ -63,4 +63,8 @@ users:
   - username: rhassan
     use_sudo: yes
     uid: 7428
+
+  - username: jjfrench
+    use_sudo: yes
+    uid: 7420
  
