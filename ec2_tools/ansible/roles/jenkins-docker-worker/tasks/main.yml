@@ -11,7 +11,16 @@
     lock_timeout: 180
     name: 'https://centos7.iuscommunity.org/ius-release.rpm'
     state: present
-  
+
+- name: Enable the Amazon Linux Extras Docker Repo
+  command: "amazon-linux-extras enable docker"
+
+- name: Install Amazon ECR Credential Helper
+  yum:
+    lock_timeout: 180
+    name: "amazon-ecr-credential-helper"
+    state: present
+ 
 - name: Install nfs-utils
   yum:
     lock_timeout: 180
@@ -86,3 +95,20 @@
     shell: /bin/zsh
     home: /jenkins
     create_home: true
+
+- name: Create docker dir for ECR credential helper
+  file:
+    path: "/home/ec2-user/.docker"
+    state: directory
+    owner: ec2-user
+    group: ec2-user
+    mode: 0700
+
+- name: Deploy config.json for ECR credential helper
+  copy:
+    src: "docker-ecr-cred-helper-config.json"
+    dest: "/home/ec2-user/.docker/config.json"
+    owner: ec2-user
+    group: ec2-user
+    mode: 0600
+
