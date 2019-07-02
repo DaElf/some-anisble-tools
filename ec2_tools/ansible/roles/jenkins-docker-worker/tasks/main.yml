@@ -86,16 +86,6 @@
     groups: docker
     append: yes
 
-- name: Add the user 'jenkins' with a specific uid and a primary group of 'wheel'
-  user:
-    name: jenkins
-    comment: Jenkins Slave
-    uid: 6000
-    groups: wheel,docker
-    shell: /bin/zsh
-    home: /jenkins
-    create_home: true
-
 - name: Create docker dir for ECR credential helper
   file:
     path: "/home/ec2-user/.docker"
