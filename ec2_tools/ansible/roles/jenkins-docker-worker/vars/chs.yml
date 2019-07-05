@@ -1,0 +1,3 @@
+---
+# vars file roles/jenkins-docker-worker | --extra-vars "aws_account=chs"
+s3_bucket: usgs-landsat-too
