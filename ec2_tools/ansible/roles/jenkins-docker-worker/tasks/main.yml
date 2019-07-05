@@ -1,5 +1,10 @@
 ---
 # tasks file for jenkin-docker-worker
+
+# Include variables based off of account name passed to playbook via --extra-vars "aws_account=chs"
+- include_vars: "{{ aws_account | default('chs') }}.yml"
+
+##-- Repo Setup --##
 - name:  Add the epel repo
   yum:
     lock_timeout: 180
@@ -14,6 +19,53 @@
 
 - name: Enable the Amazon Linux Extras Docker Repo
   command: "amazon-linux-extras enable docker"
+
+##-- Local S3 Repo Setup --##
+- name: Add local repository
+  yum_repository:
+    name: local
+    description: EROS YUM repo
+    baseurl: file:///s3/jenkins-artifacts
+    gpgcheck: no
+    skip_if_unavailable: yes
+    priority: 9
+
+- name: install botocore and boto3
+  yum:
+    lock_timeout: 180
+    state: present
+    name:
+      - python2-botocore
+      - python2-boto3
+
+- name: Simple GET operation
+  aws_s3:
+    bucket: usgs-landsat-too
+    object: "junkbox/goofys-master-1.eros.x86_64.rpm"
+    dest: /tmp/goofys-master-1.eros.x86_64.rpm
+    mode: get
+
+- name: Install goofys
+  yum:
+    lock_timeout: 180
+    state: present
+    name: /tmp/goofys-master-1.eros.x86_64.rpm
+
+- name: Install fuse
+  yum:
+    lock_timeout: 180
+    state: present
+    name: fuse
+
+- name: Mount s3 goofys mounts
+  mount:
+    path: "{{ item.path }}"
+    src: "{{ item.src }}"
+    fstype: fuse
+    opts:  _netdev,allow_other,--file-mode=0666,ro
+    state: mounted
+  with_items:
+    - { path: /s3/jenkins-artifacts, src: 'goofys#{{ s3_bucket }}:/jenkins-artifacts' }
 
 - name: Install Amazon ECR Credential Helper
   yum:
@@ -41,7 +93,7 @@
 - name: Mount up /devel
   mount:
     path: /devel
-    src: fs-ba87af13.efs.us-west-2.amazonaws.com:/
+    src: fs-1dd4c5b5.efs.us-west-2.amazonaws.com:/
     fstype: nfs4
     opts: nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noatime
     state: mounted
