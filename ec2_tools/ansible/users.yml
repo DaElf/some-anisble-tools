@@ -12,9 +12,9 @@ users:
     use_sudo: yes
     uid: 7010
 
-  - username: epost
+  - username: rdilley
     use_sudo: yes
-    uid: 7575
+    uid: 7200
 
   - username: sshrestha
     use_sudo: yes
