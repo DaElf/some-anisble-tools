@@ -67,4 +67,8 @@ users:
   - username: jjfrench
     use_sudo: yes
     uid: 7420
- 
+
+  - username: butzer
+    use_sudo: yes
+    uid: 7421
+
